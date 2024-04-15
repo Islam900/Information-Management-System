@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\TicketReasons;
+use App\Models\Tickets;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class TicketsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $tickets = Tickets::all();
+        return view('admin.tickets.index', compact('tickets'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $support = User::where('type', 'helpdesk')->get();
+        $users = User::whereHas('inventories')->get();
+        $reasons = TicketReasons::where('status', 1)->get();
+        return view('admin.tickets.create', compact('users', 'reasons', 'support'));
+    }
+
+    public function get_inventories_by_user(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $inventories = $user->inventories()->with('products')->get();
+        return $inventories;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        Tickets::create([
+            'user_id' => $request->user_id,
+            'helpdesk_id' => $request->helpdesk_id,
+            'inventories_id' => $request->inventories_id,
+            'ticket_reasons_id' => $request->ticket_reasons_id,
+            'ticket_number' => '#TICKET-NO-' . rand(0, 999999),
+            'status' => 0,
+            'rate' => 0,
+            'note' => $request->note
+        ]);
+
+        return redirect()->route('admin.tickets.index')->with('success', 'Texniki dəstək bileti yaradıldı');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $ticket = Tickets::find($id);
+        $support = User::where('type', 'helpdesk')->get();
+        $users = User::whereHas('inventories')->get();
+        $reasons = TicketReasons::where('status', 1)->get();
+        return view('admin.tickets.edit', compact('ticket', 'support', 'reasons', 'users'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}
