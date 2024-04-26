@@ -20,6 +20,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
+
     <style>
         .main-content-wrap {
             background-image: url({{ asset('assets/images/bg-main.png') }});
@@ -41,6 +42,27 @@
     <!-- ============ Body content End ============= -->
 </div>
 
+
+@if ($general_settings && $general_settings->notification_module == 1)
+<div class="modal" id="notificationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>{!! $general_settings->notification_content !!}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('assets/js/common-bundle-script.js')}}"></script>
 
@@ -55,12 +77,21 @@
         integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+
 <script src="{{ asset('assets/js/vendor/pickadate/picker.js')}}"></script>
 
 <script src="{{ asset('assets/js/vendor/pickadate/picker.date.js')}}"></script>
 <script src="{{ asset('assets/js/create_foreign_broadcast.js') }}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#notificationModal').modal('show');
+    });
+</script>
 <!-- Initialize Quill editor -->
 @yield('js')
 </body>

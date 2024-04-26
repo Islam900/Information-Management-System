@@ -33,7 +33,7 @@ class Tickets extends Model
 
     public function inventories()
     {
-        return $this->belongsTo(Inventories::class);
+        return $this->belongsTo(Appointments::class);
     }
 
     public function ticket_reasons()

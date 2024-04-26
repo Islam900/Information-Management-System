@@ -33,7 +33,7 @@
                             @foreach($categories as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{$item->name}}</td>
+                                    <td>{{ !is_null($item->parent) ? $item->parent->name.' -> ' : '' }} {{$item->name}} {{ !is_null($item->child) ? ' -> '.$item->child->name : '' }} </td>
                                     <td>
                                         <button class="btn btn-sm btn-{{$item->status == 1 ? 'success' : 'danger'}}">
                                             {{$item->status == 1 ? 'Aktiv' : 'Deaktiv'}}

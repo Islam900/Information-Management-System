@@ -121,6 +121,18 @@
                             </div>
 
                             <div class="col-md-4 form-group mb-3">
+                                <div class="select_label ui sub header ">Doğum tarixi
+                                </div>
+                                <div class="ui input">
+                                    <input id="b_day" name="b_day" value="{{old('b_day')}}"
+                                           type="date">
+                                    @if($errors->has('b_day'))
+                                        <span class="text-danger">{{ $errors->first('b_day') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 form-group mb-3">
                                 <div class="select_label ui sub header ">Şifrə
                                 </div>
                                 <div class="ui input">

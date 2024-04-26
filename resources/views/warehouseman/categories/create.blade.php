@@ -23,7 +23,24 @@
                         @csrf
                         <div class="row">
 
-                            <div class="col-md-6 form-group mb-3">
+                            <div class="col-md-4 form-group mb-3">
+                                <div class="select_label ui sub header ">Əsas kateqoriya</div>
+                                <select id="status" name="parent_id"
+                                        class="form-control ui fluid search dropdown create_form_dropdown">
+                                    <option value="NULL">--Yoxdur--</option>
+                                    @foreach($categories as $item)
+                                        <option value="{{ $item->id }}">
+                                            {{ !is_null($item->parent) ? $item->parent->name.' -> ' : '' }} {{$item->name}} {{ !is_null($item->child) ? ' -> '.$item->child->name : '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @if($errors->has('parent_id'))
+                                    <span class="text-danger">{{ $errors->first('parent_id') }}</span>
+                                @endif
+                            </div>
+
+                            <div class="col-md-4 form-group mb-3">
                                 <div class="select_label ui sub header ">Kateqoriya adı</div>
                                 <input type="text" name="name" required id="" class="form-control">
                                 @if($errors->has('name'))
@@ -31,7 +48,7 @@
                                 @endif
                             </div>
 
-                            <div class="col-md-6 form-group mb-3">
+                            <div class="col-md-4 form-group mb-3">
                                 <div class="select_label ui sub header ">Status</div>
                                 <select id="status" name="status"
                                         class="form-control ui fluid search dropdown create_form_dropdown">

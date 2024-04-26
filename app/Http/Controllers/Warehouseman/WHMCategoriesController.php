@@ -22,7 +22,8 @@ class WHMCategoriesController extends Controller
      */
     public function create()
     {
-        return view('warehouseman.categories.create');
+        $categories = Categories::where('status', 1)->get();
+        return view('warehouseman.categories.create', compact('categories'));
     }
 
     /**
@@ -31,6 +32,7 @@ class WHMCategoriesController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        $data['parent_id'] = $data['parent_id'] === "NULL" ? NULL : $data['parent_id'];
         Categories::create($data);
         return redirect()->route('warehouseman.categories.index')->with('success', 'Məlumatlar əlavə edildi');
     }
@@ -49,7 +51,8 @@ class WHMCategoriesController extends Controller
     public function edit(string $id)
     {
         $category = Categories::findOrFail($id);
-        return view('warehouseman.categories.edit', compact('category'));
+        $categories = Categories::where('status', 1)->get();
+        return view('warehouseman.categories.edit', compact('category', 'categories'));
     }
 
     /**
@@ -58,6 +61,7 @@ class WHMCategoriesController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->all();
+        $data['parent_id'] = $data['parent_id'] === "NULL" ? NULL : $data['parent_id'];
         $categories = Categories::findOrFail($id);
         $categories->update($data);
 
@@ -71,6 +75,6 @@ class WHMCategoriesController extends Controller
     {
         $categories = Categories::findOrFail($id);
         $categories->delete();
-        return redirect()->route('warehouseman.warehouseman.categories.index')->with('success', 'Məlumatlar silindi');
+        return redirect()->route('warehouseman.categories.index')->with('success', 'Məlumatlar silindi');
     }
 }

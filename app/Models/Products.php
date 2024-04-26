@@ -12,13 +12,14 @@ class Products extends Model
     protected $fillable = [
         'categories_id',
         'invoices_id',
+        'hand_registers_id',
+        'unical_id',
         'material_type',
         'avr_code',
+        'serial_number',
         'product_name',
         'price',
         'size',
-        'purchase_count',
-        'stock',
         'inventory_cost',
         'activity_status',
         'status'
@@ -29,13 +30,18 @@ class Products extends Model
         return $this->belongsTo(Invoices::class);
     }
 
+    public function hand_registers()
+    {
+        return $this->belongsTo(HandRegisters::class);
+    }
+
     public function categories()
     {
         return $this->belongsTo(Categories::class);
     }
 
-    public function inventories()
+    public function appointments()
     {
-        return $this->hasMany(Inventories::class);
+        return $this->hasOne(Appointments::class);
     }
 }

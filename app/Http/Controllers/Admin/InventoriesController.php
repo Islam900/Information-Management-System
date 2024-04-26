@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Inventories;
+use App\Models\GeneralSettings;
+use App\Models\Appointments;
 use App\Models\Products;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class InventoriesController extends Controller
@@ -15,7 +17,7 @@ class InventoriesController extends Controller
      */
     public function index()
     {
-        $inventories = Inventories::with('products', 'user')->get();
+        $inventories = Appointments::with('products', 'user')->get();
         return view('admin.inventories.index', compact('inventories'));
     }
 
@@ -24,8 +26,17 @@ class InventoriesController extends Controller
      */
     public function create()
     {
-        $products = Products::all();
-        $users = User::all();
+        $all_products = Products::all();
+        $products = [];
+        foreach ($all_products as $product) {
+            $stock = $product->stock;
+            $inventoryCount = $product->inventories_count;
+            if ($stock > $inventoryCount) {
+                $products[] = $product;
+            }
+        }
+
+        $users = User::where('type', 'employee')->get();
         return view('admin.inventories.create', compact('products', 'users'));
     }
 
@@ -35,7 +46,7 @@ class InventoriesController extends Controller
     public function store(Request $request)
     {
         foreach ($request->users_id as $user_key => $user) {
-            Inventories::create([
+            Appointments::create([
                 'user_id' => $user,
                 'products_id' => $request->products_id[$user_key],
                 'inventory_number' => $request->inventory_number[$user_key]
@@ -51,7 +62,7 @@ class InventoriesController extends Controller
 
     public function refund(Request $request)
     {
-        $transaction = Inventories::find($request->id);
+        $transaction = Appointments::find($request->id);
         $transaction->user_id = NULL;
         $transaction->save();
 
@@ -61,10 +72,11 @@ class InventoriesController extends Controller
 
         return redirect()->back()->with('success', 'İnventar anbara qaytarıldı');
     }
+
     /**
      * Display the specified resource.
      */
-    public function show(Inventories $inventories)
+    public function show(Appointments $inventories)
     {
         //
     }
@@ -72,17 +84,25 @@ class InventoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Inventories $inventory)
+    public function edit(Appointments $inventory)
     {
-        $products = Products::all();
-        $users = User::all();
+        $all_products = Products::all();
+        $products = [];
+        foreach ($all_products as $product) {
+            $stock = $product->stock;
+            $inventoryCount = $product->inventories_count;
+            if ($stock > $inventoryCount) {
+                $products[] = $product;
+            }
+        }
+        $users = User::where('type', 'employee')->get();
         return view('admin.inventories.edit', compact('products', 'users', 'inventory'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Inventories $inventory)
+    public function update(Request $request, Appointments $inventory)
     {
         $inventory->update([
             'products_id' => $request->products_id,
@@ -96,7 +116,7 @@ class InventoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Inventories $inventories)
+    public function destroy(Appointments $inventories)
     {
         //
     }

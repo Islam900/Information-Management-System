@@ -6,10 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'email',
         'type',
         'password',
+        'b_day'
     ];
 
     /**
@@ -52,7 +54,7 @@ class User extends Authenticatable
 
     public function inventories()
     {
-        return $this->hasMany(Inventories::class);
+        return $this->hasMany(Appointments::class);
     }
 
     public function departments()
@@ -75,9 +77,24 @@ class User extends Authenticatable
         return $this->hasMany(Tickets::class);
     }
 
+    public function rooms()
+    {
+        return $this->belongsTo(Rooms::class);
+    }
+
     public function my_tickets()
     {
         return $this->hasMany(Tickets::class, 'helpdesk_id');
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Reports::class);
+    }
+
+    public function local_numbers()
+    {
+        return $this->hasMany(LocalNumbers::class);
     }
 
 }

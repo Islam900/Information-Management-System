@@ -23,9 +23,12 @@
                             <thead>
                             <tr>
                                 <th>№</th>
+                                <th>Kategoriya</th>
                                 <th>Təminatçı</th>
                                 <th>E-qaimə nömrəsi</th>
+                                <th>E-qaimə seria nömrəsi</th>
                                 <th>Ümumi məbləğ</th>
+                                <th>ƏDV daxil məbləğ</th>
                                 <th>Əməliyyatlar</th>
                             </tr>
                             </thead>
@@ -33,9 +36,12 @@
                             @foreach($invoices as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
+                                    <td>{{ $item->categories->name }}</td>
                                     <td>{{$item->vendors->name}}</td>
                                     <td>{{$item->e_invoice_number}}</td>
+                                    <td>{{$item->e_invoice_serial_number}}</td>
                                     <td>{{$item->total_amount}} AZN</td>
+                                    <td>{{$item->edv_total_amount}} AZN</td>
                                     <td>
                                         <a href="{{ route('warehouseman.invoices.show', $item->id ) }}"
                                            class="text-success mr-2">

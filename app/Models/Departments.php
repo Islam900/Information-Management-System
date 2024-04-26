@@ -22,4 +22,13 @@ class Departments extends Model
         return $this->hasMany(Branches::class);
     }
 
+    public function reports()
+    {
+        return $this->hasMany(Reports::class);
+    }
+
+    public function local_numbers()
+    {
+        return $this->hasMany(LocalNumbers::class);
+    }
 }

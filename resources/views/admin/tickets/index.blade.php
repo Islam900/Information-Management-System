@@ -32,6 +32,7 @@
                                 <th>Səbəb</th>
                                 <th>Qeyd</th>
                                 <th>Status</th>
+                                <th>Qiymət</th>
                                 <th>Aktivlik statusu</th>
                                 <th>Tarix</th>
                                 <th>Əməliyyatlar</th>
@@ -74,8 +75,15 @@
                                         <button class="btn btn-lg btn-{{ $class }}">{{ $text }}</button>
                                     </td>
                                     <td>
+                                        @for($i=0;$i<$item->rate;$i++)
+                                            <span>
+                                                &#9733;
+                                            </span>
+                                        @endfor
+                                    </td>
+                                    <td>
                                         <button
-                                            class="btn btn-lg btn-{{ $item->ticket_status == 0 ? 'outline-danger' : 'outline-info' }}">
+                                            class="btn btn-lg btn-{{ $item->ticket_status == 0 ? 'danger' : 'info' }}">
                                             {{ $item->ticket_status == 0 ? 'Bilet açıqdır' : 'Bilet bağlıdır' }}
                                         </button>
                                     </td>
@@ -87,11 +95,13 @@
                                             <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                                         </a>
 
-                                        <a href="#" title="Bileti bağla"
-                                           class="text-danger mr-2" id="close-ticket"
-                                           data-id="{{$item->ticket_number}}">
-                                            <i class="nav-icon i-Close font-weight-bold"></i>
-                                        </a>
+                                        @if($item->ticket_status == 0)
+                                            <a href="#" title="Bileti bağla"
+                                               class="text-danger mr-2 close-ticket"
+                                               data-id="{{$item->ticket_number}}">
+                                                <i class="nav-icon i-Close font-weight-bold"></i>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -111,28 +121,76 @@
         $(document).ready(function () {
             $('#inventories-table').DataTable();
 
-            $("#close-ticket").on("click", function () {
+            $(".close-ticket").on("click", function () {
                 const ticket_number = $(this).data('id');
                 Swal.fire({
                     title: "Bileti bağlamaq istəyirsiniz ?",
                     icon: "info",
                     html: `<div class="rating-stars">
-                                <input type="radio" name="rating" id="rs0" checked><label for="rs0"></label>
-                                <input type="radio" name="rating" id="rs1"><label for="rs1"></label>
-                                <input type="radio" name="rating" id="rs2"><label for="rs2"></label>
-                                <input type="radio" name="rating" id="rs3"><label for="rs3"></label>
-                                <input type="radio" name="rating" id="rs4"><label for="rs4"></label>
-                                <input type="radio" name="rating" id="rs5"><label for="rs5"></label>
+                                <input type="radio" name="rating" id="rs0" value="0" checked><label for="rs0"></label>
+                                <input type="radio" name="rating" id="rs1" value="1"><label for="rs1"></label>
+                                <input type="radio" name="rating" id="rs2" value="2"><label for="rs2"></label>
+                                <input type="radio" name="rating" id="rs3" value="3"><label for="rs3"></label>
+                                <input type="radio" name="rating" id="rs4" value="4"><label for="rs4"></label>
+                                <input type="radio" name="rating" id="rs5" value="5"><label for="rs5"></label>
                                 <span class="rating-counter"></span>
                             </div>
                             `,
                     showCloseButton: true,
                     showCancelButton: true,
                     focusConfirm: false,
-                    confirmButtonText: `<i class="fa fa-thumbs-up"></i> Great!`,
-                    confirmButtonAriaLabel: "Thumbs up, great!",
-                    cancelButtonText: `<i class="fa fa-thumbs-down"></i>`,
-                    cancelButtonAriaLabel: "Thumbs down"
+                    confirmButtonText: `
+                    <i class="fa fa-thumbs-up"></i> Təsdiqləyin
+                  `,
+                    confirmButtonAriaLabel: "Təsdiqləyin",
+                    cancelButtonText: `
+                    <i class="fa fa-thumbs-down"></i> Ləğv edin
+                  `,
+                    cancelButtonAriaLabel: "Ləğv edin"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const selectedRating = $('input[name="rating"]:checked').val();
+                        $.ajax({
+                            url: "{{ route('admin.update-ticket') }}",
+                            method:"POST",
+                            data: {
+                                "_token" : "{{ csrf_token() }}",
+                                "ticket_number" : ticket_number,
+                                "ticket_rating" : selectedRating,
+                            },
+                            success:function (response) {
+                                if(response.status == 200)
+                                {
+                                    Swal.fire(response.notification, "", "success")
+                                        .then((result) => {
+                                            if (result.isConfirmed) {
+                                                location.href = response.route
+                                            }
+                                        });
+                                }
+                                else if(response.status == 404)
+                                {
+                                    Swal.fire(response.notification, "", "danger")
+                                        .then((result) => {
+                                            if (result.isConfirmed) {
+                                                location.href = response.route
+                                            }
+                                        });
+                                }
+                                else {
+                                    Swal.fire(response.notification, "", "info")
+                                        .then((result) => {
+                                            if (result.isConfirmed) {
+                                                location.href = response.route
+                                            }
+                                        });
+                                }
+
+                            }
+                        })
+                    } else {
+                        Swal.fire("Dəyişikliklər qeydə alınmadı", "", "info");
+                    };
                 });
             })
 

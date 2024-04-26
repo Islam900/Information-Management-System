@@ -16,4 +16,10 @@ class Vendors extends Model
     {
         return $this->hasMany(Invoices::class);
     }
+
+    public function hand_registers()
+    {
+        return $this->hasMany(HandRegisters::class);
+    }
+
 }

@@ -77,11 +77,15 @@ class UsersController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $user = User::findOrFail($id);
         $data = $request->all();
-        if (isset($data['password'])) {
+        if (!is_null($data['password'])) {
             $data['password'] = bcrypt($request->password);
         }
-        $user = User::findOrFail($id);
+        else
+        {
+            $data['password'] = $user->password;
+        }
         $user->update($data);
 
         return redirect()->route('admin.users.index')->with('success', 'Məlumatlar dəyişdirildi');

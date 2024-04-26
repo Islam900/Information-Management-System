@@ -21,7 +21,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="inventories-table" class="display table table-striped" style="width:100%">
+                        <table id="tickets-table" class="display table table-striped" style="width:100%">
                             <thead>
                             <tr>
                                 <th>№</th>
@@ -89,6 +89,7 @@
             </div>
 
 
+
         </div>
     </div>
 @endsection
@@ -96,7 +97,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#inventories-table').DataTable();
+            // $('#tickets-table').DataTable();
 
             $('.solve-ticket').on("click", function () {
                 const ticket_number = $(this).data('ticket-number');
@@ -169,30 +170,5 @@
                 });
             })
         })
-
-        @if (session('success'))
-        const storeSuccess = "{{ session('success') }}";
-        const SuccessAlert = Swal.fire({
-            title: "Uğurlu!",
-            text: storeSuccess,
-            icon: "success"
-        })
-        SuccessAlert.fire();
-
-        @php session()->forget('success') @endphp
-        @endif
-
-
-        @if (session('error'))
-        const storeError = "{{ session('error') }}";
-        const ErrorAlert = Swal.fire({
-            title: "Xəta!",
-            text: storeError,
-            icon: "error"
-        })
-        ErrorAlert.fire();
-
-        @php session()->forget('error') @endphp
-        @endif
     </script>
 @endsection

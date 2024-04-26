@@ -18,6 +18,16 @@
             <div class="triangle"></div>
         </li>
 
+        @if($general_settings->weekly_report_module == 1 && in_array(\Illuminate\Support\Facades\Auth::user()->id, $report_users))
+            <li class="nav-item">
+                <a class="nav-item-hold" href="{{ route('employee.reports.index') }}">
+                    <i class="nav-icon i-Calendar"></i>
+                    <span class="nav-text">Həftəlik hesabat</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+        @endif
+
        @if($general_settings->ticket_module == 1)
        <li class="nav-item">
             <a class="nav-item-hold" href="{{ route('employee.tickets.index') }}">

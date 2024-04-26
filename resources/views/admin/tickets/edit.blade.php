@@ -26,7 +26,7 @@
 
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İşçi</div>
-                                    <select frequency="true" id="user_select" name="user_id" disabled class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                    <select frequency="true" id="user_select" name="user_id" disabled readonly class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">İşçi seçin</option>
                                         @forelse($users as $user)
                                             <option value="{{$user->id}}" {{ $ticket->user_id == $user->id ? 'selected' : '' }}>{{$user->name}}</option>
@@ -41,8 +41,8 @@
                                     <div class="select_label ui sub header ">İşçi</div>
                                     <select frequency="true" id="support_select" name="helpdesk_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">Kimə təhkim olunsun</option>
-                                        @forelse($support as $user)
-                                            <option value="{{$user->id}}" {{ $ticket->helpdesk_id == $user->id ? 'selected' : '' }}>{{$user->name}}</option>
+                                        @forelse($support as $s_team)
+                                            <option value="{{$s_team->id}}" {{ $ticket->helpdesk_id == $s_team->id ? 'selected' : '' }}>{{$s_team->name}}</option>
                                         @empty
                                             <option disabled selected>Məlumat yoxdur</option>
                                         @endforelse
@@ -52,8 +52,11 @@
 
                                 <div class="col-md-3 form-group mb-3" id="inventory_section">
                                     <div class="select_label ui sub header ">İnventar</div>
-                                    <select frequency="true" id="inventories_select" name="inventories_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                    <select frequency="true" id="inventories_select" readonly disabled name="inventories_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">İnventar seçin</option>
+                                        @foreach($inventories as $inventory)
+                                        <option value="{{ $inventory->products->product_id }}">{{ $inventory->products->product_name }}</option>
+                                        @endforeach
                                     </select>
                                     <span class="text-danger error_message" id="inventory_selectError"></span>
                                 </div>
@@ -71,7 +74,7 @@
                                     <span class="text-danger error_message" id="categories_idError"></span>
                                 </div>
 
-                                <div class="col-md-12 form-group mb-3" id="note_section">
+                                <div class="col-md-3 form-group mb-3" id="note_section">
                                     <div class="select_label ui sub header ">Əlavə qeyd</div>
                                     <div class="ui input">
                                         <input id="note" required value="{{$ticket->note }} "
@@ -80,9 +83,41 @@
                                     <span class="text-danger error_message" id="noteError"></span>
                                 </div>
 
+                                <div class="col-md-3 form-group mb-3" id="inventory_section">
+                                    <div class="select_label ui sub header ">Qiymət</div>
+                                    <select frequency="true" id="rate"   name="rate" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                        <option value="">Qiymət seçin</option>
+                                        @for($i=1;$i<=5;$i++)
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                    <span class="text-danger error_message" id="inventory_selectError"></span>
+                                </div>
+
+                                <div class="col-md-3 form-group mb-3" id="inventory_section">
+                                    <div class="select_label ui sub header ">Bilet statusu</div>
+                                    <select frequency="true" id="status" name="status" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                        <option value="">Bilet statusunu seçin</option>
+                                        <option value="0">Gözləyir</option>
+                                        <option value="1">Həll olundu</option>
+                                        <option value="2">Problem yoxdur - Əsassız</option>
+                                        <option value="3">İnventar sıradan çıxıb</option>
+                                    </select>
+                                    <span class="text-danger error_message" id="inventory_selectError"></span>
+                                </div>
+                                <div class="col-md-3 form-group mb-3" id="inventory_section">
+                                    <div class="select_label ui sub header ">Bilet aktivlik statusu</div>
+                                    <select frequency="true" id="ticket_status" name="ticket_status" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                        <option value="">Bilet aktivlik statusunu seçin</option>
+                                        <option value="1">Bağlıdır</option>
+                                        <option value="0">Açıqdır</option>
+                                    </select>
+                                    <span class="text-danger error_message" id="inventory_selectError"></span>
+                                </div>
+
                             </div>
                         </div>
-                        <button class="btn btn-primary btn-lg" type="submit">Yadda saxlayın</button>    
+                        <button class="btn btn-primary btn-lg" type="submit">Yadda saxlayın</button>
                     </form>
                 </div>
             </div>

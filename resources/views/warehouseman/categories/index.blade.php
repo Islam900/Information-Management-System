@@ -33,14 +33,14 @@
                             @foreach($categories as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{$item->name}}</td>
+                                    <td>{{ !is_null($item->parent) ? $item->parent->name.' -> ' : '' }} {{$item->name}} {{ !is_null($item->child) ? ' -> '.$item->child->name : '' }} </td>
                                     <td>
                                         <button class="btn btn-sm btn-{{$item->status == 1 ? 'success' : 'danger'}}">
                                             {{$item->status == 1 ? 'Aktiv' : 'Deaktiv'}}
                                         </button>
                                     </td>
                                     <td>
-                                        <a href="{{ route('warehouseman.categories.edit', $item->id ) }}"
+                                        <a href="{{ route('admin.categories.edit', $item->id ) }}"
                                            class="text-success mr-2">
                                             <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                                         </a>

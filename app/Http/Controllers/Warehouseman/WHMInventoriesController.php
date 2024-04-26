@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Warehouseman;
 
 use App\Http\Controllers\Controller;
-use App\Models\Inventories;
+use App\Models\Appointments;
 use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class WHMInventoriesController extends Controller
      */
     public function index()
     {
-        $inventories = Inventories::with('products', 'user')->get();
+        $inventories = Appointments::with('products', 'user')->get();
         return view('warehouseman.inventories.index', compact('inventories'));
     }
 
@@ -24,8 +24,16 @@ class WHMInventoriesController extends Controller
      */
     public function create()
     {
-        $products = Products::all();
-        $users = User::all();
+        $all_products = Products::all();
+        $products = [];
+        foreach ($all_products as $product) {
+            $stock = $product->stock;
+            $inventoryCount = $product->inventories_count;
+            if ($stock > $inventoryCount) {
+                $products[] = $product;
+            }
+        }
+        $users = User::where('type', 'employee')->get();
         return view('warehouseman.inventories.create', compact('products', 'users'));
     }
 
@@ -35,7 +43,7 @@ class WHMInventoriesController extends Controller
     public function store(Request $request)
     {
         foreach ($request->users_id as $user_key => $user) {
-            Inventories::create([
+            Appointments::create([
                 'user_id' => $user,
                 'products_id' => $request->products_id[$user_key],
                 'inventory_number' => $request->inventory_number[$user_key]
@@ -51,7 +59,7 @@ class WHMInventoriesController extends Controller
 
     public function refund(Request $request)
     {
-        $transaction = Inventories::find($request->id);
+        $transaction = Appointments::find($request->id);
         $transaction->user_id = NULL;
         $transaction->save();
 
@@ -64,7 +72,7 @@ class WHMInventoriesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Inventories $inventories)
+    public function show(Appointments $inventories)
     {
         //
     }
@@ -72,17 +80,25 @@ class WHMInventoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Inventories $inventory)
+    public function edit(Appointments $inventory)
     {
-        $products = Products::all();
-        $users = User::all();
+        $all_products = Products::all();
+        $products = [];
+        foreach ($all_products as $product) {
+            $stock = $product->stock;
+            $inventoryCount = $product->inventories_count;
+            if ($stock > $inventoryCount) {
+                $products[] = $product;
+            }
+        }
+        $users = User::where('type', 'employee')->get();
         return view('warehouseman.inventories.edit', compact('products', 'users', 'inventory'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Inventories $inventory)
+    public function update(Request $request, Appointments $inventory)
     {
         $inventory->update([
             'products_id' => $request->products_id,
@@ -96,7 +112,7 @@ class WHMInventoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Inventories $inventories)
+    public function destroy(Appointments $inventories)
     {
         //
     }

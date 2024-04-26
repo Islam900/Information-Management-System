@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\GeneralSettings;
+use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,7 +53,9 @@ class LoginController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+            $user = User::find(Auth::user()->id);
+            $user->active_status = 1;
+            $user->save();
 
             if($user->type != 'administrator')
             {
@@ -78,6 +81,9 @@ class LoginController extends Controller
     }
     public function logout(Request $request)
     {
+        $user = User::find(Auth::user()->id);
+        $user->active_status = 0;
+        $user->save();
 
         (new LogController())->create_logs(Auth::user()->name . ' sistemdən çıxış etdi.', 'Sistemdən çıxış');
         Auth::logout();

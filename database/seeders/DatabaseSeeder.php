@@ -13,6 +13,7 @@ use App\Models\User;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Vendors;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -27,64 +28,45 @@ class DatabaseSeeder extends Seeder
         $this->call(PositionsSeeder::class);
         $this->call(RoomsSeeder::class);
         $this->call(CategoriesSeeder::class);
-        // $this->call(EmployeesSeeder::class);
+//         $this->call(EmployeesSeeder::class);
         $this->call(VendorsSeeder::class);
         $this->call(GeneralSettingsSeeder::class);
 
-        User::create([
-            'departments_id' => NULL,
-            'branches_id' => NULL,
-            'positions_id' => NULL,
-            'rooms_id' => 1,
-            'name' => 'Cavid Şıxıyev',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('salamadmin'),
-            'type' => 'administrator'
-        ]);
-
-        User::create([
-            'departments_id' => 1,
-            'branches_id' => 3,
-            'positions_id' => 17,
-            'rooms_id' => 1,
-            'name' => 'Elman Ənvərli',
-            'email' => 'whm@gmail.com',
-            'password' => bcrypt('salamadmin'),
-            'type' => 'warehouseman'
-        ]);
-
-        User::create([
-            'departments_id' => 1,
-            'branches_id' => 3,
-            'positions_id' => 16,
-            'rooms_id' => 1,
-            'name' => 'Güllər Qədimova',
-            'email' => 'hr@gmail.com',
-            'password' => bcrypt('salamadmin'),
-            'type' => 'human-resource'
-        ]);
-
-        User::create([
-            'departments_id' => 1,
-            'branches_id' => 3,
-            'positions_id' => 15,
-            'rooms_id' => 1,
-            'name' => 'Cavid Həsənli',
-            'email' => 'support@gmail.com',
-            'password' => bcrypt('salamadmin'),
-            'type' => 'support'
-        ]);
-
-        User::create([
-            'departments_id' => 1,
-            'branches_id' => 3,
-            'positions_id' => 18,
-            'rooms_id' => 1,
-            'name' => 'Röya Quliyeva',
-            'email' => 'user@gmail.com',
-            'password' => bcrypt('salamadmin'),
-            'type' => 'employee'
-        ]);
+//        User::create([
+//            'departments_id' => NULL,
+//            'branches_id' => NULL,
+//            'positions_id' => NULL,
+//            'rooms_id' => 1,
+//            'name' => 'Röya Quliyeva',
+//            'email' => 'admin@icta.az',
+//            'password' => bcrypt('icta123'),
+//            'type' => 'administrator',
+//            'b_day' => Carbon::now()->format('Y-m-d')
+//        ]);
+//
+//        User::create([
+//            'departments_id' => NULL,
+//            'branches_id' => NULL,
+//            'positions_id' => NULL,
+//            'rooms_id' => 1,
+//            'name' => 'Elman Ənvərli',
+//            'email' => 'whm@icta.az',
+//            'password' => bcrypt('icta123'),
+//            'type' => 'warehouseman',
+//            'b_day' => Carbon::now()->format('Y-m-d')
+//        ]);
+//
+//        User::create([
+//            'departments_id' => NULL,
+//            'branches_id' => NULL,
+//            'positions_id' => NULL,
+//            'rooms_id' => 1,
+//            'name' => 'Cavid Həsənli',
+//            'email' => 'support@icta.az',
+//            'password' => bcrypt('icta123'),
+//            'type' => 'support',
+//            'b_day' => Carbon::now()->format('Y-m-d')
+//        ]);
 
         TicketReasons::create([
             'reason' => 'Səbəb 1',

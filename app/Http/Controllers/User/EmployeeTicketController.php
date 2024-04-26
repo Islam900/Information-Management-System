@@ -38,4 +38,38 @@ class EmployeeTicketController extends Controller
 
         return redirect()->route('employee.tickets.index')->with('success', 'Texniki dəstək bileti yaradıldı');
     }
+
+    public function update_ticket(Request $request)
+    {
+        $ticket = Tickets::where('ticket_number', $request->ticket_number)->first();
+        if($ticket)
+        {
+            $ticket->ticket_status = 1;
+            $ticket->rate = $request->ticket_rating;
+
+            if ($ticket->save()) {
+                return response()->json([
+                    'notification' => 'Bilet məlumatları dəyişdirildi',
+                    'route' => route('employee.tickets.index'),
+                    'status' => 200
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'notification' => 'Xəta',
+                    'route' => route('employee.tickets.index'),
+                    'status' => 500
+                ]);
+            }
+        }
+        else
+        {
+            return response()->json([
+                'notification' => 'Bilet tapılmadı',
+                'route' => route('employee.tickets.index'),
+                'status' => 404
+            ]);
+        }
+    }
 }

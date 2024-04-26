@@ -63,10 +63,6 @@
 
                         <div class="lower_buttons_container d-flex align-items-center row">
                             <div class="col-6 ">
-                                <button type="button" class="btn btn-success btn-lg" id="addRow">Yenisini əlavə et</button>
-                            </div>
-
-                            <div class="col-6 ">
                                 <button class="btn btn-primary btn-lg">Təhkim et</button>
                             </div>
                         </div>

@@ -14,7 +14,7 @@
         <li class="nav-item " data-item="dashboard-department">
             <a class="nav-item-hold" href="#">
                 <i class="nav-icon i-Building"></i>
-                <span class="nav-text">Departament</span>
+                <span class="nav-text">Struktur</span>
             </a>
             <div class="triangle"></div>
         </li>
@@ -22,14 +22,14 @@
         <li class="nav-item " data-item="dashboard-inventory">
             <a class="nav-item-hold" href="#">
                 <i class="nav-icon i-Inbox-Empty"></i>
-                <span class="nav-text">İnvertar</span>
+                <span class="nav-text">İnventar</span>
             </a>
             <div class="triangle"></div>
         </li>
         <li class="nav-item ">
             <a class="nav-item-hold" href="{{ route('admin.inventories.index') }}">
                 <i class="nav-icon i-traffic-Light"></i>
-                <span class="nav-text">İnvertar əməliyyatları</span>
+                <span class="nav-text">Təhkim olunma</span>
             </a>
             <div class="triangle"></div>
         </li>
@@ -37,6 +37,13 @@
             <a class="nav-item-hold" href="{{ route('admin.tickets.index') }}">
                 <i class="nav-icon i-Ticket"></i>
                 <span class="nav-text">Texniki dəstək biletləri</span>
+            </a>
+            <div class="triangle"></div>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-item-hold" href="{{ route('admin.reports.index') }}">
+                <i class="nav-icon i-Calendar"></i>
+                <span class="nav-text">Həftəlik hesabatlar</span>
             </a>
             <div class="triangle"></div>
         </li>
@@ -104,6 +111,13 @@
                 <span class="item-name">İşçilər</span>
             </a>
         </li>
+        <li class="nav-item ">
+            <a class=""
+               href="{{ route('admin.local-numbers.index') }}">
+                <i class="nav-icon i-Cash-register-2"></i>
+                <span class="item-name">Daxili nömrələr</span>
+            </a>
+        </li>
     </ul>
 
     <ul class="childNav" data-parent="dashboard-inventory">
@@ -125,7 +139,7 @@
             <a class=""
                href="{{ route('admin.products.index') }}">
                 <i class="nav-icon i-Cash-register-2"></i>
-                <span class="item-name">İnventarlar</span>
+                <span class="item-name">Saxlanc anbarı</span>
             </a>
         </li>
 
@@ -133,7 +147,14 @@
             <a class=""
                href="{{ route('admin.invoices.index') }}">
                 <i class="nav-icon i-Cash-register-2"></i>
-                <span class="item-name">Qaimələr</span>
+                <span class="item-name">E-qaimələr</span>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class=""
+               href="{{ route('admin.hand-registers.index') }}">
+                <i class="nav-icon i-Cash-register-2"></i>
+                <span class="item-name">Fakturalar</span>
             </a>
         </li>
     </ul>

@@ -38,7 +38,7 @@
                                     <td>{{$item->name}}</td>
                                     <td>{{ !is_null($item->departments) ? $item->departments->name : 'İdarə heyəti' }}</td>
                                     <td>{{ !is_null($item->branches) ? $item->branches->name : '' }}</td>
-                                    <td>{{ $item->room }}</td>
+                                    <td>{{ !is_null($item->rooms) ? $item->rooms->name : '' }}</td>
                                     <td>{{$item->email}}</td>
                                     <td>
                                         <a href="{{ route('admin.users.edit', $item->id ) }}"

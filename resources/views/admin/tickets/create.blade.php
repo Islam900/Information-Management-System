@@ -81,7 +81,7 @@
 
                             </div>
                         </div>
-                        <button class="btn btn-primary btn-lg" type="submit">Yeni bilet yaradın</button>    
+                        <button class="btn btn-primary btn-lg" type="submit">Yeni bilet yaradın</button>
                     </form>
                 </div>
             </div>
@@ -99,7 +99,7 @@
             $('#user_select').on("change", function (e) {
                     const user_id = e.target.value;
                     $.ajax({
-                        url:"{{ url('admin/get-inventories-by-user') }}",
+                        url:"{{ url('get-inventories-by-user') }}",
                         type:"POST",
                         data:{
                             "_token":"{{csrf_token()}}",

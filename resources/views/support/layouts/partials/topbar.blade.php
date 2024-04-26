@@ -29,7 +29,7 @@
                     <p style="text-align: right; margin-bottom: 0;";>{{\Illuminate\Support\Facades\Auth::user()->position}}</p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="">Hesab məlumatları</a>
+                    <a class="dropdown-item" href="{{ route('support.profile') }}">Hesab məlumatları</a>
                     <form action="{{route('logout')}}" method="POST">
                         @csrf
                         <button class="dropdown-item">

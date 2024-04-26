@@ -27,6 +27,17 @@ class Branches extends Model
         return $this->hasMany(Positions::class);
     }
 
+    public function reports()
+    {
+        return $this->hasMany(Reports::class);
+    }
+
+    public function local_numbers()
+    {
+        return $this->hasMany(LocalNumbers::class);
+    }
+
+
 
 
 }

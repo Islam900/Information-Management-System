@@ -24,7 +24,7 @@ class TicketsController extends Controller
      */
     public function create()
     {
-        $support = User::where('type', 'helpdesk')->get();
+        $support = User::where('type', 'support')->get();
         $users = User::whereHas('inventories')->get();
         $reasons = TicketReasons::where('status', 1)->get();
         return view('admin.tickets.create', compact('users', 'reasons', 'support'));
@@ -56,6 +56,40 @@ class TicketsController extends Controller
         return redirect()->route('admin.tickets.index')->with('success', 'Texniki dəstək bileti yaradıldı');
     }
 
+    public function update_ticket(Request $request)
+    {
+        $ticket = Tickets::where('ticket_number', $request->ticket_number)->first();
+        if($ticket)
+        {
+            $ticket->ticket_status = 1;
+            $ticket->rate = $request->ticket_rating;
+
+            if ($ticket->save()) {
+                return response()->json([
+                    'notification' => 'Bilet məlumatları dəyişdirildi',
+                    'route' => route('admin.tickets.index'),
+                    'status' => 200
+                ]);
+            }
+            else
+            {
+                return response()->json([
+                    'notification' => 'Xəta',
+                    'route' => route('admin.tickets.index'),
+                    'status' => 500
+                ]);
+            }
+        }
+        else
+        {
+            return response()->json([
+                'notification' => 'Bilet tapılmadı',
+                'route' => route('admin.tickets.index'),
+                'status' => 404
+            ]);
+        }
+    }
+
     /**
      * Display the specified resource.
      */
@@ -70,10 +104,11 @@ class TicketsController extends Controller
     public function edit(string $id)
     {
         $ticket = Tickets::find($id);
-        $support = User::where('type', 'helpdesk')->get();
+        $support = User::where('type', 'support')->get();
         $users = User::whereHas('inventories')->get();
         $reasons = TicketReasons::where('status', 1)->get();
-        return view('admin.tickets.edit', compact('ticket', 'support', 'reasons', 'users'));
+        $inventories = $ticket->user->inventories;
+        return view('admin.tickets.edit', compact('ticket', 'support', 'reasons', 'users', 'inventories'));
     }
 
     /**
@@ -81,7 +116,17 @@ class TicketsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $ticket = Tickets::find($id);
+
+            $ticket->helpdesk_id = $request->helpdesk_id;
+            $ticket->ticket_reasons_id = $request->ticket_reasons_id;
+            $ticket->status = $request->status;
+            $ticket->ticket_status = $request->ticket_status;
+            $ticket->rate = $request->rate;
+            $ticket->note = $request->note;
+            $ticket->save();
+
+            return redirect()->route('admin.tickets.index')->with('success', 'Məlumatlar dəyişdirildi');
     }
 
     /**

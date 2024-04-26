@@ -22,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $general_settings = GeneralSettings::first();
-        View::share(['general_settings' => $general_settings]);
+        $report_users = json_decode($general_settings->weekly_report_module_users, true)['users'] ?? [];
+
+        View::share(['general_settings' => $general_settings, 'report_users' => $report_users]);
     }
 }

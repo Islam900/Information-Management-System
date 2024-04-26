@@ -13,14 +13,14 @@
         <li class="nav-item " data-item="dashboard-inventory">
             <a class="nav-item-hold" href="#">
                 <i class="nav-icon i-Inbox-Empty"></i>
-                <span class="nav-text">İnvertar</span>
+                <span class="nav-text">İnventar</span>
             </a>
             <div class="triangle"></div>
         </li>
         <li class="nav-item ">
             <a class="nav-item-hold" href="{{ route('warehouseman.inventories.index') }}">
                 <i class="nav-icon i-traffic-Light"></i>
-                <span class="nav-text">İnvertar əməliyyatları</span>
+                <span class="nav-text">Təhkim olunma</span>
             </a>
             <div class="triangle"></div>
         </li>
@@ -50,7 +50,7 @@
             <a class=""
                href="{{ route('warehouseman.products.index') }}">
                 <i class="nav-icon i-Cash-register-2"></i>
-                <span class="item-name">İnventarlar</span>
+                <span class="item-name">Saxlanc anbarı</span>
             </a>
         </li>
 
@@ -58,7 +58,14 @@
             <a class=""
                href="{{ route('warehouseman.invoices.index') }}">
                 <i class="nav-icon i-Cash-register-2"></i>
-                <span class="item-name">Qaimələr</span>
+                <span class="item-name">E-qaimələr</span>
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class=""
+               href="{{ route('warehouseman.hand-registers.index') }}">
+                <i class="nav-icon i-Cash-register-2"></i>
+                <span class="item-name">Fakturalar</span>
             </a>
         </li>
     </ul>

@@ -25,10 +25,19 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6 form-group mb-3">
+                                        <div class="col-md-3 form-group mb-3">
+                                            <div class="select_label ui sub header ">Seçim edin</div>
+                                            <select frequency="true" id="register_or_new" name="register_or_new" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                                <option value="">Seçin</option>
+                                                <option value="new">Yeni</option>
+                                                <option value="old">Əl qaimələri ilə</option>
+                                            </select>
+                                            <span class="text-danger error_message" id="vendors_idError"></span>
+                                        </div>
+                                        <div class="col-md-3 form-group mb-3 " id="vendors-section">
                                             <div class="select_label ui sub header ">Təminatçılar</div>
                                             <select frequency="true" id="vendors_select" name="vendors_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
-                                                <option value="">Tezliyi seçin və ya daxil edin</option>
+                                                <option value="">Təminatçı seçin</option>
                                                 @forelse($vendors as $item)
                                                     <option value="{{$item->id}}" {{ old('vendors_id')==$item->id ? 'selected' : '' }}>{{$item->name}}</option>
                                                 @empty
@@ -39,55 +48,92 @@
                                             <span class="text-danger error_message" id="vendors_idError"></span>
                                         </div>
 
-                                        <div class="col-md-6 form-group mb-3">
-                                            <div class="select_label ui sub header ">E-qaimə nömrəsi</div>
+                                        <div class="col-md-3 form-group mb-3 " id="categories-section">
+                                            <div class="select_label ui sub header ">Əsas kateqoriya</div>
+                                            <select frequency="true" id="categories_id" name="main_categories_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                                <option value="">Əsas kategoriya seçin</option>
+                                                @forelse($categories as $category)
+                                                    <option value="{{$category->id}}" {{ old('categories_id')==$category->id ? 'selected' : '' }}>{{$category->name}}</option>
+                                                @empty
+                                                    <option disabled selected>Məlumat yoxdur</option>
+                                                @endforelse
+
+                                            </select>
+                                            <span class="text-danger error_message" id="vendors_idError"></span>
+                                        </div>
+
+                                        <div class="col-md-3 form-group mb-3">
+                                            <div class="select_label ui sub header ">E-qaimə nömrəsi / Seria nömrəsi</div>
                                             <div class="ui input">
                                                 <input id="e_invoice_number" value="{{old('e_invoice_number')}}"
-                                                       name="e_invoice_number" type="text" placeholder="">
+                                                       name="e_invoice_number" type="text" placeholder="E-Qaimə nömrəsi">
+                                                <input id="e_invoice_serial_number" value="{{old('e_invoice_number')}}"
+                                                       name="e_invoice_serial_number" type="text" placeholder="Seria nömrəsi">
                                             </div>
                                             <span class="text-danger error_message" id="e_invoice_numberError"></span>
                                         </div>
+
+                                        <div class="col-md-3 form-group mb-3">
+                                            <div class="select_label ui sub header ">E-qaimə tarixi</div>
+                                            <div class="ui input">
+                                                <input id="e_invoice_date"
+                                                       name="e_invoice_date" type="date">
+                                            </div>
+                                            <span class="text-danger error_message" id="e_invoice_numberError"></span>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row position-relative form_block" id="hand_registers_section">
+                                <div class="col-md-3 form-group mb-3">
+                                    <div class="select_label ui sub header ">Əl qaiməsi</div>
+                                    <select frequency="true" id="hand_registers_id" multiple name="hand_registers_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                        <option value="">Əl qaimələri seçin</option>
+                                        @foreach($registers as $register)
+                                            <option value="{{ $register->id }}">{{ $register->register_number }} - {{ $register->total_amount }} AZN  ({{ $register->register_date }})</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger error_message" id="subcategories_idError"></span>
+                                </div>
+                            </div>
+
                             <div class="row position-relative form_block" id="formRow">
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Kateqoriya</div>
-                                    <select frequency="true" id="categories_select" name="categories_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
-                                        <option value="">Kateqoriya seçin</option>
-                                        @forelse($cats as $item)
-                                            <option value="{{$item->id}}" {{ old('categories_id')==$item->id ? 'selected' : '' }}>{{$item->name}}</option>
-                                        @empty
-                                            <option disabled selected>Məlumat yoxdur</option>
-                                        @endforelse
+                                    <select frequency="true" id="subcategories_id" name="subcategories_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                        <option value="">Alt kateqoriya seçin</option>
 
                                     </select>
-                                    <span class="text-danger error_message" id="categories_idError"></span>
+                                    <span class="text-danger error_message" id="subcategories_idError"></span>
                                 </div>
 
                                 <div class="col-md-3 form-group mb-3">
-                                    <div class="select_label ui sub header ">AVR kodu</div>
+                                    <div class="select_label ui sub header ">Təsvir</div>
                                     <div class="ui input">
-                                        <input id="avr_code" required value="{{old('avr_code')}}"
-                                               name="avr_code[]" type="text" placeholder="">
+                                        <input id="serial_number" value="{{old('serial_number')}}"
+                                               name="serial_number[]" type="text" placeholder="Seria nömrəsini daxil edin">
                                     </div>
-                                    <span class="text-danger error_message" id="avr_codeError"></span>
+                                    <span class="text-danger error_message" id="serial_numberError"></span>
                                 </div>
 
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Material tipi</div>
-                                    <div class="ui input">
-                                        <input id="material_type" required value="{{old('material_type')}}"
-                                               name="material_type[]" type="text" placeholder="">
-                                    </div>
-                                    <span class="text-danger error_message" id="material_typeError"></span>
+                                    <select frequency="true" id="material_type" name="material_type[]" class="form-control ui fluid search dropdown create_form_dropdown material_type_select_cl">
+                                        <option disabled selected>Material tipini seçin</option>
+                                        <option value="Azqiymətli/Tezköhnələn">Azqiymətli/Tezköhnələn</option>
+                                        <option value="Əsas inventar">Əsas inventar</option>
+
+                                    </select>
+                                    <span class="text-danger error_message" id="activity_statusError"></span>
                                 </div>
 
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İnventar adı</div>
                                     <div class="ui input">
-                                        <input id="product_name" required value="{{old('product_name')}}"
-                                               name="product_name[]" type="text" placeholder="">
+                                        <input id="product_name" value="{{old('product_name')}}"
+                                               name="product_name[]" type="text" placeholder="İnventar adını daxil edin">
                                     </div>
                                     <span class="text-danger error_message" id="product_nameError"></span>
                                 </div>
@@ -95,8 +141,8 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Qiyməti</div>
                                     <div class="ui input">
-                                        <input id="price" required value="{{old('price')}}"
-                                               name="price[]" type="number" step=any placeholder="">
+                                        <input id="price" value="{{old('price')}}"
+                                               name="price[]" type="number" step=any placeholder="Ədəd üçün qiymət">
                                     </div>
                                     <span class="text-danger error_message" id="priceError"></span>
                                 </div>
@@ -104,8 +150,8 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İnventar dəyəri</div>
                                     <div class="ui input">
-                                        <input id="inventory_cost" required value="{{old('inventory_cost')}}"
-                                               name="inventory_cost[]" type="number" step=any placeholder="">
+                                        <input id="inventory_cost" value="{{old('inventory_cost')}}"
+                                               name="inventory_cost[]" type="number" step=any placeholder="İnventar dəyəri">
                                     </div>
                                     <span class="text-danger error_message" id="inventory_costError"></span>
                                 </div>
@@ -113,17 +159,17 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Ölçü</div>
                                     <div class="ui input">
-                                        <input id="size" required value="{{old('size')}}"
-                                               name="size[]" type="text" placeholder="">
+                                        <input id="size" required value="ədəd"
+                                               name="size[]"  type="text" placeholder="">
                                     </div>
                                     <span class="text-danger error_message" id="sizeError"></span>
                                 </div>
 
                                 <div class="col-md-3 form-group mb-3">
-                                    <div class="select_label ui sub header ">Stok</div>
+                                    <div class="select_label ui sub header ">Alış sayı</div>
                                     <div class="ui input">
-                                        <input id="purchase_count" required value="{{old('purchase_count')}}"
-                                               name="purchase_count[]" type="number" placeholder="">
+                                        <input id="purchase_count" value="{{old('purchase_count')}}"
+                                               name="purchase_count[]" type="number" placeholder="Alış sayını daxil edin">
                                     </div>
                                     <span class="text-danger error_message" id="purchase_countError"></span>
                                 </div>
@@ -131,7 +177,7 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Aktivlik statusu</div>
                                     <select frequency="true" id="activity_status" name="activity_status[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
-                                        <option value="">Aktivlik statusu seçin</option>
+                                        <option disabled selected>Aktivlik statusu seçin</option>
                                         <option value="1">Aktiv</option>
                                         <option value="0">Deaktiv</option>
 
@@ -142,7 +188,7 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Statusu</div>
                                     <select frequency="true" id="status" name="status[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
-                                        <option value="">Statusu seçin</option>
+                                        <option disabled selected>Statusu seçin</option>
 
                                         <option value="Yeni">Yeni</option>
                                         <option value="İşlənmiş">İşlənmiş</option>
@@ -182,63 +228,95 @@
 @endsection
 @section('js')
     <script>
-        let rowCount = 0;
 
-        addNewBtn.addEventListener('click', function () {
-            rowCount++;
-            const formsContainer = document.querySelector('.form_inputs_container');
-            const defaultForm = document.getElementById('formRow');
+        $(document).ready(function () {
+            $('#hand_registers_section').hide();
+            $('#vendors-section').hide();
+            $('#categories-section').hide();
+            $('#addRow').hide();
+            $('#formRow').hide();
+            $('#register_or_new').on("change", function (e) {
+                if(e.target.value == "new")
+                {
+                    $('#hand_registers_section').fadeOut();
+                    $('#formRow').fadeIn();
+                    $('#addRow').fadeIn();
+                    $('#vendors-section').fadeIn();
+                    $('#categories-section').fadeIn();
 
-            const clone = defaultForm.cloneNode(true);
-            clone.id += rowCount;
-            const inputs = clone.querySelectorAll('input');
-            const selects = clone.querySelectorAll('select');
-            const error_messages = clone.querySelectorAll('.error_message');
-            const delete_button = clone.querySelectorAll('.delete_block');
+                    let rowCount = 0;
 
-            inputs.forEach((input) => {
-                const $input = $(input);
-                const $textDiv = $input.siblings('div.text');
-                $textDiv.empty();
-                input.value = '';
-                input.id ? input.id += rowCount : null;
-            });
+                    addNewBtn.addEventListener('click', function () {
+                        rowCount++;
+                        const formsContainer = document.querySelector('.form_inputs_container');
+                        const defaultForm = document.getElementById('formRow');
 
-            selects.forEach((select) => {
-                const $select = $(select);
-                $select.find(":selected").val('');
-                const $textDiv = $select.siblings('div.text');
-                $textDiv.empty();
-                if (select.id) {
-                    select.id += rowCount;
+                        const clone = defaultForm.cloneNode(true);
+                        clone.id += rowCount;
+                        const inputs = clone.querySelectorAll('input');
+                        const selects = clone.querySelectorAll('select');
+                        const error_messages = clone.querySelectorAll('.error_message');
+                        const delete_button = clone.querySelectorAll('.delete_block');
+
+                        inputs.forEach((input) => {
+                            const $input = $(input);
+                            const $textDiv = $input.siblings('div.text');
+                            $textDiv.empty();
+                            input.value = '';
+                            input.id ? input.id += rowCount : null;
+                        });
+
+                        selects.forEach((select) => {
+                            const $select = $(select);
+                            $select.find(":selected").val('');
+                            const $textDiv = $select.siblings('div.text');
+                            $textDiv.empty();
+                            if (select.id) {
+                                select.id += rowCount;
+                            }
+                        });
+
+                        error_messages.forEach(message => message.id ? message.id += rowCount : null);
+
+                        delete_button.forEach(button => button.id ? button.id += rowCount : null);
+
+                        formsContainer.appendChild(clone);
+
+                        const dynamicForm = document.getElementById(`formRow${rowCount}`);
+                        if(rowCount > 0){
+                            const deleteContainer = document.createElement('div');
+                            deleteContainer.id = `delete_container${rowCount}`;
+                            deleteContainer.classList.add('delete_block');
+                            deleteContainer.textContent = 'Bloku sil';
+                            dynamicForm.appendChild(deleteContainer);
+                        };
+
+
+                        $('.ui.create_form_dropdown').dropdown({
+                            clearable: true,
+                        });
+
+                        $('.vendors_select_cl').dropdown({
+                            allowAdditions: true,
+                            clearable: true,
+                        });
+                    });
                 }
-            });
+                else {
+                    $('#hand_registers_section').fadeIn();
+                    $('#formRow').fadeOut();
+                    $('#addRow').fadeOut();
+                    $('#vendors-section').fadeOut();
+                    $('#categories-section').fadeOut();
+                    $('.delete_block').each(function( e ) {
+                        this.click();
+                    });
 
-            error_messages.forEach(message => message.id ? message.id += rowCount : null);
-
-            delete_button.forEach(button => button.id ? button.id += rowCount : null);
-
-            formsContainer.appendChild(clone);
-
-            const dynamicForm = document.getElementById(`formRow${rowCount}`);
-            if(rowCount > 0){
-                const deleteContainer = document.createElement('div');
-                deleteContainer.id = `delete_container${rowCount}`;
-                deleteContainer.classList.add('delete_block');
-                deleteContainer.textContent = 'Bloku sil';
-                dynamicForm.appendChild(deleteContainer);
-            };
+                }
+            })
+        })
 
 
-            $('.ui.create_form_dropdown').dropdown({
-                clearable: true,
-            });
-
-            $('.vendors_select_cl').dropdown({
-                allowAdditions: true,
-                clearable: true,
-            });
-        });
 
         $(document).on('click', '[id^="delete_container"]', function(e) {
             const number = e.target.id.substring(16, e.target.id.length);
@@ -248,6 +326,29 @@
             fields = fields.filter(field => field.num != number)
             console.log(fields)
         });
+
+        $('#categories_id').on("change", function (e) {
+            const main_categories_id = e.target.value;
+            $.ajax({
+                url:"{{ url('warehouseman/get-subcategories-by-main-category') }}",
+                type:"POST",
+                data:{
+                    "_token":"{{csrf_token()}}",
+                    "categories_id":main_categories_id
+                },
+                success:function(response){
+                    let subcategory = $('#subcategories_id');
+                    subcategory.empty();
+                    $.each(response, function(index, category) {
+                        subcategory.append($("<option>", {
+                            value: category.id,
+                            text: category.name
+                        }));
+                    });
+                    subcategory.attr('disabled', false);
+                }
+            })
+        })
 
     </script>
 @endsection

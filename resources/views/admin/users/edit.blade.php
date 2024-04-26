@@ -25,10 +25,10 @@
                         <div class="row">
                             <div class="col-md-4 form-group mb-3">
                                 <div class="select_label ui sub header ">Departament</div>
-                                <select frequency="true" required id="frequency_select" name="department" class="form-control ui fluid search dropdown create_form_dropdown frequency_select_cl">
+                                <select frequency="true" id="frequency_select" name="department" class="form-control ui fluid search dropdown create_form_dropdown frequency_select_cl">
                                     <option value="">Departament seçin</option>
                                     @forelse($departments as $item)
-                                        <option value="{{$item->name}}" {{  $user->department == $item->name ? 'selected' : '' }}>{{$item->name}}</option>
+                                        <option value="{{$item->name}}" {{ !is_null($user->departments) && $user->departments_id == $item->id ? 'selected' : '' }}>{{$item->name}}</option>
                                     @empty
                                         <option disabled selected>Məlumat yoxdur</option>
                                     @endforelse
@@ -41,10 +41,10 @@
 
                             <div class="col-md-4 form-group mb-3">
                                 <div class="select_label ui sub header ">Şöbə</div>
-                                <select frequency="true" required id="frequency_select" name="branch" class="form-control ui fluid search dropdown create_form_dropdown frequency_select_cl">
+                                <select frequency="true" id="frequency_select" name="branch" class="form-control ui fluid search dropdown create_form_dropdown frequency_select_cl">
                                     <option value="">Şöbə seçin</option>
                                     @forelse($branches as $item)
-                                        <option value="{{$item->name}}" {{  $user->branch ==$item->name ? 'selected' : '' }}>{{$item->name}}</option>
+                                        <option value="{{$item->name}}" {{ !is_null($user->branches) && $user->branches_id == $item->id ? 'selected' : '' }}>{{$item->name}}</option>
                                     @empty
                                         <option disabled selected>Məlumat yoxdur</option>
                                     @endforelse
@@ -57,10 +57,10 @@
 
                             <div class="col-md-4 form-group mb-3">
                                 <div class="select_label ui sub header ">Otaq</div>
-                                <select frequency="true" required id="frequency_select" name="room" class="form-control ui fluid search dropdown create_form_dropdown frequency_select_cl">
+                                <select frequency="true" id="frequency_select" name="room" class="form-control ui fluid search dropdown create_form_dropdown frequency_select_cl">
                                     <option value="">Otaq seçin</option>
                                     @forelse($rooms as $item)
-                                        <option value="{{$item->name}}" {{  $user->room ==$item->name ? 'selected' : '' }}>{{$item->name}}</option>
+                                        <option value="{{$item->name}}" {{ !is_null($user->rooms) && $user->rooms_id == $item->id ? 'selected' : '' }}>{{$item->name}}</option>
                                     @empty
                                         <option disabled selected>Məlumat yoxdur</option>
                                     @endforelse
@@ -99,7 +99,7 @@
                                 <div class="select_label ui sub header ">Şifrə
                                 </div>
                                 <div class="ui input">
-                                    <input id="test" required min="6" max="50" name="password"
+                                    <input id="test" min="6" max="50" name="password"
                                            type="password" placeholder="********">
                                     @if($errors->has('password'))
                                         <span class="text-danger">{{ $errors->first('password') }}</span>

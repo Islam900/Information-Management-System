@@ -15,8 +15,14 @@
                                 <th>Ad soyad</th>
                                 <th>Departament</th>
                                 <th>Şöbə</th>
+                                <th>Vəzifə</th>
                                 <th>Otaq</th>
                                 <th>Email</th>
+                                @if($user->local_numbers)
+                                    <th>
+                                        Daxili nömrələr
+                                    </th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
@@ -24,15 +30,30 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name}}</td>
                                 <td>
-                                    {{ $item->user->departments->name }}
+                                    {{ !is_null($user->departments) ? $user->departments->name : '' }}
                                 </td>
                                 <td>
-                                    {{ !is_null($item->user->branches) ? $item->user->branches->name : '' }}
+                                    {{ !is_null($user->branches) ? $user->branches->name : '' }}
                                 </td>
                                 <td>
-                                    {{ $item->user->room }}
+                                    {{ !is_null($user->positions) ? $user->positions->name : '' }}
+                                </td>
+                                <td>
+                                    {{ $user->room }}
                                 </td>
                                 <td>{{ $user->email}}</td>
+                                @if($user->local_numbers)
+                                    <td>
+                                        @foreach($user->local_numbers as $number)
+                                            <button class="btn btn-primary btn-lg">
+                                           <span>
+                                               <i class="nav-icon i-Telephone"></i>
+                                           </span>
+                                                <strong>{{$number->number}}</strong>
+                                            </button>
+                                        @endforeach
+                                    </td>
+                                @endif
                             </tr>
                             </tbody>
                         </table>
@@ -54,6 +75,7 @@
                                 <th>№</th>
                                 <th>E-Qaimə nömrəsi</th>
                                 <th>İnventar nömrəsi</th>
+                                <th>Seria nömrəsi</th>
                                 <th>AVR kodu</th>
                                 <th>İnventar adı</th>
                                 <th>Kateqoriya</th>
@@ -70,6 +92,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->products->invoices->e_invoice_number }}</td>
                                     <td>{{ $item->inventory_number}}</td>
+                                    <td>{{ $item->serial_number}}</td>
                                     <td>{{ $item->products->avr_code }}</td>
                                     <td>{{ $item->products->product_name }}</td>
                                     <td>{{ $item->products->categories->name }}</td>

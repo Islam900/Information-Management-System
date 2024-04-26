@@ -13,6 +13,15 @@ class CategoriesSeeder extends Seeder
      */
     public function run(): void
     {
+        $categories_main = [
+            'İKT avadanlığı',
+            'Təsərrüfat',
+            'Dəftərxana',
+            'Katriclər',
+            'Çap-mətbəə',
+            'İçməli su',
+        ];
+
         $categories = [
             'Kondisioner',
             'Notebook',
@@ -56,10 +65,20 @@ class CategoriesSeeder extends Seeder
             'Tester'
         ];
 
-        foreach ($categories as $item)
+        foreach ($categories_main as $item)
         {
             Categories::create([
+                'parent_id' => NULL,
                 'name' => $item,
+                'status' => 1
+            ]);
+        }
+
+        foreach ($categories as $cat_item)
+        {
+            Categories::create([
+                'parent_id' => 1,
+                'name' => $cat_item,
                 'status' => 1
             ]);
         }

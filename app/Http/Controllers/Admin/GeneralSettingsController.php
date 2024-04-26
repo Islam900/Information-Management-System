@@ -9,21 +9,57 @@ use App\Models\TicketReasons;
 use App\Models\User;
 use App\Models\Departments;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class GeneralSettingsController extends Controller
 {
     public function index()
     {
         $item = GeneralSettings::first();
-        $departments = Departments::where('status', 1)->get();
-        $branches = Branches::where('status', 1)->get();
-        $users = User::all();
-        $reasons = TicketReasons::all();
-        return view('admin.general-settings.index', compact('item', 'departments', 'branches', 'users', 'reasons'));
+        $departments = Departments::withCount('branches')->withCount('users')->where('status', 1)->get();
+        $branches = Branches::withCount('users')->where('status', 1)->get();
+        $users = User::where('type', 'employee')->get();
+        $reasons = TicketReasons::withCount('tickets')->get();
+        $roles = Role::withCount('permissions')->withCount('users')->get();
+        $permissions = Permission::all();
+        $technical_users = User::where('type', '!=', 'employee')->get();
+        return view('admin.general-settings.index', compact(
+            'item',
+            'departments',
+            'branches',
+            'users',
+            'reasons',
+            'roles',
+            'permissions',
+            'technical_users'
+        ));
     }
 
     public function update_general_settings(Request $request)
     {
+
+        $report_data = [
+            'departments' => [],
+            'branches' => [],
+            'users' => []
+        ];
+        foreach ($request->w_user_id as $user_id) {
+            $user = User::find($user_id);
+            $departments_id = !is_null($user->departments) ? $user->departments->id : NULL;
+            $branches_id = !is_null($user->branches) ? $user->branches->id : NULL;
+
+            if (!in_array($departments_id, $report_data['departments'])) {
+                $report_data['departments'][] = $departments_id;
+            }
+
+            if (!in_array($branches_id, $report_data['branches'])) {
+                $report_data['branches'][] = $branches_id;
+            }
+
+            $report_data['users'][] = $user_id;
+        }
+
         $general_settings = GeneralSettings::updateOrCreate(
             ['id' => 1],
             [
@@ -31,6 +67,7 @@ class GeneralSettingsController extends Controller
                 'repair_mode' => isset($request->repair_mode) && $request->repair_mode == "on" ? 1 : 0,
                 'repair_mode_message' => $request->repair_mode_message ?? NULL,
                 'weekly_report_module' => isset($request->weekly_report_module) && $request->weekly_report_module == "on" ? 1 : 0,
+                'weekly_report_module_users' => isset($request->weekly_report_module) && $request->weekly_report_module == "on" ? json_encode($report_data) : json_encode([]),
                 'ticket_module' => isset($request->ticket_module) && $request->ticket_module == "on" ? 1 : 0,
                 'delivery_act_generation' => isset($request->delivery_act_generation) && $request->delivery_act_generation == "on" ? 1 : 0,
                 'delivery_act_content' => $request->delivery_act_content ?? NULL,
@@ -56,4 +93,34 @@ class GeneralSettingsController extends Controller
         return redirect()->back()->with('success', 'Məlumatlar əlavə edildi');
     }
 
+    public function store_technical_users(Request $request)
+    {
+        $data = $request->all();
+        $data['password'] = bcrypt($request->email);
+        $data['rooms_id'] = 1;
+        $user = User::create($data);
+
+        $role = Role::find($request->role);
+        $user->assignRole($role);
+        return redirect()->back()->with('success', 'Məlumatlar əlavə edildi');
+    }
+
+    public function store_roles(Request $request)
+    {
+        $role = Role::create([
+            'name' => $request->role_name,
+            'guard' => 'web'
+        ]);
+        $role->syncPermissions($request->permissions);
+        return redirect()->back()->with('success', 'Məlumatlar əlavə edildi');
+    }
+
+    public function store_permissions(Request $request)
+    {
+        Permission::create([
+            'name' => $request->permission_name,
+            'guard_name' => 'web'
+        ]);
+        return redirect()->back()->with('success', 'Məlumatlar əlavə edildi');
+    }
 }

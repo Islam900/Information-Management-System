@@ -31,7 +31,7 @@
                                     <td>{{$item->products->product_name}}</td>
                                     <td>{{$item->inventory_number}}</td>
                                     <td>
-                                        {{ \Illuminate\Support\Facades\Auth::user()->departments->name }}
+                                        {{ !is_null(\Illuminate\Support\Facades\Auth::user()->departments) ? \Illuminate\Support\Facades\Auth::user()->departments->name : '' }}
                                     </td>
                                     <td>
                                         {{ !is_null(\Illuminate\Support\Facades\Auth::user()->branches) ? \Illuminate\Support\Facades\Auth::user()->branches->name : '' }}

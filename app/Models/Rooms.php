@@ -12,4 +12,14 @@ class Rooms extends Model
     protected $table = 'rooms';
     protected $fillable = ['name', 'status'];
 
+    public function local_numbers()
+    {
+        return $this->hasMany(LocalNumbers::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
 }

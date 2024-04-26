@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invoices_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('hand_registers_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('categories_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('unical_code')->default(\Illuminate\Support\Str::random(10));
             $table->string('material_type', 15);
-            $table->string('avr_code', 15);
-            $table->string('product_name', 50);
+            $table->string('avr_code', )->nullable();
+            $table->string('serial_number')->nullable();
+            $table->string('product_name', );
             $table->float('price');
             $table->string('size', 15);
-            $table->integer('purchase_count')->default(0);
-            $table->integer('stock')->default(0);
             $table->float('inventory_cost');
             $table->integer('activity_status')->default(1);
             $table->string('status')->default("Yeni");
