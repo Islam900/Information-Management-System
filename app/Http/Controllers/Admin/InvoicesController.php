@@ -7,8 +7,11 @@ use App\Models\Categories;
 use App\Models\HandRegisters;
 use App\Models\Invoices;
 use App\Models\Products;
+use App\Models\Stocks;
 use App\Models\Vendors;
+use App\Models\Warehouses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class InvoicesController extends Controller
 {
@@ -26,10 +29,11 @@ class InvoicesController extends Controller
      */
     public function create()
     {
+        $whs = Warehouses::where('status', 1)->get();
         $categories = Categories::whereNull('parent_id')->where('status', 1)->get();
         $vendors = Vendors::where('status', 1)->get();
         $registers = HandRegisters::whereNull('invoices_id')->get();
-        return view('admin.invoices.create', compact('categories', 'vendors', 'registers'));
+        return view('admin.invoices.create', compact('categories', 'vendors', 'registers', 'whs'));
     }
 
     /**
@@ -39,35 +43,47 @@ class InvoicesController extends Controller
     {
 
         if ($request->register_or_new == "new") {
-            $total_amount = 0;
-            $productsData = [];
+            $total_product_price = 0;
+            foreach ($request->product_name as $product_key => $item) {
+                $unical_code = Str::random(10);
+                for($i=0;$i<$request->purchase_count[$product_key];$i++){
+                    $rowName = $request->unique_row_name[$product_key];
+                    $clean_code = $request->$rowName[$i];
+                    $products[] = [
+                        'invoices_id' => NULL,
+                        'hand_registers_id' => NULL,
+                        'categories_id' => $request->subcategories_id[$product_key],
+                        'unical_code' => $unical_code,
+                        'material_type' => $request->material_type[$product_key],
+                        'avr_code' => $request->material_type[$product_key] == 'Əsas inventar' ? NULL : $clean_code,
+                        'serial_number' => $request->material_type[$product_key] != 'Əsas inventar' ? NULL : $clean_code,
+                        'product_name' => $item,
+                        'price' => $request->price[$product_key],
+                        'size' => $request->size[$product_key],
+                        'inventory_cost' => $request->inventory_cost[$product_key],
+                        'activity_status' => $request->activity_status[$product_key],
+                        'status' => $request->status[$product_key]
+                    ];
+                    $total_product_price += $request->price[$product_key];
+                }
 
-            foreach ($request->price as $pr_key => $price) {
-                $total_amount += $price * $request->purchase_count[$pr_key];
-                $productsData[] = [
-                    'invoices_id' => null,
-                    'categories_id' => $request->subcategories_id[$pr_key],
-                    'material_type' => $request->material_type[$pr_key],
-                    'avr_code' => null,
-                    'serial_number' => $request->serial_number[$pr_key],
-                    'product_name' => $request->product_name[$pr_key],
-                    'price' => $price,
-                    'size' => $request->size[$pr_key],
-                    'purchase_count' => $request->purchase_count[$pr_key],
-                    'stock' => $request->purchase_count[$pr_key],
-                    'inventory_cost' => $request->inventory_cost[$pr_key],
-                    'activity_status' => $request->activity_status[$pr_key],
-                    'status' => $request->status[$pr_key]
+                $stock_data = [
+                    'warehouses_id' => $request->warehouses_id,
+                    'product_unical_code' => $unical_code,
+                    'purchase_count' => $request->purchase_count[$product_key],
+                    'stock_count' => $request->purchase_count[$product_key],
                 ];
+
+                Stocks::create($stock_data);
             }
 
             $invoice = Invoices::create([
                 'vendors_id' => $request->vendors_id,
                 'categories_id' => $request->main_categories_id,
-                'e_invoice_number' => $request->e_invoice_number ?? null,
-                'e_invoice_serial_number' => $request->e_invoice_serial_number ?? null,
-                'total_amount' => $total_amount,
-                'edv_total_amount' => $total_amount * 1.18,
+                'e_invoice_number' => $request->e_invoice_number,
+                'e_invoice_serial_number' => $request->e_invoice_serial_number,
+                'total_amount' => $total_product_price,
+                'edv_total_amount' => $total_product_price + $total_product_price * 0.18,
                 'note' => $request->note,
                 'e_invoice_date' => $request->e_invoice_date
             ]);
@@ -75,7 +91,12 @@ class InvoicesController extends Controller
             Products::insert(array_map(function ($data) use ($invoice) {
                 $data['invoices_id'] = $invoice->id;
                 return $data;
-            }, $productsData));
+            }, $products));
+
+
+
+
+
         } else {
             $total_register_amount = HandRegisters::whereIn('id', $request->hand_registers_id)->sum('total_amount');
             $total_register_amount_edv = HandRegisters::whereIn('id', $request->hand_registers_id)->sum('edv_total_amount');
@@ -104,7 +125,8 @@ class InvoicesController extends Controller
      */
     public function show(string $id)
     {
-        $invoice = Invoices::with('products')->find($id);
+        $invoice = Invoices::with('products', 'hand_registers.products')->find($id);
+
         return view('admin.invoices.show', compact('invoice'));
     }
 

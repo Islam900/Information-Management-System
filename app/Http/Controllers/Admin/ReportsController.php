@@ -13,8 +13,9 @@ class ReportsController extends Controller
      */
     public function index()
     {
-        $reports = Reports::all();
-        return view('admin.reports.index', compact('reports'));
+        $reports = Reports::with('reports_subjects')->get();
+        $dates = Reports::select('report_date')->distinct()->get();
+        return view('admin.reports.index', compact('reports', 'dates'));
     }
 
     /**

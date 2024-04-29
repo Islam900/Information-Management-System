@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('helpdesk_id')->nullable()->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('inventories_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('appointments_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('ticket_reasons_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('ticket_number')->unique();
             $table->integer('status')->default(0);

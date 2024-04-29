@@ -37,7 +37,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input id="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email ünvanınızı daxil edin..." type="email">
+                                <input id="email" class="form-control @error('email') is-invalid @enderror" required name="email" value="{{ old('email') }}" placeholder="Email ünvanınızı daxil edin..." type="email">
                             </div>
                             <div class="form-group">
                                 <label for="password">Şifrə</label>

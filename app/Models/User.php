@@ -52,7 +52,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function inventories()
+    public function appointments()
     {
         return $this->hasMany(Appointments::class);
     }

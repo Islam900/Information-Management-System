@@ -12,7 +12,7 @@ class Tickets extends Model
     protected $fillable = [
         'user_id',
         'helpdesk_id',
-        'inventories_id',
+        'appointments_id',
         'ticket_reasons_id',
         'ticket_number',
         'status',
@@ -31,7 +31,7 @@ class Tickets extends Model
         return $this->belongsTo(User::class, 'helpdesk_id');
     }
 
-    public function inventories()
+    public function appointments()
     {
         return $this->belongsTo(Appointments::class);
     }

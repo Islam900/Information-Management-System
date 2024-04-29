@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Appointments extends Model
 {
     use HasFactory;
-    protected $table = 'inventories';
+    protected $table = 'appointments';
     protected $fillable = ['products_id', 'user_id', 'inventory_number'];
 
     public function products()

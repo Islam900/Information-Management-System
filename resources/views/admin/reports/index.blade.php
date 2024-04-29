@@ -1,6 +1,30 @@
 @extends('admin.layouts.app')
 @section('content')
 
+    <style>
+        .data_head_container{
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+        }
+
+        .data_head_container a{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data_head_container .profile_container{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .data_head_container .profile_owner{
+            color: #6a6a6a;
+        }
+    </style>
+
     <div class="row mb-4">
         <div class="col-md-12 mb-4">
 
@@ -19,7 +43,12 @@
                         @foreach($reports as $report)
                             <div class="card p-8">
                                 <div class="card-header header-elements-inline">
-                                    <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
+                                    <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0 data_head_container">
+                                        <div class="profile_container">
+                                            <div class="profile_img"><i class="nav-icon i-Checked-User" style="font-size: 26px;"></i></div>
+                                            <div class="profile_owner">{{ $report->user->name }}</div>
+                                        </div>
+
                                         <a data-toggle="collapse" class="text-default collapsed"
                                            href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">
                                             <span><i class="i-Data-Settings ul-accordion__font"> </i></span>

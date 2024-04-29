@@ -26,7 +26,8 @@ use \App\Http\Controllers\Admin\{
     ProjectsController,
     ReportsController,
     HandRegistersController,
-    LocalNumbersController
+    LocalNumbersController,
+    WarehousesController
 };
 
 use \App\Http\Controllers\Warehouseman\{
@@ -93,6 +94,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
     Route::resource('users', UsersController::class);
     Route::resource('local-numbers', LocalNumbersController::class);
+
+    Route::resource('warehouses', WarehousesController::class);
 
     /* -------------------- GENERAL SETTINGS ---------------------- */
     Route::get('general-settings', [GeneralSettingsController::class, 'index'])->name('general-settings.index');

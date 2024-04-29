@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('hand_registers_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('categories_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('unical_code')->default(\Illuminate\Support\Str::random(10));
-            $table->string('material_type', 15);
+            $table->string('material_type', 25);
             $table->string('avr_code', )->nullable();
             $table->string('serial_number')->nullable();
             $table->string('product_name', );

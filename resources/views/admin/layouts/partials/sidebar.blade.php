@@ -137,9 +137,9 @@
         </li>
         <li class="nav-item ">
             <a class=""
-               href="{{ route('admin.products.index') }}">
+               href="{{ route('admin.warehouses.index') }}">
                 <i class="nav-icon i-Cash-register-2"></i>
-                <span class="item-name">Saxlanc anbarı</span>
+                <span class="item-name">Saxlanc anbarları</span>
             </a>
         </li>
 

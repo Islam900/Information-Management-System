@@ -73,6 +73,17 @@
                                             <span class="text-danger error_message" id="e_invoice_numberError"></span>
                                         </div>
 
+                                            <div class="col-md-3 form-group mb-3">
+                                                <div class="select_label ui sub header ">Anbar</div>
+                                                <select frequency="true" id="warehouses_id"  name="warehouses_id" class="form-control ui fluid search dropdown create_form_dropdown warehouses_select_cl">
+                                                    <option value="">Anbar seçin</option>
+                                                    @foreach($whs as $wh)
+                                                        <option value="{{ $wh->id }}">{{ $wh->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <span class="text-danger error_message" id="subcategories_idError"></span>
+                                            </div>
+
                                         <div class="col-md-3 form-group mb-3">
                                             <div class="select_label ui sub header ">E-qaimə tarixi</div>
                                             <div class="ui input">
@@ -104,18 +115,8 @@
                                     <div class="select_label ui sub header ">Kateqoriya</div>
                                     <select frequency="true" id="subcategories_id" name="subcategories_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">Alt kateqoriya seçin</option>
-
                                     </select>
                                     <span class="text-danger error_message" id="subcategories_idError"></span>
-                                </div>
-
-                                <div class="col-md-3 form-group mb-3">
-                                    <div class="select_label ui sub header ">Təsvir</div>
-                                    <div class="ui input">
-                                        <input id="serial_number" value="{{old('serial_number')}}"
-                                               name="serial_number[]" type="text" placeholder="Seria nömrəsini daxil edin">
-                                    </div>
-                                    <span class="text-danger error_message" id="serial_numberError"></span>
                                 </div>
 
                                 <div class="col-md-3 form-group mb-3">
@@ -124,6 +125,7 @@
                                         <option disabled selected>Material tipini seçin</option>
                                         <option value="Azqiymətli/Tezköhnələn">Azqiymətli/Tezköhnələn</option>
                                         <option value="Əsas inventar">Əsas inventar</option>
+                                        <option value="Mal-material">Mal-material</option>
 
                                     </select>
                                     <span class="text-danger error_message" id="activity_statusError"></span>
@@ -165,13 +167,59 @@
                                     <span class="text-danger error_message" id="sizeError"></span>
                                 </div>
 
-                                <div class="col-md-3 form-group mb-3">
-                                    <div class="select_label ui sub header ">Alış sayı</div>
-                                    <div class="ui input">
-                                        <input id="purchase_count" value="{{old('purchase_count')}}"
-                                               name="purchase_count[]" type="number" placeholder="Alış sayını daxil edin">
+                                <style>
+                                    .purchase_count_container{
+                                        display: flex;
+                                        align-items: flex-end;
+                                        width: 100%;
+                                        gap: 20px;
+                                    }
+
+                                    .purchase_count_container .input_container{
+                                        flex: 1 1 75%;
+                                    }
+
+                                    .purchase_count_container .main_inventory_btn_cls{
+                                        flex: 1 1 25%;
+                                        height: 45px;
+                                    }
+
+                                    .additional_inputs_container{
+                                        border: 1px solid #adaaaa;
+                                        padding: 16px 24px;
+                                        margin: 22px 15px;
+                                        border-radius: 4px;
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 12px;
+                                        width: 42%;
+                                    }
+
+                                    .additional_inputs_container input{
+                                        border: 1px solid gray;
+                                        padding: 15px 8px;
+                                        border-radius: 3px;
+                                    }
+
+                                    .additional_inputs_container input:focus-visible{
+                                        outline: none;
+                                        border-color: gray;
+                                    }
+                                </style>
+
+                                <div class="col-md-3 form-group mb-3 purchase_count_container">
+                                    <div class="input_container">
+                                        <div class="select_label ui sub header ">Alış sayı</div>
+                                        <div class="ui input">
+                                            <input id="purchase_count" value="{{old('purchase_count')}}"
+                                                   name="purchase_count[]" type="number" placeholder="Alış sayını daxil edin">
+                                        </div>
+                                        <span class="text-danger error_message" id="purchase_countError"></span>
                                     </div>
-                                    <span class="text-danger error_message" id="purchase_countError"></span>
+
+                                    <button type="button" id="main_inventory_number_btn" class="btn btn-primary d-none main_inventory_btn_cls" data-bs-toggle="modal" data-bs-target="">
+                                        Button
+                                    </button>
                                 </div>
 
                                 <div class="col-md-3 form-group mb-3">
@@ -197,7 +245,11 @@
                                     <span class="text-danger error_message" id="activity_statusError"></span>
                                 </div>
 
+                                <input type="hidden" id="hidden_input">
 
+                                <div class="additional_inputs_container">
+
+                                </div>
                             </div>
                         </div>
 
@@ -228,7 +280,102 @@
 @endsection
 @section('js')
     <script>
+        document.getElementById('material_type').addEventListener('change', function(e) {
+            if(e.target.value !== 'Mal-material' && e.target.value !== ''){
+                document.getElementById('main_inventory_number_btn').classList.remove('d-none');
+            } else {
+                document.getElementById('main_inventory_number_btn').classList.add('d-none')
+            }
 
+            document.getElementById('hidden_input').value = 'formRow';
+            document.getElementById('hidden_input').name = 'unique_row_name[]';
+        })
+
+        document.getElementById('main_inventory_number_btn').addEventListener('click', function(e) {
+            const serialNumElement = document.querySelectorAll('.serial_num_input');
+
+            if(serialNumElement){
+                serialNumElement.forEach(el => {
+                    el.remove();
+                })
+            }
+
+            const count = document.getElementById('purchase_count').value;
+
+            for(let i = 0; i < count; i++){
+                const inputContainer = document.createElement('input');
+                inputContainer.classList.add('serial_num_input')
+                inputContainer.type = 'text';
+                inputContainer.name = 'formRow[]';
+                document.querySelector('#formRow .additional_inputs_container').appendChild(inputContainer);
+            }
+        })
+
+
+
+        $(document).on('click', '[id^="addRow"]', function(e) {
+            document.querySelectorAll('.material_type_select_cl select').forEach(select => {
+                select.addEventListener('change', function (e){
+                    const whichRow = e.target.id.substring(13, e.target.id.length)
+                    if(e.target.value !== 'Mal-material' && e.target.value !== ''){
+                        document.getElementById(`main_inventory_number_btn${whichRow}`).classList.remove('d-none');
+                    } else {
+                        document.getElementById(`main_inventory_number_btn${whichRow}`).classList.add('d-none')
+
+                        if(document.querySelectorAll(`.serial_num_input${whichRow}`)){
+                            document.querySelectorAll(`.serial_num_input${whichRow}`).forEach(el => {
+                                el.remove()
+                            })
+                        }
+                    }
+
+                    document.getElementById(`hidden_input${whichRow}`).value = `${whichRow}`;
+                    document.getElementById(`hidden_input${whichRow}`).name = 'unique_row_name[]';
+                })
+            })
+
+            document.querySelectorAll('.main_inventory_btn_cls').forEach(button => {
+                console.log(button)
+                button.addEventListener('click', function (e) {
+                    console.log(1)
+                    const whichRow = e.target.id.substring(25, e.target.id.length)
+
+                    const serialNumElement = document.querySelectorAll(`.serial_num_input${whichRow}`);
+
+                    if(serialNumElement){
+                        serialNumElement.forEach(el => {
+                            el.remove();
+                        })
+                    }
+
+                    const count = document.getElementById(`purchase_count${whichRow}`).value;
+
+                    for(let i = 0; i < count; i++){
+                        const inputContainer = document.createElement('input');
+                        inputContainer.classList.add(`serial_num_input${whichRow}`, 'serial_input')
+                        inputContainer.type = 'text';
+                        inputContainer.name = `${whichRow}[]`;
+                        document.querySelector(`#formRow${whichRow} .additional_inputs_container`).appendChild(inputContainer)
+                        // document.querySelector('#formRow .additional_inputs_container')
+                    }
+                })
+            })
+        });
+
+    </script>
+
+    <script>
+        function generateRandomString(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+        let rowCount;
         $(document).ready(function () {
             $('#hand_registers_section').hide();
             $('#vendors-section').hide();
@@ -244,17 +391,19 @@
                     $('#vendors-section').fadeIn();
                     $('#categories-section').fadeIn();
 
-                    let rowCount = 0;
-
                     addNewBtn.addEventListener('click', function () {
-                        rowCount++;
+
+                        rowCount = generateRandomString(20);
+                        // rowCount++;
                         const formsContainer = document.querySelector('.form_inputs_container');
                         const defaultForm = document.getElementById('formRow');
 
                         const clone = defaultForm.cloneNode(true);
                         clone.id += rowCount;
                         const inputs = clone.querySelectorAll('input');
+                        const serialInputs = clone.querySelectorAll('.serial_num_input');
                         const selects = clone.querySelectorAll('select');
+                        const addSerialButton = clone.querySelector('#main_inventory_number_btn');
                         const error_messages = clone.querySelectorAll('.error_message');
                         const delete_button = clone.querySelectorAll('.delete_block');
 
@@ -276,6 +425,11 @@
                             }
                         });
 
+                        serialInputs.forEach((input) => input.remove());
+
+                        addSerialButton.id += rowCount;
+                        addSerialButton.classList.add('d-none')
+
                         error_messages.forEach(message => message.id ? message.id += rowCount : null);
 
                         delete_button.forEach(button => button.id ? button.id += rowCount : null);
@@ -283,7 +437,7 @@
                         formsContainer.appendChild(clone);
 
                         const dynamicForm = document.getElementById(`formRow${rowCount}`);
-                        if(rowCount > 0){
+                        if(rowCount.length > 0){
                             const deleteContainer = document.createElement('div');
                             deleteContainer.id = `delete_container${rowCount}`;
                             deleteContainer.classList.add('delete_block');
@@ -322,9 +476,9 @@
             const number = e.target.id.substring(16, e.target.id.length);
             const container = document.querySelector(`#formRow${number}`);
             container.remove();
-            rowCount--;
-            fields = fields.filter(field => field.num != number)
-            console.log(fields)
+            // rowCount--;
+            // fields = fields.filter(field => field.num != number)
+            // console.log(fields)
         });
 
         $('#categories_id').on("change", function (e) {

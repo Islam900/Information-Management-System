@@ -16,7 +16,7 @@
                             <tr>
                                 <th>№</th>
                                 <th>İnventar</th>
-                                <th>Seria nömrəsi</th>
+                                <th>Unikal kodu</th>
                                 <th>Kateqoriya</th>
                                 <th>E-qaimə</th>
                                 <th>Əl qaiməsi</th>
@@ -30,29 +30,31 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($products as $item)
+                            @foreach($stocks as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{$item->product_name}}</td>
-                                    <td>{{$item->serial_number}}</td>
-                                    <td>{{$item->categories->name}}</td>
+                                    <td>{{$item->product_unical_code}}</td>
+                                    <td>{{$item->category_name}}</td>
                                     <td>
-                                        {{!is_null($item->invoices) ? $item->invoices->e_invoice_number.' '.$item->invoices->e_invoice_serial_number : '' }}
+                                        {{ $item->e_invoice_number.' '.$item->e_invoice_serial_number }}
                                     </td>
                                     <td>
-                                        {{!is_null($item->hand_registers) ? $item->hand_registers->register_number : '' }}
+                                        {{ $item->register_number }}
                                     </td>
-                                    <td>{{!is_null($item->invoices) ? $item->invoices->vendors->name : $item->hand_registers->vendors->name}}</td>
+                                    <td>
+                                        {{ $item->vendor_name }}
+                                    </td>
                                     <td>{{$item->purchase_count}} {{ $item->size }}</td>
-                                    <td>{{$item->purchase_count - $item->stock}} {{ $item->size }}</td>
-                                    <td class="text-{{$item->stock == 0 ? 'danger' : 'success'}}"><strong>{{$item->stock}} {{ $item->size }}</strong></td>
+                                    <td>{{$item->purchase_count - $item->stock_count}} {{ $item->size }}</td>
+                                    <td class="text-{{$item->stock_count == 0 ? 'danger' : 'success'}}"><strong>{{$item->stock_count}} {{ $item->size }}</strong></td>
                                     <td>
                                         <button class="btn btn-sm btn-{{$item->activity_status == 1 ? 'success' : 'danger'}}">
                                             {{$item->activity_status == 1 ? 'Aktiv' : 'Deaktiv'}}
                                         </button>
                                     </td>
                                     <td>
-                                        {{ !is_null($item->invoices) ? \Carbon\Carbon::parse($item->invoices->e_invoice_date)->format('d.m.Y') : \Carbon\Carbon::parse($item->hand_registers->register_date)->format('d.m.Y') }}
+                                        {{ !is_null($item->e_invoice_number) ? \Carbon\Carbon::parse($item->e_invoice_date)->format('d.m.Y') : \Carbon\Carbon::parse($item->register_date)->format('d.m.Y') }}
                                     </td>
                                     <td>
                                         <button class="btn btn-sm btn-primary">
