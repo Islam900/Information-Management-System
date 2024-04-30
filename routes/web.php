@@ -119,6 +119,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('get-positions-by-null-department', [PositionsController::class, 'get_positions_by_null_department'])->name('get-positions-by-null-department');
     Route::post('get-inventories-by-user', [TicketsController::class, 'get_inventories_by_user'])->name('get-inventories-by-user');
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
+    Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
 
 });
 

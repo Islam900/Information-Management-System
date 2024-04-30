@@ -13,7 +13,12 @@ class Warehouses extends Model
 
     public function stocks()
     {
-        return $this->hasMany(Stocks::class, 'product_unical_code', 'code');
+        return $this->hasMany(Stocks::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Products::class);
     }
 
 

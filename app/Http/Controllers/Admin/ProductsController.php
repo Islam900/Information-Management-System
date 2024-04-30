@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Products;
 use App\Models\Stocks;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -54,7 +55,14 @@ class ProductsController extends Controller
      */
     public function show(string $id)
     {
-        //
+
+    }
+
+    public function details(Request $request)
+    {
+        $products = Products::where('unical_code', $request->productCode)->get();
+        $users = User::where('type', 'employee')->get();
+        return view('admin.warehouses.products.details', compact('products', 'users'));
     }
 
     /**

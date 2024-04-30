@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Products;
+use App\Models\Stocks;
 use App\Models\Warehouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,7 @@ class WarehousesController extends Controller
     public function show(string $id)
     {
         $whs = Warehouses::find($id);
-        return view('admin.warehouses.show', compact('whs'));
+        return view('admin.warehouses.products.index', compact('whs'));
     }
 
     /**
@@ -57,6 +58,8 @@ class WarehousesController extends Controller
         $whs = Warehouses::findOrFail($id);
         return view('admin.warehouses.edit', compact('whs'));
     }
+
+
 
     /**
      * Update the specified resource in storage.

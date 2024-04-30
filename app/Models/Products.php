@@ -10,6 +10,7 @@ class Products extends Model
     use HasFactory;
     protected $table = 'products';
     protected $fillable = [
+        'warehouses_id',
         'categories_id',
         'invoices_id',
         'hand_registers_id',
@@ -43,5 +44,10 @@ class Products extends Model
     public function appointments()
     {
         return $this->hasOne(Appointments::class);
+    }
+
+    public function warehouses()
+    {
+        return $this->belongsTo(Warehouses::class);
     }
 }
