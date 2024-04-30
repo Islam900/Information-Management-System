@@ -8,85 +8,125 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3>Hesabatlar</h3>
-                        <a href="{{route('employee.reports.create')}}">
-                            <button class="btn btn-success">
-                                <span class="me-2">
-                                    <i class="nav-icon i-Add-File"></i>
-                                </span>
-                                Yeni hesabat
-                            </button>
-                        </a>
+                        <h3>Hesabat tərkibi</h3>
+                        
                     </div>
 
                 </div>
                 <div class="card-body">
 
-                    <!-- right control icon -->
-                    {{--                            <div class="accordion" id="accordionRightIcon">--}}
-
-                    {{--                                @foreach($reports as $report)--}}
-                    {{--                                    <div class="card p-8">--}}
-                    {{--                                        <div class="card-header header-elements-inline">--}}
-                    {{--                                            <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">--}}
-                    {{--                                                <a data-toggle="collapse" class="text-default collapsed"--}}
-                    {{--                                                   href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">--}}
-                    {{--                                                    <span><i class="i-Data-Settings ul-accordion__font"> </i></span>--}}
-                    {{--                                                    {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat</a>--}}
-                    {{--                                            </h6>--}}
-                    {{--                                        </div>--}}
-                    {{--                                        <div id="accordion-item-icons-{{ $report->id }}" class="collapse" data-parent="#accordionRightIcon"--}}
-                    {{--                                             style="">--}}
-                    {{--                                            <div class="card-body">--}}
-                    {{--                                                <p><strong>Kullanıcı Adı:</strong> {{ $report->user->name }}</p>--}}
-                    {{--                                                <ul class="list-group">--}}
-                    {{--                                                    @foreach($report->reports_subjects as $subject_key => $subject)--}}
-                    {{--                                                        <li class="list-group-item d-flex justify-content-between align-items-center">--}}
-                    {{--                                                            <p class="text-primary">{{ $subject_key+1 }}. {{ $subject->subject }}</p>--}}
-                    {{--                                                            <strong>{{ $subject->project_name }}</strong>--}}
-                    {{--                                                        </li>--}}
-                    {{--                                                    @endforeach--}}
-                    {{--                                                </ul>--}}
-                    {{--                                            </div>--}}
-                    {{--                                        </div>--}}
-                    {{--                                    </div>--}}
-                    {{--                                @endforeach--}}
-
-                    {{--                            </div>--}}
-                    <!-- /right control icon -->
-
-
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h3>Yapılacaklar</h3>
-                                <div id="todo-list" class="todo-list" data-list="todos">
-                                    @foreach($reports as $report)
-                                        <ul class="list-group">
-                                            @foreach($report->reports_subjects as $subject_key => $subject)
-                                                <li class="list-group-item">
-                                                    {{ $subject->subject }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @endforeach
+                    <div class="wrapper">
+                        <div class="wrapper_inside" id="wrapper">
+                            <div class="left_container">
+                                <div class="header">Görüləcək işlər</div>
+                                <div id="left" class="container_dragula">
+                                @foreach($reports as $report)
+                                @foreach($report->reports_subjects->where('status', 0) as $subject_key => $subject)
+                                <div>{{ $subject->subject}}</div>
+                                @endforeach
+                                @endforeach
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <h3>Yapılanlar</h3>
-                                <div id="in-progress-list" class="todo-list" data-list="in_progress">
-                                    <!-- Yapılanlar Listesi -->
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <h3>Yapıldı Olanlar</h3>
-                                <div id="done-list" class="todo-list" data-list="done">
-                                    <!-- Yapıldı Olanlar Listesi -->
+
+                            <div class="right_container">
+                                <div class="header">Hesabat tərkibi</div>
+                                <div id="right" class="container_dragula">
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <style>
+                        .wrapper {
+                            display: table;
+                            width: 100%;
+                        }   
+
+                        .wrapper .wrapper_inside{
+                            display: flex;
+                            width: 100%;
+                        }
+
+                        .wrapper_inside > div{
+                            flex: 1 1 50%;
+                        }
+
+                        .wrapper .wrapper_inside .header{
+                            font-size: 16px;
+                            padding: 10px 20px;
+                            margin: 10px;
+                            color: #ededed;
+                            text-align: center;
+                            border-radius: 6px;
+                            font-weight: 600;
+                        }
+
+                        .wrapper .wrapper_inside .right_container .header{
+                            background-color: #00af1c;
+                        }
+
+                        .wrapper .wrapper_inside .left_container .header{
+                            background-color: #e10101b5;
+                        }
+
+                        .container_dragula{
+                            height: 100%;
+                        }
+
+                        .container_dragula div {
+                            margin: 10px;
+                            padding: 10px;
+                            background-color: rgb(225 225 225 / 52%);
+                            transition: all 0.4s ease-in-out;
+                            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+                            font-size: 13px;
+                        }
+
+                        .container_dragula {
+                            background-color: rgba(255, 255, 255, 0.2);
+                        }
+
+                        .container_dragula:nth-child(odd) {
+                            background-color: rgba(0, 0, 0, 0.2);
+                        }
+                    </style>
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3>Həftəlik hesabatlar</h3>
+                </div>
+                <div class="card-body">
+                <div class="accordion" id="accordionRightIcon">
+                    @foreach($reports as $report)
+                        <div class="card p-8">
+                            <div class="card-header header-elements-inline">
+                                <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
+                                    <a data-toggle="collapse" class="text-default collapsed"
+                                    href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">
+                                        <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
+                                        {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat</a>
+                                </h6>
+                            </div>
+                            <div id="accordion-item-icons-{{ $report->id }}" class="collapse" data-parent="#accordionRightIcon"
+                                style="">
+                                <div class="card-body">
+                                    <p><strong>Kullanıcı Adı:</strong> {{ $report->user->name }}</p>
+                                    <ul class="list-group">
+                                        @foreach($report->reports_subjects as $subject_key => $subject)
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <p class="text-primary">{{ $subject_key+1 }}. {{ $subject->subject }}</p>
+                                                <strong>{{ $subject->project_name }}</strong>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    </div>
                 </div>
             </div>
 
@@ -96,6 +136,9 @@
 @endsection
 
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script> -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.6.6/dragula.min.js'></script>
     <script>
         $(document).ready(function () {
             $('#reports-table').DataTable({
@@ -130,33 +173,38 @@
     </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Dragula instance oluştur
-            var todoList = document.getElementById('todo-list');
-            var inProgressList = document.getElementById('in-progress-list');
-            var doneList = document.getElementById('done-list');
 
-            var drake = dragula([todoList, inProgressList, doneList]);
+        dragula([document.querySelector('#left'), document.querySelector('#right')]);
 
-            // Drop işlemi bittiğinde tetiklenen event
-            drake.on('drop', function (el, target, source, sibling) {
-                var todoId = el.getAttribute('data-todo-id');
-                var newList = target.getAttribute('data-list');
+        // Function to initialize the MutationObserver
+        function observeDivChanges() {
+            // Select the target node
+            const target = document.getElementById('left');
 
-                // AJAX isteği gönder
-                var formData = new FormData();
-                formData.append('todo_id', todoId);
-                formData.append('new_list', newList);
+            // Create a callback function to execute when mutations are observed
+            const callback = function(mutationsList, observer) {
+                for (const mutation of mutationsList) {
+                    if(mutation.type === 'attributes'){
+                        console.log('something changed inside of the element 🦝')
+                    }
+                }
+            };
 
-                fetch('/todos/update', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => console.log(data))
-                    .catch(error => console.error('Error:', error));
-            });
-        });
+            // Create an observer instance linked to the callback function
+            const observer = new MutationObserver(callback);
+
+            // Options for the observer (which mutations to observe)
+            var config = { attributes: true, childList: true, subtree: true, characterData: true };
+
+            // Start observing
+            observer.observe(target, config);
+
+            // Optionally, stop observing
+            // observer.disconnect();
+        }
+
+        observeDivChanges();
+
     </script>
 
 @endsection
