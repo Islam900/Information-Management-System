@@ -8,6 +8,7 @@ use App\Models\HandRegisters;
 use App\Models\Products;
 use App\Models\Stocks;
 use App\Models\Vendors;
+use App\Models\Warehouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -24,9 +25,10 @@ class HandRegistersController extends Controller
      */
     public function create()
     {
+        $whs = Warehouses::where('status', 1)->get();
         $categories = Categories::whereNull('parent_id')->where('status', 1)->get();
         $vendors = Vendors::where('status', 1)->get();
-        return view('admin.hand-registers.create', compact('categories', 'vendors'));
+        return view('admin.hand-registers.create', compact('categories', 'vendors', 'whs'));
     }
 
     /**
@@ -90,19 +92,20 @@ class HandRegistersController extends Controller
             Stocks::create($stock_data);
         }
 
-        $invoice = Invoices::create([
+        $register = HandRegisters::create([
+            'invoices_id' => NULL,
             'vendors_id' => $request->vendors_id,
             'categories_id' => $request->main_categories_id,
-            'e_invoice_number' => $request->e_invoice_number,
-            'e_invoice_serial_number' => $request->e_invoice_serial_number,
+            'register_number' => $request->register_number,
+            'register_date' => $request->register_date,
             'total_amount' => $total_product_price,
             'edv_total_amount' => $total_product_price + $total_product_price * 0.18,
             'note' => $request->note,
             'e_invoice_date' => $request->e_invoice_date
         ]);
 
-        Products::insert(array_map(function ($data) use ($invoice) {
-            $data['invoices_id'] = $invoice->id;
+        Products::insert(array_map(function ($data) use ($register) {
+            $data['hand_registers_id'] = $register->id;
             return $data;
         }, $products));
 

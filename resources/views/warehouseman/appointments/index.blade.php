@@ -36,7 +36,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($inventories as $item)
+                            @foreach($appointments as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{$item->products->product_name}}</td>

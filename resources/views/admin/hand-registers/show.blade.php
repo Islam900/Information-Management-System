@@ -60,6 +60,7 @@
                             <thead>
                             <tr>
                                 <th>№</th>
+                                <th>Seria nömrəsi</th>
                                 <th>AVR kodu</th>
                                 <th>İnventar adı</th>
                                 <th>Kateqoriya</th>
@@ -74,6 +75,7 @@
                             @forelse($register->products as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
+                                    <td>{{ $item->serial_number }}</td>
                                     <td>{{ $item->avr_code }}</td>
                                     <td>{{ $item->product_name }}</td>
                                     <td>{{ $item->categories->name }}</td>

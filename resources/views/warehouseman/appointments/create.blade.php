@@ -41,7 +41,7 @@
                                     <select frequency="true" id="products_select" name="products_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">İnventar seçin</option>
                                         @forelse($products as $item)
-                                            <option value="{{$item->id}}" {{ old('products_id')==$item->id ? 'selected' : '' }}>{{$item->product_name}}</option>
+                                            <option value="{{$item->id}}" {{ old('products_id')==$item->id ? 'selected' : '' }}>{{$item->material_type == 'Əsas inventar' ? $item->serial_number : $item->avr_code}} - {{$item->product_name}}</option>
                                         @empty
                                             <option disabled selected>Məlumat yoxdur</option>
                                         @endforelse
@@ -62,6 +62,10 @@
                         </div>
 
                         <div class="lower_buttons_container d-flex align-items-center row">
+                            <div class="col-6 ">
+                                <button type="button" class="btn btn-success btn-lg" id="addRow">Yenisini əlavə et</button>
+                            </div>
+
                             <div class="col-6 ">
                                 <button class="btn btn-primary btn-lg">Təhkim et</button>
                             </div>

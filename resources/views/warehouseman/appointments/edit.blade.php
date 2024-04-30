@@ -19,20 +19,15 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('warehouseman.appointments.update', $inventory) }}" class="store-local-report-form">
+                    <form method="POST" action="{{ route('warehouseman.appointments.update', $appointment) }}" class="store-local-report-form">
                         @csrf
                         @method('PUT')
                         <div class="form_inputs_container position-relative">
                             <div class="row position-relative form_block" id="formRow">
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İşçi</div>
-                                    <select frequency="true" id="users_select" readonly="" name="users_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
-                                        <option value="">İşçi seçin</option>
-                                        @forelse($users as $item)
-                                            <option>{{$item->name}}</option>
-                                        @empty
-                                            <option disabled selected>Məlumat yoxdur</option>
-                                        @endforelse
+                                    <select frequency="true" id="users_select" readonly disabled name="users_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                        <option value="{{ $appointment->user_id }}" selected>{{ $appointment->user->name }}</option>
                                     </select>
                                     <span class="text-danger error_message" id="categories_idError"></span>
                                 </div>
@@ -40,12 +35,7 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İnventar</div>
                                     <select frequency="true" id="products_select" readonly="" name="products_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
-                                        <option value="">İnventar seçin</option>
-                                        @forelse($products as $item)
-                                            <option value="{{$item->id}}" {{ $inventory->products->id ==$item->id ? 'selected' : '' }}>{{$item->product_name}}</option>
-                                        @empty
-                                            <option disabled selected>Məlumat yoxdur</option>
-                                        @endforelse
+                                        <option value="{{ $appointment->products_id }}" selected>{{$appointment->products->material_type == 'Əsas inventar' ? $appointment->products->serial_number : $appointment->products->avr_code}} - {{$appointment->products->product_name}}</option>
                                     </select>
                                     <span class="text-danger error_message" id="categories_idError"></span>
                                 </div>
@@ -54,7 +44,7 @@
                                     <div class="select_label ui sub header ">Təhkim edin</div>
                                     <select frequency="true" id="users_select" name="users_id_new" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">İşçi seçin</option>
-                                        @forelse($users as $item)
+                                        @forelse($users->except($appointment->user_id) as $item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
                                         @empty
                                             <option disabled selected>Məlumat yoxdur</option>
@@ -66,7 +56,7 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İnvertar nömrəsi</div>
                                     <div class="ui input">
-                                        <input id="inventory_number" required readonly value="{{$inventory->inventory_number }}"
+                                        <input id="inventory_number" required readonly value="{{$appointment->inventory_number }}"
                                                name="inventory_number" type="text" placeholder="">
                                     </div>
                                     <span class="text-danger error_message" id="inventory_numberError"></span>

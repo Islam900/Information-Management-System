@@ -56,8 +56,8 @@
                 </div>
 
                 <div class="card-body">
-                    @if($invoice->hand_registers)
-                        @foreach($invoice->hand_registers as $register)
+                    @if($invoice->hand_registers->count() > 0)
+                    @foreach($invoice->hand_registers as $register)
                             <div class="card">
                                 <div class="card-header">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -130,6 +130,7 @@
                                         <thead>
                                         <tr>
                                             <th>№</th>
+                                            <th>Seria nömrəsi</th>
                                             <th>AVR kodu</th>
                                             <th>İnventar adı</th>
                                             <th>Kateqoriya</th>
@@ -144,6 +145,7 @@
                                         @forelse($invoice->products as $item)
                                             <tr>
                                                 <td>{{ $item->id }}</td>
+                                                <td>{{ $item->serial_number }}</td>
                                                 <td>{{ $item->avr_code }}</td>
                                                 <td>{{ $item->product_name }}</td>
                                                 <td>{{ $item->categories->name }}</td>

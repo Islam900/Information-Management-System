@@ -63,6 +63,17 @@
                                         </div>
 
                                         <div class="col-md-3 form-group mb-3">
+                                            <div class="select_label ui sub header ">Anbar</div>
+                                            <select frequency="true" id="warehouses_id"  name="warehouses_id" class="form-control ui fluid search dropdown create_form_dropdown warehouses_select_cl">
+                                                <option value="">Anbar seçin</option>
+                                                @foreach($whs as $wh)
+                                                    <option value="{{ $wh->id }}">{{ $wh->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="text-danger error_message" id="subcategories_idError"></span>
+                                        </div>
+
+                                        <div class="col-md-3 form-group mb-3">
                                             <div class="select_label ui sub header ">Əl qaiməsi tarixi</div>
                                             <div class="ui input">
                                                 <input id="register_date"
@@ -342,7 +353,7 @@
         $(document).ready(function () {
                 //if(e.target.value == "new")
                 //{
-                  
+
 
                     addNewBtn.addEventListener('click', function () {
 
@@ -410,7 +421,7 @@
                     });
                 //}
                 //else {
-                   
+
 
                 //}
         })

@@ -5,18 +5,16 @@ namespace App\Http\Controllers\Warehouseman;
 use App\Http\Controllers\Controller;
 use App\Models\Appointments;
 use App\Models\Products;
+use App\Models\Stocks;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class WHMInventoriesController extends Controller
+class WHMAppointmentsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $inventories = Appointments::with('products', 'user')->get();
-        return view('warehouseman.appointments.index', compact('inventories'));
+        $appointments = Appointments::with('products', 'user')->get();
+        return view('warehouseman.appointments.index', compact('appointments'));
     }
 
     /**
@@ -24,15 +22,8 @@ class WHMInventoriesController extends Controller
      */
     public function create()
     {
-        $all_products = Products::all();
-        $products = [];
-        foreach ($all_products as $product) {
-            $stock = $product->stock;
-            $inventoryCount = $product->inventories_count;
-            if ($stock > $inventoryCount) {
-                $products[] = $product;
-            }
-        }
+
+        $products = Products::doesntHave('appointments')->get();
         $users = User::where('type', 'employee')->get();
         return view('warehouseman.appointments.create', compact('products', 'users'));
     }
@@ -50,8 +41,13 @@ class WHMInventoriesController extends Controller
             ]);
 
             $product = Products::find($request->products_id[$user_key]);
-            $product->stock = $product->stock - 1;
-            $product->save();
+            $stock = Stocks::where('product_unical_code', $product->unical_code)->first();
+            if ($stock) {
+                $newStockCount = $stock->stock_count - 1;
+                $stock->update([
+                    'stock_count' => $newStockCount
+                ]);
+            }
         }
 
         return redirect()->route('warehouseman.appointments.index')->with('success', 'Məlumatlar daxil edildi');
@@ -69,6 +65,7 @@ class WHMInventoriesController extends Controller
 
         return redirect()->back()->with('success', 'İnventar anbara qaytarıldı');
     }
+
     /**
      * Display the specified resource.
      */
@@ -80,31 +77,23 @@ class WHMInventoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Appointments $inventory)
+    public function edit(Appointments $appointment)
     {
-        $all_products = Products::all();
-        $products = [];
-        foreach ($all_products as $product) {
-            $stock = $product->stock;
-            $inventoryCount = $product->inventories_count;
-            if ($stock > $inventoryCount) {
-                $products[] = $product;
-            }
-        }
         $users = User::where('type', 'employee')->get();
-        return view('warehouseman.appointments.edit', compact('products', 'users', 'inventory'));
+        return view('warehouseman.appointments.edit', compact( 'users', 'appointment'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Appointments $inventory)
+    public function update(Request $request, Appointments $appointment)
     {
-        $inventory->update([
+        $appointment->update([
             'products_id' => $request->products_id,
             'inventory_number' => $request->inventory_number,
-            'users_id' => $request->users_id_new
+            'user_id' => $request->users_id_new
         ]);
+        $appointment->save();
 
         return redirect()->route('warehouseman.appointments.index')->with('success', 'Məlumatlar dəyişdirildi');
     }

@@ -33,11 +33,12 @@ use \App\Http\Controllers\Admin\{
 use \App\Http\Controllers\Warehouseman\{
     WarehousemanController,
     WHMCategoriesController,
-    WHMInventoriesController,
+    WHMAppointmentsController,
     WHMInvoicesController,
     WHMProductsController,
     WHMVendorsController,
-    WHMHandRegistersController
+    WHMHandRegistersController,
+    WHMWarehousesController
 };
 
 use \App\Http\Controllers\Support\{
@@ -134,9 +135,11 @@ Route::prefix('warehouseman')->name('warehouseman.')->middleware(['auth', 'check
     Route::resource('products', WHMProductsController::class);
     Route::resource('invoices', WHMInvoicesController::class);
     Route::resource('hand-registers', WHMHandRegistersController::class);
-    Route::resource('appointments', WHMInventoriesController::class);
-    Route::get('appointments/{id}/refund', [WHMInventoriesController::class, 'refund'])->name('appointments.refund');
+    Route::resource('appointments', WHMAppointmentsController::class);
+    Route::resource('warehouses', WHMWarehousesController::class);
+    Route::get('appointments/{id}/refund', [WHMAppointmentsController::class, 'refund'])->name('appointments.refund');
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
+    Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
 
 });
 
