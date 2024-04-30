@@ -131,6 +131,7 @@
                                         <tr>
                                             <th>№</th>
                                             <th>Seria nömrəsi</th>
+                                            <th>AVR kodu</th>
                                             <th>İnventar adı</th>
                                             <th>Kateqoriya</th>
                                             <th>Material tipi</th>
@@ -145,6 +146,7 @@
                                             <tr>
                                                 <td>{{ $item->id }}</td>
                                                 <td>{{ $item->serial_number }}</td>
+                                                <td>{{ $item->avr_code }}</td>
                                                 <td>{{ $item->product_name }}</td>
                                                 <td>{{ $item->categories->name }}</td>
                                                 <td>{{ $item->material_type }}</td>
@@ -187,7 +189,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#user-inventories-table').DataTable();
+            $('#user-appointments-table').DataTable();
         })
     </script>
 @endsection

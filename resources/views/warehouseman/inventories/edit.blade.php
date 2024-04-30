@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h3>Yeni təhkim olunma</h3>
-                        <a href="{{ route('warehouseman.inventories.index') }}">
+                        <a href="{{ route('warehouseman.appointments.index') }}">
                             <button class="btn btn-danger">
                                 <span class="me-2">
                                     <i class="nav-icon i-Arrow-Back-2"></i>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('warehouseman.inventories.update', $inventory) }}" class="store-local-report-form">
+                    <form method="POST" action="{{ route('warehouseman.appointments.update', $inventory) }}" class="store-local-report-form">
                         @csrf
                         @method('PUT')
                         <div class="form_inputs_container position-relative">

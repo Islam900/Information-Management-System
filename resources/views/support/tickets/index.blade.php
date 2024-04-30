@@ -98,7 +98,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#inventories-table').DataTable();
+            $('#appointments-table').DataTable();
 
             $('.accept-ticket').on("click", function () {
                 const ticket_number = $(this).data('ticket-number');

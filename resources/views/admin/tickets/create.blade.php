@@ -99,7 +99,7 @@
             $('#user_select').on("change", function (e) {
                     const user_id = e.target.value;
                     $.ajax({
-                        url:"{{ url('get-inventories-by-user') }}",
+                        url:"{{ url('get-appointments-by-user') }}",
                         type:"POST",
                         data:{
                             "_token":"{{csrf_token()}}",

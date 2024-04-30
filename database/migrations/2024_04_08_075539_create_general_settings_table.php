@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('repair_mode_message')->nullable();
             $table->integer('weekly_report_module')->default(0);
             $table->jsonb('weekly_report_module_users')->nullable();
+            $table->jsonb('weekly_report_receivers')->nullable();
             $table->integer('ticket_module')->default(0);
             $table->integer('delivery_act_generation')->default(0);
             $table->text('delivery_act_content')->nullable();

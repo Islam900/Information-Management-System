@@ -547,9 +547,11 @@
                                                     <td>{{ $t_user->email }}</td>
                                                     <td>{{ $t_user->type }}</td>
                                                     <td>
-                                                        @foreach($t_user->roles as $role)
-                                                            {{ $role->name }}
-                                                        @endforeach
+                                                        @if(!is_null($t_user->roles))
+                                                            @foreach($t_user->roles as $role)
+                                                                {{ $role->name }}
+                                                            @endforeach
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach

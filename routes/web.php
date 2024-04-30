@@ -14,7 +14,7 @@ use \App\Http\Controllers\Admin\{
     BranchesController,
     PositionsController,
     RoomsController,
-    InventoriesController,
+    AppointmentsController,
     InvoicesController,
     TicketsController,
     GeneralSettingsController,
@@ -87,10 +87,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::resource('products', ProductsController::class);
     Route::resource('invoices', InvoicesController::class);
     Route::resource('hand-registers', HandRegistersController::class);
-    Route::resource('inventories', InventoriesController::class);
+    Route::resource('appointments', AppointmentsController::class);
     Route::resource('tickets', TicketsController::class);
     Route::resource('reports', ReportsController::class);
-    Route::get('inventories/{id}/refund', [InventoriesController::class, 'refund'])->name('inventories.refund');
+    Route::get('appointments/{id}/refund', [InventoriesController::class, 'refund'])->name('appointments.refund');
     Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
     Route::resource('users', UsersController::class);
     Route::resource('local-numbers', LocalNumbersController::class);
@@ -117,7 +117,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('get-positions-by-branch', [PositionsController::class, 'get_positions_by_branch'])->name('get-positions-by-branch');
     Route::post('get-positions-by-management-board', [PositionsController::class, 'get_positions_by_management_board'])->name('get-positions-by-management-board');
     Route::post('get-positions-by-null-department', [PositionsController::class, 'get_positions_by_null_department'])->name('get-positions-by-null-department');
-    Route::post('get-inventories-by-user', [TicketsController::class, 'get_inventories_by_user'])->name('get-inventories-by-user');
+    Route::post('get-appointments-by-user', [TicketsController::class, 'get_inventories_by_user'])->name('get-appointments-by-user');
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
 
@@ -134,8 +134,8 @@ Route::prefix('warehouseman')->name('warehouseman.')->middleware(['auth', 'check
     Route::resource('products', WHMProductsController::class);
     Route::resource('invoices', WHMInvoicesController::class);
     Route::resource('hand-registers', WHMHandRegistersController::class);
-    Route::resource('inventories', WHMInventoriesController::class);
-    Route::get('inventories/{id}/refund', [WHMInventoriesController::class, 'refund'])->name('inventories.refund');
+    Route::resource('appointments', WHMInventoriesController::class);
+    Route::get('appointments/{id}/refund', [WHMInventoriesController::class, 'refund'])->name('appointments.refund');
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
 
 });
@@ -146,7 +146,7 @@ Route::prefix('employee')->name('employee.')->middleware(['auth', 'check_role:em
     Route::get('/home', [EmployeeController::class, 'index'])->name('home');
     Route::get('profile', [EmployeeController::class, 'profile'])->name('profile');
     Route::put('update-profile/{id}', [EmployeeController::class, 'update_profile'])->name('update-profile');
-    Route::get('employee-inventories', [EmployeInventoriesController::class, 'index'])->name('employee-inventories');
+    Route::get('employee-appointments', [EmployeInventoriesController::class, 'index'])->name('employee-appointments');
     Route::resource('tickets', EmployeeTicketController::class);
     Route::resource('reports', EmployeeReportsController::class);
     Route::post('update-ticket', [EmployeeTicketController::class, 'update_ticket'])->name('update-ticket');

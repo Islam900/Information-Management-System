@@ -27,7 +27,7 @@
             <div class="triangle"></div>
         </li>
         <li class="nav-item ">
-            <a class="nav-item-hold" href="{{ route('admin.inventories.index') }}">
+            <a class="nav-item-hold" href="{{ route('admin.appointments.index') }}">
                 <i class="nav-icon i-traffic-Light"></i>
                 <span class="nav-text">Təhkim olunma</span>
             </a>

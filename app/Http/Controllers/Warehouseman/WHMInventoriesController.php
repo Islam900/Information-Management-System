@@ -16,7 +16,7 @@ class WHMInventoriesController extends Controller
     public function index()
     {
         $inventories = Appointments::with('products', 'user')->get();
-        return view('warehouseman.inventories.index', compact('inventories'));
+        return view('warehouseman.appointments.index', compact('inventories'));
     }
 
     /**
@@ -34,7 +34,7 @@ class WHMInventoriesController extends Controller
             }
         }
         $users = User::where('type', 'employee')->get();
-        return view('warehouseman.inventories.create', compact('products', 'users'));
+        return view('warehouseman.appointments.create', compact('products', 'users'));
     }
 
     /**
@@ -54,7 +54,7 @@ class WHMInventoriesController extends Controller
             $product->save();
         }
 
-        return redirect()->route('warehouseman.inventories.index')->with('success', 'Məlumatlar daxil edildi');
+        return redirect()->route('warehouseman.appointments.index')->with('success', 'Məlumatlar daxil edildi');
     }
 
     public function refund(Request $request)
@@ -92,7 +92,7 @@ class WHMInventoriesController extends Controller
             }
         }
         $users = User::where('type', 'employee')->get();
-        return view('warehouseman.inventories.edit', compact('products', 'users', 'inventory'));
+        return view('warehouseman.appointments.edit', compact('products', 'users', 'inventory'));
     }
 
     /**
@@ -106,7 +106,7 @@ class WHMInventoriesController extends Controller
             'users_id' => $request->users_id_new
         ]);
 
-        return redirect()->route('warehouseman.inventories.index')->with('success', 'Məlumatlar dəyişdirildi');
+        return redirect()->route('warehouseman.appointments.index')->with('success', 'Məlumatlar dəyişdirildi');
     }
 
     /**

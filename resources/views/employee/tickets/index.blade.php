@@ -103,7 +103,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#inventories-table').DataTable();
+            $('#appointments-table').DataTable();
 
             $(".close-ticket").on("click", function () {
                 const ticket_number = $(this).data('id');

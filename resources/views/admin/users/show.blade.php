@@ -130,7 +130,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#user-inventories-table').DataTable();
+            $('#user-appointments-table').DataTable();
         })
     </script>
 @endsection

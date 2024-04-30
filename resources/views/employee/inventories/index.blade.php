@@ -60,7 +60,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#inventories-table').DataTable();
+            $('#appointments-table').DataTable();
         })
 
         @if (session('success'))

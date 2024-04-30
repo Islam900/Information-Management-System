@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h3>Yeni təhkim olunma</h3>
-                        <a href="{{ route('admin.inventories.index') }}">
+                        <a href="{{ route('admin.appointments.index') }}">
                             <button class="btn btn-danger">
                                 <span class="me-2">
                                     <i class="nav-icon i-Arrow-Back-2"></i>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('admin.inventories.store') }}" class="store-local-report-form">
+                    <form method="POST" action="{{ route('admin.appointments.store') }}" class="store-local-report-form">
                         @csrf
                         <div class="form_inputs_container position-relative">
                             <div class="row position-relative form_block" id="formRow">
@@ -41,7 +41,7 @@
                                     <select frequency="true" id="products_select" name="products_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">İnventar seçin</option>
                                         @forelse($products as $item)
-                                            <option value="{{$item->id}}" {{ old('products_id')==$item->id ? 'selected' : '' }}>{{$item->product_name}}</option>
+                                            <option value="{{$item->id}}" {{ old('products_id')==$item->id ? 'selected' : '' }}>{{$item->material_type == 'Əsas inventar' ? $item->serial_number : $item->avr_code}} - {{$item->product_name}}</option>
                                         @empty
                                             <option disabled selected>Məlumat yoxdur</option>
                                         @endforelse

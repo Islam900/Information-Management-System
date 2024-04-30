@@ -25,7 +25,7 @@ class TicketsController extends Controller
     public function create()
     {
         $support = User::where('type', 'support')->get();
-        $users = User::whereHas('inventories')->get();
+        $users = User::whereHas('appointments')->get();
         $reasons = TicketReasons::where('status', 1)->get();
         return view('admin.tickets.create', compact('users', 'reasons', 'support'));
     }
@@ -105,7 +105,7 @@ class TicketsController extends Controller
     {
         $ticket = Tickets::find($id);
         $support = User::where('type', 'support')->get();
-        $users = User::whereHas('inventories')->get();
+        $users = User::whereHas('appointments')->get();
         $reasons = TicketReasons::where('status', 1)->get();
         $inventories = $ticket->user->inventories;
         return view('admin.tickets.edit', compact('ticket', 'support', 'reasons', 'users', 'inventories'));

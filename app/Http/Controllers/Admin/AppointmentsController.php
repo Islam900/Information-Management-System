@@ -3,22 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\GeneralSettings;
 use App\Models\Appointments;
 use App\Models\Products;
+use App\Models\Stocks;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class InventoriesController extends Controller
+class AppointmentsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $inventories = Appointments::with('products', 'user')->get();
-        return view('admin.inventories.index', compact('inventories'));
+        $appointments = Appointments::with('products', 'user')->get();
+        return view('admin.appointments.index', compact('appointments'));
     }
 
     /**
@@ -26,18 +22,10 @@ class InventoriesController extends Controller
      */
     public function create()
     {
-        $all_products = Products::all();
-        $products = [];
-        foreach ($all_products as $product) {
-            $stock = $product->stock;
-            $inventoryCount = $product->inventories_count;
-            if ($stock > $inventoryCount) {
-                $products[] = $product;
-            }
-        }
 
+        $products = Products::doesntHave('appointments')->get();
         $users = User::where('type', 'employee')->get();
-        return view('admin.inventories.create', compact('products', 'users'));
+        return view('admin.appointments.create', compact('products', 'users'));
     }
 
     /**
@@ -53,11 +41,16 @@ class InventoriesController extends Controller
             ]);
 
             $product = Products::find($request->products_id[$user_key]);
-            $product->stock = $product->stock - 1;
-            $product->save();
+            $stock = Stocks::where('product_unical_code', $product->unical_code)->first();
+            if ($stock) {
+                $newStockCount = $stock->stock_count - 1;
+                $stock->update([
+                    'stock_count' => $newStockCount
+                ]);
+            }
         }
 
-        return redirect()->route('admin.inventories.index')->with('success', 'Məlumatlar daxil edildi');
+        return redirect()->route('admin.appointments.index')->with('success', 'Məlumatlar daxil edildi');
     }
 
     public function refund(Request $request)
@@ -84,33 +77,25 @@ class InventoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Appointments $inventory)
+    public function edit(Appointments $appointment)
     {
-        $all_products = Products::all();
-        $products = [];
-        foreach ($all_products as $product) {
-            $stock = $product->stock;
-            $inventoryCount = $product->inventories_count;
-            if ($stock > $inventoryCount) {
-                $products[] = $product;
-            }
-        }
         $users = User::where('type', 'employee')->get();
-        return view('admin.inventories.edit', compact('products', 'users', 'inventory'));
+        return view('admin.appointments.edit', compact( 'users', 'appointment'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Appointments $inventory)
+    public function update(Request $request, Appointments $appointment)
     {
-        $inventory->update([
+        $appointment->update([
             'products_id' => $request->products_id,
             'inventory_number' => $request->inventory_number,
-            'users_id' => $request->users_id_new
+            'user_id' => $request->users_id_new
         ]);
+        $appointment->save();
 
-        return redirect()->route('admin.inventories.index')->with('success', 'Məlumatlar dəyişdirildi');
+        return redirect()->route('admin.appointments.index')->with('success', 'Məlumatlar dəyişdirildi');
     }
 
     /**

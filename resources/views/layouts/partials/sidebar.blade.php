@@ -27,7 +27,7 @@
             <div class="triangle"></div>
         </li>
         <li class="nav-item ">
-            <a class="nav-item-hold" href="{{ route('inventories.index') }}">
+            <a class="nav-item-hold" href="{{ route('appointments.index') }}">
                 <i class="nav-icon i-Bar-Chart"></i>
                 <span class="nav-text">İnvertar əməliyyatları</span>
             </a>

@@ -145,7 +145,7 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Tablo için tablo yapısı `inventories`
+-- Tablo için tablo yapısı `appointments`
 --
 
 CREATE TABLE `inventories` (
@@ -558,7 +558,7 @@ ALTER TABLE `failed_jobs`
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Tablo için indeksler `inventories`
+-- Tablo için indeksler `appointments`
 --
 ALTER TABLE `inventories`
   ADD PRIMARY KEY (`id`),
@@ -708,7 +708,7 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- Tablo için AUTO_INCREMENT değeri `inventories`
+-- Tablo için AUTO_INCREMENT değeri `appointments`
 --
 ALTER TABLE `inventories`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
@@ -784,7 +784,7 @@ ALTER TABLE `vendors`
 --
 
 --
--- Tablo kısıtlamaları `inventories`
+-- Tablo kısıtlamaları `appointments`
 --
 ALTER TABLE `inventories`
   ADD CONSTRAINT `inventories_products_id_foreign` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

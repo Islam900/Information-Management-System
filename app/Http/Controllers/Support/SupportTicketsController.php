@@ -11,7 +11,7 @@ class SupportTicketsController extends Controller
 {
     public function index()
     {
-        $tickets = Tickets::with('user', 'ticket_reasons', 'inventories.products')->get();
+        $tickets = Tickets::with('user', 'ticket_reasons', 'appointments.products')->get();
         return view('support.tickets.index', compact('tickets'));
     }
 

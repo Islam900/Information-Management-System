@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Categories;
 use App\Models\HandRegisters;
 use App\Models\Products;
+use App\Models\Stocks;
 use App\Models\Vendors;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class HandRegistersController extends Controller
 {
@@ -32,42 +34,77 @@ class HandRegistersController extends Controller
      */
     public function store(Request $request)
     {
-        $total_amount = 0;
-        foreach ($request->price as $pr_key => $price) {
-            $total_amount += $price * $request->purchase_count[$pr_key];
+        $total_product_price = 0;
+        $products = [];
+        foreach ($request->product_name as $product_key => $item) {
+            $unical_code = Str::random(10);
+            if($request->material_type[$product_key] != 'Mal-material') {
+                for ($i = 0; $i < $request->purchase_count[$product_key]; $i++) {
+                    $rowName = $request->unique_row_name[$product_key];
+                    $clean_code = $request->$rowName[$i];
+                    $products[] = [
+                        'warehouses_id' => $request->warehouses_id,
+                        'invoices_id' => NULL,
+                        'hand_registers_id' => NULL,
+                        'categories_id' => $request->subcategories_id[$product_key],
+                        'unical_code' => $unical_code,
+                        'material_type' => $request->material_type[$product_key],
+                        'avr_code' => $request->material_type[$product_key] == 'Əsas inventar' ? NULL : $clean_code,
+                        'serial_number' => $request->material_type[$product_key] != 'Əsas inventar' ? NULL : $clean_code,
+                        'product_name' => $item,
+                        'price' => $request->price[$product_key],
+                        'size' => $request->size[$product_key],
+                        'inventory_cost' => $request->inventory_cost[$product_key],
+                        'activity_status' => $request->activity_status[$product_key],
+                        'status' => $request->status[$product_key]
+                    ];
+                    $total_product_price += $request->price[$product_key];
+                }
+            }else {
+                $products[] = [
+                    'warehouses_id' => $request->warehouses_id,
+                    'invoices_id' => NULL,
+                    'hand_registers_id' => NULL,
+                    'categories_id' => $request->subcategories_id[$product_key],
+                    'unical_code' => $unical_code,
+                    'material_type' => $request->material_type[$product_key],
+                    'avr_code' => NULL,
+                    'serial_number' => NULL,
+                    'product_name' => $item,
+                    'price' => $request->price[$product_key],
+                    'size' => $request->size[$product_key],
+                    'inventory_cost' => $request->inventory_cost[$product_key],
+                    'activity_status' => $request->activity_status[$product_key],
+                    'status' => $request->status[$product_key]
+                ];
+            }
+
+
+            $stock_data = [
+                'warehouses_id' => $request->warehouses_id,
+                'product_unical_code' => $unical_code,
+                'purchase_count' => $request->purchase_count[$product_key],
+                'stock_count' => $request->purchase_count[$product_key],
+            ];
+
+            Stocks::create($stock_data);
         }
 
-
-        $register = HandRegisters::create([
-            'invoices_id' => NULL,
+        $invoice = Invoices::create([
             'vendors_id' => $request->vendors_id,
             'categories_id' => $request->main_categories_id,
-            'register_number' => $request->register_number ?? NULL,
-            'total_amount' => $total_amount,
-            'edv_total_amount' => $total_amount+($total_amount*1.18),
+            'e_invoice_number' => $request->e_invoice_number,
+            'e_invoice_serial_number' => $request->e_invoice_serial_number,
+            'total_amount' => $total_product_price,
+            'edv_total_amount' => $total_product_price + $total_product_price * 0.18,
             'note' => $request->note,
-            'register_date' => $request->register_date
+            'e_invoice_date' => $request->e_invoice_date
         ]);
 
-
-        foreach ($request->product_name as $key => $product) {
-            Products::create([
-                'invoices_id' => NULL,
-                'hand_registers_id' => $register->id,
-                'categories_id' => $request->subcategories_id[$key],
-                'material_type' => $request->material_type[$key],
-                'avr_code' => NULL,
-                'serial_number' => $request->serial_number[$key],
-                'product_name' => $request->product_name[$key],
-                'price' => $request->price[$key],
-                'size' => $request->size[$key],
-                'purchase_count' => $request->purchase_count[$key],
-                'stock' => $request->purchase_count[$key],
-                'inventory_cost' => $request->inventory_cost[$key],
-                'activity_status' => $request->activity_status[$key],
-                'status' => $request->status[$key]
-            ]);
-        }
+        Products::insert(array_map(function ($data) use ($invoice) {
+            $data['invoices_id'] = $invoice->id;
+            return $data;
+        }, $products));
 
         return redirect()->route('admin.hand-registers.index')->with('success', 'Məlumatlar daxil edildi');
     }

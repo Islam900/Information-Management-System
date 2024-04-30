@@ -22,38 +22,70 @@
                 </div>
                 <div class="card-body">
 
-                            <!-- right control icon -->
-                            <div class="accordion" id="accordionRightIcon">
+                    <!-- right control icon -->
+                    {{--                            <div class="accordion" id="accordionRightIcon">--}}
 
-                                @foreach($reports as $report)
-                                    <div class="card p-8">
-                                        <div class="card-header header-elements-inline">
-                                            <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
-                                                <a data-toggle="collapse" class="text-default collapsed"
-                                                   href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">
-                                                    <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
-                                                    {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat</a>
-                                            </h6>
-                                        </div>
-                                        <div id="accordion-item-icons-{{ $report->id }}" class="collapse" data-parent="#accordionRightIcon"
-                                             style="">
-                                            <div class="card-body">
-                                                <p><strong>Kullanıcı Adı:</strong> {{ $report->user->name }}</p>
-                                                <ul class="list-group">
-                                                    @foreach($report->reports_subjects as $subject_key => $subject)
-                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <p class="text-primary">{{ $subject_key+1 }}. {{ $subject->subject }}</p>
-                                                            <strong>{{ $subject->project_name }}</strong>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
+                    {{--                                @foreach($reports as $report)--}}
+                    {{--                                    <div class="card p-8">--}}
+                    {{--                                        <div class="card-header header-elements-inline">--}}
+                    {{--                                            <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">--}}
+                    {{--                                                <a data-toggle="collapse" class="text-default collapsed"--}}
+                    {{--                                                   href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">--}}
+                    {{--                                                    <span><i class="i-Data-Settings ul-accordion__font"> </i></span>--}}
+                    {{--                                                    {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat</a>--}}
+                    {{--                                            </h6>--}}
+                    {{--                                        </div>--}}
+                    {{--                                        <div id="accordion-item-icons-{{ $report->id }}" class="collapse" data-parent="#accordionRightIcon"--}}
+                    {{--                                             style="">--}}
+                    {{--                                            <div class="card-body">--}}
+                    {{--                                                <p><strong>Kullanıcı Adı:</strong> {{ $report->user->name }}</p>--}}
+                    {{--                                                <ul class="list-group">--}}
+                    {{--                                                    @foreach($report->reports_subjects as $subject_key => $subject)--}}
+                    {{--                                                        <li class="list-group-item d-flex justify-content-between align-items-center">--}}
+                    {{--                                                            <p class="text-primary">{{ $subject_key+1 }}. {{ $subject->subject }}</p>--}}
+                    {{--                                                            <strong>{{ $subject->project_name }}</strong>--}}
+                    {{--                                                        </li>--}}
+                    {{--                                                    @endforeach--}}
+                    {{--                                                </ul>--}}
+                    {{--                                            </div>--}}
+                    {{--                                        </div>--}}
+                    {{--                                    </div>--}}
+                    {{--                                @endforeach--}}
 
+                    {{--                            </div>--}}
+                    <!-- /right control icon -->
+
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3>Yapılacaklar</h3>
+                                <div id="todo-list" class="todo-list" data-list="todos">
+                                    @foreach($reports as $report)
+                                        <ul class="list-group">
+                                            @foreach($report->reports_subjects as $subject_key => $subject)
+                                                <li class="list-group-item">
+                                                    {{ $subject->subject }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endforeach
+                                </div>
                             </div>
-                            <!-- /right control icon -->
+                            <div class="col-md-4">
+                                <h3>Yapılanlar</h3>
+                                <div id="in-progress-list" class="todo-list" data-list="in_progress">
+                                    <!-- Yapılanlar Listesi -->
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h3>Yapıldı Olanlar</h3>
+                                <div id="done-list" class="todo-list" data-list="done">
+                                    <!-- Yapıldı Olanlar Listesi -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -96,4 +128,35 @@
         @php session()->forget('error') @endphp
         @endif
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Dragula instance oluştur
+            var todoList = document.getElementById('todo-list');
+            var inProgressList = document.getElementById('in-progress-list');
+            var doneList = document.getElementById('done-list');
+
+            var drake = dragula([todoList, inProgressList, doneList]);
+
+            // Drop işlemi bittiğinde tetiklenen event
+            drake.on('drop', function (el, target, source, sibling) {
+                var todoId = el.getAttribute('data-todo-id');
+                var newList = target.getAttribute('data-list');
+
+                // AJAX isteği gönder
+                var formData = new FormData();
+                formData.append('todo_id', todoId);
+                formData.append('new_list', newList);
+
+                fetch('/todos/update', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+
 @endsection

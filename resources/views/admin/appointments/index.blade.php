@@ -8,7 +8,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h3>Əməliyyatlar</h3>
                         <div>
-                            <a href="{{route('admin.inventories.create')}}">
+                            <a href="{{route('admin.appointments.create')}}">
                                 <button class="btn btn-success">
                                 <span class="me-2">
                                     <i class="nav-icon i-Add-File"></i>
@@ -36,7 +36,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($inventories as $item)
+                            @foreach($appointments as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{$item->products->product_name}}</td>
@@ -53,12 +53,12 @@
                                     <td>{{ !is_null($item->user) ? $item->user->name : '' }}</td>
                                     <td>{{\Illuminate\Support\Carbon::parse($item->created_at)->format('d.m.Y')}}</td>
                                     <td>
-                                        <a href="{{ route('admin.inventories.edit', $item ) }}"
+                                        <a href="{{ route('admin.appointments.edit', $item ) }}"
                                            class="text-success mr-2">
                                             <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                                         </a>
                                         @if($item->users)
-                                            <a href="{{ route('admin.inventories.refund', $item->id ) }}"
+                                            <a href="{{ route('admin.appointments.refund', $item->id ) }}"
                                                class="text-danger mr-2">
                                                 <i class="nav-icon i-Refresh font-weight-bold"></i>
                                             </a>
@@ -80,7 +80,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#inventories-table').DataTable();
+            $('#appointments-table').DataTable();
         })
 
         @if (session('success'))
