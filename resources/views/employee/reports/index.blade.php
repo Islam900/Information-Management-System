@@ -45,7 +45,7 @@
 
         .container_dragula button {
             flex: 1 1 10%;
-            padding: 12px 24px;
+            padding: 12px 0px;
             border: 1px solid #e9e9e9;
             border-radius: 4px;
             background-color: #ff4545;
@@ -84,7 +84,7 @@
         .wrapper_inside .input_section{
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 9px;
             padding: 12px 8px;
         }
 
@@ -104,7 +104,7 @@
 
         .input_section button{
             flex: 1 1 20%;
-            padding: 12px 24px;
+            padding: 11px 0px;
             border: 1px solid #e9e9e9;
             border-radius: 4px;
             background-color: #918d8d;
@@ -123,6 +123,18 @@
         .input_section button:hover{
             border-color: #524f4f;
             background-color: #a9a4a4;
+        }
+
+        .input_section button#submit-report{
+            background-color: #00af1c;
+        }
+
+        .input_section input#new-subject-project{
+            flex: 1 1 30%;
+        }
+
+        .input_section input#new-subject-content{
+            flex: 1 1 50%;
         }
     </style>
     <div class="row mb-4">
@@ -172,6 +184,10 @@
                                         @endforeach
                                 </div>
 
+                                <div class="input_section">
+                                    <div style='visibility: hidden; flex: 1 1 80%;'></div>
+                                    <button type="button" id="submit-report">Hesabatı təsdiqlə</button>
+                                </div>
                             </div>
                         </div>
                     </div>
