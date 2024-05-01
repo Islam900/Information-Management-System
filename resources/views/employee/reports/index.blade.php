@@ -157,11 +157,13 @@
                                 <div class="header">Görüləcək işlər</div>
 
                                 <div id="left" class="container_dragula">
-                                    @foreach($uncompleted_subjects->where('status', 0) as $subject_key0 => $subject0)
-                                    <div>
-                                        <div class="list_item"><p data-id="{{ $subject0->id }}">{{ $subject0->project_name ?? NULL }} - {{ $subject0->subject}}</p></div>
-                                        <button data-id="{{ $subject0->id }}" class="remove-button">Sil</button>
-                                    </div>
+                                    @foreach($uncompleted_reports as $uncompleted_report)
+                                        @foreach($uncompleted_report->reports_subjects->where('status', 0) as $subject_key0 => $subject0)
+                                        <div>
+                                            <div class="list_item"><p data-id="{{ $subject0->id }}">{{ $subject0->project_name ?? NULL }} - {{ $subject0->subject}}</p></div>
+                                            <button data-id="{{ $subject0->id }}" class="remove-button">Sil</button>
+                                        </div>
+                                        @endforeach
                                     @endforeach
                                 </div>
 
@@ -176,11 +178,13 @@
                             <div class="right_container">
                                 <div class="header">Hesabat tərkibi</div>
                                 <div id="right" class="container_dragula">
-                                        @foreach($uncompleted_subjects->where('status', 1) as $subject_key1 => $subject1)
-                                            <div>
-                                                <div class="list_item"><p data-id="{{ $subject1->id }}">{{ $subject1->project_name ?? NULL }} - {{ $subject1->subject}}</p></div>
-                                                <button data-id="{{ $subject1->id }}" class="remove-button">Sil</button>
-                                            </div>
+                                        @foreach($completed_reports as  $completed_report)
+                                            @foreach($completed_report->reports_subjects->where('status', 1) as $subject_key1 => $subject1)
+                                                <div>
+                                                    <div class="list_item"><p data-id="{{ $subject1->id }}">{{ $subject1->project_name ?? NULL }} - {{ $subject1->subject}}</p></div>
+                                                    <button data-id="{{ $subject1->id }}" class="remove-button">Sil</button>
+                                                </div>
+                                            @endforeach
                                         @endforeach
                                 </div>
 
