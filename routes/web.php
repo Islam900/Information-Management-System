@@ -7,7 +7,8 @@ use \App\Http\Controllers\User\{
     EmployeeController,
     EmployeInventoriesController,
     EmployeeTicketController,
-    EmployeeReportsController
+    EmployeeReportsController,
+    EmployeeReportsSubjectsController
 };
 
 use \App\Http\Controllers\Admin\{
@@ -154,6 +155,10 @@ Route::prefix('employee')->name('employee.')->middleware(['auth', 'check_role:em
     Route::resource('tickets', EmployeeTicketController::class);
     Route::resource('reports', EmployeeReportsController::class);
     Route::post('update-ticket', [EmployeeTicketController::class, 'update_ticket'])->name('update-ticket');
+
+    Route::post('update-reports-subjects', [EmployeeReportsSubjectsController::class, 'update_reports_subjects'])->name('update-reports-subjects');
+    Route::post('create-reports-subjects', [EmployeeReportsSubjectsController::class, 'create_reports_subjects'])->name('create-reports-subjects');
+    Route::post('delete-reports-subjects', [EmployeeReportsSubjectsController::class, 'delete_reports_subjects'])->name('delete-reports-subjects');
 });
 
 

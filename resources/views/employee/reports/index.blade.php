@@ -145,26 +145,33 @@
                                 <div class="header">Görüləcək işlər</div>
 
                                 <div id="left" class="container_dragula">
-                                @foreach($reports as $report)
-                                    @foreach($report->reports_subjects->where('status', 0) as $subject_key => $subject)
+                                    @foreach($uncompleted_subjects->where('status', 0) as $subject_key0 => $subject0)
                                     <div>
-                                        <div class="list_item"><p data-id="{{ $subject->id }}">{{ $subject->project_name ?? NULL }} - {{ $subject->subject}}</p></div>
-                                        <button>Sil</button>
+                                        <div class="list_item"><p data-id="{{ $subject0->id }}">{{ $subject0->project_name ?? NULL }} - {{ $subject0->subject}}</p></div>
+                                        <button data-id="{{ $subject0->id }}" class="remove-button">Sil</button>
                                     </div>
                                     @endforeach
-                                @endforeach
                                 </div>
 
                                 <div class="input_section">
-                                    <input type="text">
-                                    <button type="button">Əlavə et</button>
+                                    <input type="text" id="new-subject-project">
+                                    <input type="text" required id="new-subject-content">
+                                    <small id="subject-content-error" class="text-danger"></small>
+                                    <button type="button" id="add-new-subject">Əlavə et</button>
                                 </div>
                             </div>
 
                             <div class="right_container">
                                 <div class="header">Hesabat tərkibi</div>
                                 <div id="right" class="container_dragula">
+                                        @foreach($uncompleted_subjects->where('status', 1) as $subject_key1 => $subject1)
+                                            <div>
+                                                <div class="list_item"><p data-id="{{ $subject1->id }}">{{ $subject1->project_name ?? NULL }} - {{ $subject1->subject}}</p></div>
+                                                <button data-id="{{ $subject1->id }}" class="remove-button">Sil</button>
+                                            </div>
+                                        @endforeach
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -178,22 +185,22 @@
                 </div>
                 <div class="card-body">
                 <div class="accordion" id="accordionRightIcon">
-                    @foreach($reports as $report)
+                    @foreach($completed_reports as $completed_report)
                         <div class="card p-8">
                             <div class="card-header header-elements-inline">
                                 <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
                                     <a data-toggle="collapse" class="text-default collapsed"
-                                    href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">
+                                    href="#accordion-item-icons-{{ $completed_report->id }}" aria-expanded="false">
                                         <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
-                                        {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat</a>
+                                        {{ \Carbon\Carbon::parse($completed_report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat</a>
                                 </h6>
                             </div>
-                            <div id="accordion-item-icons-{{ $report->id }}" class="collapse" data-parent="#accordionRightIcon"
+                            <div id="accordion-item-icons-{{ $completed_report->id }}" class="collapse" data-parent="#accordionRightIcon"
                                 style="">
                                 <div class="card-body">
-                                    <p><strong>Kullanıcı Adı:</strong> {{ $report->user->name }}</p>
+                                    <p><strong>Kullanıcı Adı:</strong> {{ $completed_report->user->name }}</p>
                                     <ul class="list-group">
-                                        @foreach($report->reports_subjects as $subject_key => $subject)
+                                        @foreach($completed_report->reports_subjects as $subject_key => $subject)
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                                 <p class="text-primary">{{ $subject_key+1 }}. {{ $subject->subject }}</p>
                                                 <strong>{{ $subject->project_name }}</strong>
@@ -252,53 +259,133 @@
 
     <script>
 
-        dragula([document.querySelector('#left'), document.querySelector('#right')]);
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
 
-        // Function to initialize the MutationObserver
-        function observeDivChanges() {
-            // Select the target node
-            const target = document.getElementById('left');
 
-            // Create a callback function to execute when mutations are observed
-            const callback = function(mutationsList, observer) {
-                
-                for (const mutation of mutationsList) {
+        dragula([document.querySelector('#left'), document.querySelector('#right')]).on('drop', function(el, target, source, sibling) {
+            const data_id = target.querySelector('p').getAttribute('data-id');
+            const target_id = target.id
 
-                    if (mutation.type === 'childList') {
-                        
-                        if (mutation.addedNodes.length > 0) {
-                            mutation.addedNodes.forEach(node => {
-                                const data_id = node.querySelector('p').getAttribute('data-id');
-                            });
-                        }
-                        
-                        if (mutation.removedNodes.length > 0) {
-                            mutation.removedNodes.forEach(node => {
-                                const data_id = node.querySelector('p').getAttribute('data-id');
-                            });
-                        }
+            if(target_id == 'right')
+            {
+                $.ajax({
+                    url:"{{ route('employee.update-reports-subjects') }}",
+                    method:"POST",
+                    data: {
+                        "_token":"{{csrf_token()}}",
+                        "data_id":data_id,
+                        "status": 1
+                    },
+                    success:function (response) {
+                        Toast.fire({
+                            icon: response.icon,
+                            title: response.message
+                        });
                     }
-
-                    if(mutation.type === 'attributes'){
-                        console.log('something changed inside of the element 🦝')
+                })
+            }
+            else if(target_id == 'left')
+            {
+                $.ajax({
+                    url:"{{ route('employee.update-reports-subjects') }}",
+                    method:"POST",
+                    data: {
+                        "_token":"{{csrf_token()}}",
+                        "data_id":data_id,
+                        "status": 0
+                    },
+                    success:function (response) {
+                        Toast.fire({
+                            icon: response.icon,
+                            title: response.message
+                        });
                     }
+                })
+            }
+        });
+
+        $('#add-new-subject').on("click", function () {
+            const project_name = $('#new-subject-project').val();
+            const subject_content = $('#new-subject-content').val();
+
+            if(subject_content.trim() == '')
+            {
+                $('#subject-content-error').html('Tapşırıq məzmununu daxil edin');
+            }
+            else
+            {
+                $('#subject-content-error').html('');
+                $.ajax({
+                    url:"{{ route('employee.create-reports-subjects') }}",
+                    method:"POST",
+                    data: {
+                        "_token":"{{csrf_token()}}",
+                        "project_name":project_name,
+                        "subject_content":subject_content,
+                        "status": 0
+                    },
+                    success:function (response) {
+
+                        $('#left').append('<div><div class="list_item"><p data-id="'+response.subjects.id+'">'+response.subjects.project_name+' - '+response.subjects.subject+'</p></div> <button data-id="'+response.subjects.id+'" class="remove-button">Sil</button></div>')
+
+                        Toast.fire({
+                            icon: response.icon,
+                            title: response.message
+                        });
+                        $('#new-subject-project').val('');
+                        $('#new-subject-content').val('');
+
+
+                    }
+                })
+
+            }
+        })
+
+        $('.remove-button').on("click", function (e) {
+            const data_id = $(this).data('id');
+
+            Swal.fire({
+                title: "Silmək istədiyinizdən əminsiniz ?",
+                showCancelButton: true,
+                cancelButtonText: "Ləğv et",
+                confirmButtonText: "Sil",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url:"{{ route('employee.delete-reports-subjects') }}",
+                        method:"POST",
+                        data: {
+                            "_token":"{{csrf_token()}}",
+                            "data_id":data_id
+                        },
+                        success:function (response) {
+                            if(response.icon === 'success') {
+                                $(`[data-id='${response.subject_id}']`).closest('div').remove();
+                                Swal.fire("Məlumatlar silindi!", "", "success");
+                            } else {
+                                Swal.fire("Xəta baş verdi!", "", "error");
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire("Xəta baş verdi!", "", "error");
+                            console.error(xhr.responseText);
+                        }
+                    });
                 }
-            };
+            });
+        });
 
-            // Create an observer instance linked to the callback function
-            const observer = new MutationObserver(callback);
-
-            // Options for the observer (which mutations to observe)
-            var config = { attributes: true, childList: true, subtree: true, characterData: true };
-
-            // Start observing
-            observer.observe(target, config);
-
-            // Optionally, stop observing
-            // observer.disconnect();
-        }
-
-        observeDivChanges();
 
     </script>
 

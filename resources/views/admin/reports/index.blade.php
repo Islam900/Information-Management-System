@@ -45,7 +45,13 @@
                                 <div class="card-header header-elements-inline">
                                     <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0 data_head_container">
                                         <div class="profile_container">
-                                            <div class="profile_img"><i class="nav-icon i-Checked-User" style="font-size: 26px;"></i></div>
+                                            <div class="profile_img">
+                                                @if(!is_null($report->user->avatar))
+                                                    <img src="{{ asset('assets/images/avatars').'/'.$report->user->avatar }}" height="26px" alt="">
+                                                @else
+                                                    <i class="nav-icon i-Checked-User" style="font-size: 26px;"></i>
+                                                @endif
+                                            </div>
                                             <div class="profile_owner">{{ $report->user->name }}</div>
                                         </div>
 

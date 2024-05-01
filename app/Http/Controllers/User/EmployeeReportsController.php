@@ -16,8 +16,9 @@ class EmployeeReportsController extends Controller
      */
     public function index()
     {
-        $reports = Reports::where('user_id', Auth::user()->id)->get();
-        return view('employee.reports.index', compact('reports'));
+        $completed_reports = Reports::where('user_id', Auth::user()->id)->where('status', 2)->get();
+        $uncompleted_subjects = ReportsSubjects::whereNull('reports_id')->get();
+        return view('employee.reports.index', compact('completed_reports', 'uncompleted_subjects'));
     }
 
     /**

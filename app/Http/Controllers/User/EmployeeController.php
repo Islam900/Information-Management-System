@@ -23,7 +23,6 @@ class EmployeeController extends Controller
     public function update_profile (Request $request, $id)
     {
         $data = $request->all();
-
         $user = User::find($id);
         if ($request->filled('password')) {
             if (Hash::check($request->new_password, $user->password)) {
@@ -38,7 +37,15 @@ class EmployeeController extends Controller
             }
         }
         $user->name = $request->name;
+        $user->b_day = $request->b_day;
         $user->email = $request->email;
+
+        if($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $filename = time() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move('assets/images/avatars', $filename);
+            $user->avatar = $filename;
+        }
         $user->save();
 
         return redirect()->route('employee.profile')

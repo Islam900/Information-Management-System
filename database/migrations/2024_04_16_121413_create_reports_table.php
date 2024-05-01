@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('departments_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('branches_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->date('report_date')->default(\Carbon\Carbon::now());
+            $table->date('report_date')->nullable();
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }
