@@ -1,6 +1,59 @@
 @extends('employee.layouts.app')
 @section('content')
+    <style>
+        .wrapper {
+            display: table;
+            width: 100%;
+        }
 
+        .wrapper .wrapper_inside{
+            display: flex;
+            width: 100%;
+        }
+
+        .wrapper_inside > div{
+            flex: 1 1 50%;
+        }
+
+        .wrapper .wrapper_inside .header{
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 10px;
+            color: #ededed;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .wrapper .wrapper_inside .right_container .header{
+            background-color: #00af1c;
+        }
+
+        .wrapper .wrapper_inside .left_container .header{
+            background-color: #e10101b5;
+        }
+
+        .container_dragula{
+            height: 100%;
+        }
+
+        .container_dragula div {
+            margin: 10px;
+            padding: 10px;
+            background-color: rgb(225 225 225 / 52%);
+            transition: all 0.4s ease-in-out;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+            font-size: 13px;
+        }
+
+        .container_dragula {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .container_dragula:nth-child(odd) {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
     <div class="row mb-4">
         <div class="col-md-12 mb-4">
 
@@ -9,7 +62,7 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h3>Hesabat tərkibi</h3>
-                        
+
                     </div>
 
                 </div>
@@ -21,9 +74,9 @@
                                 <div class="header">Görüləcək işlər</div>
                                 <div id="left" class="container_dragula">
                                 @foreach($reports as $report)
-                                @foreach($report->reports_subjects->where('status', 0) as $subject_key => $subject)
-                                <div>{{ $subject->subject}}</div>
-                                @endforeach
+                                    @foreach($report->reports_subjects->where('status', 0) as $subject_key => $subject)
+                                    <div>{{ $subject->project_name ?? NULL }} - {{ $subject->subject}}</div>
+                                    @endforeach
                                 @endforeach
                                 </div>
                             </div>
@@ -35,61 +88,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <style>
-                        .wrapper {
-                            display: table;
-                            width: 100%;
-                        }   
-
-                        .wrapper .wrapper_inside{
-                            display: flex;
-                            width: 100%;
-                        }
-
-                        .wrapper_inside > div{
-                            flex: 1 1 50%;
-                        }
-
-                        .wrapper .wrapper_inside .header{
-                            font-size: 16px;
-                            padding: 10px 20px;
-                            margin: 10px;
-                            color: #ededed;
-                            text-align: center;
-                            border-radius: 6px;
-                            font-weight: 600;
-                        }
-
-                        .wrapper .wrapper_inside .right_container .header{
-                            background-color: #00af1c;
-                        }
-
-                        .wrapper .wrapper_inside .left_container .header{
-                            background-color: #e10101b5;
-                        }
-
-                        .container_dragula{
-                            height: 100%;
-                        }
-
-                        .container_dragula div {
-                            margin: 10px;
-                            padding: 10px;
-                            background-color: rgb(225 225 225 / 52%);
-                            transition: all 0.4s ease-in-out;
-                            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-                            font-size: 13px;
-                        }
-
-                        .container_dragula {
-                            background-color: rgba(255, 255, 255, 0.2);
-                        }
-
-                        .container_dragula:nth-child(odd) {
-                            background-color: rgba(0, 0, 0, 0.2);
-                        }
-                    </style>
 
                 </div>
             </div>

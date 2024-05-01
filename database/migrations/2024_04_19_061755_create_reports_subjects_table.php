@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('reports_subjects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reports_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('reports_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('project_name');
             $table->string('subject');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

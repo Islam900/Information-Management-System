@@ -10,7 +10,7 @@ class EmployeInventoriesController extends Controller
 {
     public function index()
     {
-        $inventories = Auth::user()->inventories;
+        $inventories = Auth::user()->appointments;
         return view('employee.appointments.index', compact('inventories'));
     }
 }

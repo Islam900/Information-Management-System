@@ -27,7 +27,7 @@
                                     <div class="row">
                                         <div class="col-md-3 form-group mb-3">
                                             <div class="select_label ui sub header ">Seçim edin</div>
-                                            <select frequency="true" id="register_or_new" name="register_or_new" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                            <select frequency="true" required id="register_or_new" name="register_or_new" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                                 <option value="">Seçin</option>
                                                 <option value="new">Yeni</option>
                                                 <option value="old">Əl qaimələri ilə</option>
@@ -36,7 +36,7 @@
                                         </div>
                                         <div class="col-md-3 form-group mb-3 " id="vendors-section">
                                             <div class="select_label ui sub header ">Təminatçılar</div>
-                                            <select frequency="true" id="vendors_select" name="vendors_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                            <select frequency="true" required id="vendors_select" name="vendors_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                                 <option value="">Təminatçı seçin</option>
                                                 @forelse($vendors as $item)
                                                     <option value="{{$item->id}}" {{ old('vendors_id')==$item->id ? 'selected' : '' }}>{{$item->name}}</option>
@@ -50,7 +50,7 @@
 
                                         <div class="col-md-3 form-group mb-3 " id="categories-section">
                                             <div class="select_label ui sub header ">Əsas kateqoriya</div>
-                                            <select frequency="true" id="categories_id" name="main_categories_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                            <select frequency="true" required id="categories_id" name="main_categories_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                                 <option value="">Əsas kategoriya seçin</option>
                                                 @forelse($categories as $category)
                                                     <option value="{{$category->id}}" {{ old('categories_id')==$category->id ? 'selected' : '' }}>{{$category->name}}</option>
@@ -65,9 +65,9 @@
                                         <div class="col-md-3 form-group mb-3">
                                             <div class="select_label ui sub header ">E-qaimə nömrəsi / Seria nömrəsi</div>
                                             <div class="ui input">
-                                                <input id="e_invoice_number" value="{{old('e_invoice_number')}}"
+                                                <input id="e_invoice_number" required value="{{old('e_invoice_number')}}"
                                                        name="e_invoice_number" type="text" placeholder="E-Qaimə nömrəsi">
-                                                <input id="e_invoice_serial_number" value="{{old('e_invoice_number')}}"
+                                                <input id="e_invoice_serial_number" required value="{{old('e_invoice_number')}}"
                                                        name="e_invoice_serial_number" type="text" placeholder="Seria nömrəsi">
                                             </div>
                                             <span class="text-danger error_message" id="e_invoice_numberError"></span>
@@ -75,7 +75,7 @@
 
                                             <div class="col-md-3 form-group mb-3">
                                                 <div class="select_label ui sub header ">Anbar</div>
-                                                <select frequency="true" id="warehouses_id"  name="warehouses_id" class="form-control ui fluid search dropdown create_form_dropdown warehouses_select_cl">
+                                                <select frequency="true" required id="warehouses_id"  name="warehouses_id" class="form-control ui fluid search dropdown create_form_dropdown warehouses_select_cl">
                                                     <option value="">Anbar seçin</option>
                                                     @foreach($whs as $wh)
                                                         <option value="{{ $wh->id }}">{{ $wh->name }}</option>
@@ -87,7 +87,7 @@
                                         <div class="col-md-3 form-group mb-3">
                                             <div class="select_label ui sub header ">E-qaimə tarixi</div>
                                             <div class="ui input">
-                                                <input id="e_invoice_date"
+                                                <input id="e_invoice_date" required
                                                        name="e_invoice_date" type="date">
                                             </div>
                                             <span class="text-danger error_message" id="e_invoice_numberError"></span>
@@ -100,7 +100,7 @@
                             <div class="row position-relative form_block" id="hand_registers_section">
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Əl qaiməsi</div>
-                                    <select frequency="true" id="hand_registers_id" multiple name="hand_registers_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                    <select frequency="true" id="hand_registers_id" required multiple name="hand_registers_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">Əl qaimələri seçin</option>
                                         @foreach($registers as $register)
                                             <option value="{{ $register->id }}">{{ $register->register_number }} - {{ $register->total_amount }} AZN  ({{ $register->register_date }})</option>
@@ -113,7 +113,7 @@
                             <div class="row position-relative form_block" id="formRow">
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Kateqoriya</div>
-                                    <select frequency="true" id="subcategories_id" name="subcategories_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                    <select frequency="true" id="subcategories_id" required name="subcategories_id[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">Alt kateqoriya seçin</option>
                                     </select>
                                     <span class="text-danger error_message" id="subcategories_idError"></span>
@@ -121,7 +121,7 @@
 
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Material tipi</div>
-                                    <select frequency="true" id="material_type" name="material_type[]" class="form-control ui fluid search dropdown create_form_dropdown material_type_select_cl">
+                                    <select frequency="true" id="material_type" required name="material_type[]" class="form-control ui fluid search dropdown create_form_dropdown material_type_select_cl">
                                         <option disabled selected>Material tipini seçin</option>
                                         <option value="Azqiymətli/Tezköhnələn">Azqiymətli/Tezköhnələn</option>
                                         <option value="Əsas inventar">Əsas inventar</option>
@@ -134,7 +134,7 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İnventar adı</div>
                                     <div class="ui input">
-                                        <input id="product_name" value="{{old('product_name')}}"
+                                        <input id="product_name" required value="{{old('product_name')}}"
                                                name="product_name[]" type="text" placeholder="İnventar adını daxil edin">
                                     </div>
                                     <span class="text-danger error_message" id="product_nameError"></span>
@@ -143,7 +143,7 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Qiyməti</div>
                                     <div class="ui input">
-                                        <input id="price" value="{{old('price')}}"
+                                        <input id="price" required value="{{old('price')}}"
                                                name="price[]" type="number" step=any placeholder="Ədəd üçün qiymət">
                                     </div>
                                     <span class="text-danger error_message" id="priceError"></span>
@@ -152,7 +152,7 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İnventar dəyəri</div>
                                     <div class="ui input">
-                                        <input id="inventory_cost" value="{{old('inventory_cost')}}"
+                                        <input id="inventory_cost" required value="{{old('inventory_cost')}}"
                                                name="inventory_cost[]" type="number" step=any placeholder="İnventar dəyəri">
                                     </div>
                                     <span class="text-danger error_message" id="inventory_costError"></span>
@@ -211,7 +211,7 @@
                                     <div class="input_container">
                                         <div class="select_label ui sub header ">Alış sayı</div>
                                         <div class="ui input">
-                                            <input id="purchase_count" value="{{old('purchase_count')}}"
+                                            <input id="purchase_count" required value="{{old('purchase_count')}}"
                                                    name="purchase_count[]" type="number" placeholder="Alış sayını daxil edin">
                                         </div>
                                         <span class="text-danger error_message" id="purchase_countError"></span>
@@ -224,7 +224,7 @@
 
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Aktivlik statusu</div>
-                                    <select frequency="true" id="activity_status" name="activity_status[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                    <select frequency="true" id="activity_status" required name="activity_status[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option disabled selected>Aktivlik statusu seçin</option>
                                         <option value="1">Aktiv</option>
                                         <option value="0">Deaktiv</option>
@@ -235,7 +235,7 @@
 
                                 <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Statusu</div>
-                                    <select frequency="true" id="status" name="status[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                    <select frequency="true" id="status" required name="status[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option disabled selected>Statusu seçin</option>
 
                                         <option value="Yeni">Yeni</option>

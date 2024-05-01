@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\User\TicketController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\User\{

@@ -87,7 +87,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($user->inventories as $item)
+                            @forelse($user->appointments as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->products->invoices->e_invoice_number }}</td>
