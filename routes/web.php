@@ -159,6 +159,7 @@ Route::prefix('employee')->name('employee.')->middleware(['auth', 'check_role:em
     Route::post('update-reports-subjects', [EmployeeReportsSubjectsController::class, 'update_reports_subjects'])->name('update-reports-subjects');
     Route::post('create-reports-subjects', [EmployeeReportsSubjectsController::class, 'create_reports_subjects'])->name('create-reports-subjects');
     Route::post('delete-reports-subjects', [EmployeeReportsSubjectsController::class, 'delete_reports_subjects'])->name('delete-reports-subjects');
+    Route::post('confirm-reports', [EmployeeReportsController::class, 'confirm_reports'])->name('confirm-reports');
 });
 
 

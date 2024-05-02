@@ -6,16 +6,16 @@
             width: 100%;
         }
 
-        .wrapper .wrapper_inside{
+        .wrapper .wrapper_inside {
             display: flex;
             width: 100%;
         }
 
-        .wrapper_inside > div{
+        .wrapper_inside > div {
             flex: 1 1 50%;
         }
 
-        .wrapper .wrapper_inside .header{
+        .wrapper .wrapper_inside .header {
             font-size: 16px;
             padding: 10px 20px;
             margin: 10px;
@@ -25,15 +25,15 @@
             font-weight: 600;
         }
 
-        .wrapper .wrapper_inside .right_container .header{
+        .wrapper .wrapper_inside .right_container .header {
             background-color: #00af1c;
         }
 
-        .wrapper .wrapper_inside .left_container .header{
+        .wrapper .wrapper_inside .left_container .header {
             background-color: #e10101b5;
         }
 
-        .container_dragula{
+        .container_dragula {
             min-height: 50px;
             cursor: pointer;
         }
@@ -58,7 +58,7 @@
             margin-right: 10px;
         }
 
-        .container_dragula button:hover{
+        .container_dragula button:hover {
             border-color: #ffa2a2;
             background-color: #ff0000;
         }
@@ -81,14 +81,14 @@
             background-color: rgba(0, 0, 0, 0.2);
         }
 
-        .wrapper_inside .input_section{
+        .wrapper_inside .input_section {
             display: flex;
             align-items: center;
             gap: 9px;
             padding: 12px 8px;
         }
 
-        .input_section input{
+        .input_section input {
             flex: 1 1 80%;
             padding: 12px;
             border: 1px solid #bdbdbd;
@@ -97,12 +97,12 @@
             font-size: 14px;
         }
 
-        .input_section input:focus-visible{
+        .input_section input:focus-visible {
             outline: none;
             border-color: #605e5e;
         }
 
-        .input_section button{
+        .input_section button {
             flex: 1 1 20%;
             padding: 11px 0px;
             border: 1px solid #e9e9e9;
@@ -116,24 +116,24 @@
             transition: all 0.2s ease;
         }
 
-        button:focus-visible{
+        button:focus-visible {
             outline: none;
         }
 
-        .input_section button:hover{
+        .input_section button:hover {
             border-color: #524f4f;
             background-color: #a9a4a4;
         }
 
-        .input_section button#submit-report{
+        .input_section button#submit-report {
             background-color: #00af1c;
         }
 
-        .input_section input#new-subject-project{
+        .input_section input#new-subject-project {
             flex: 1 1 30%;
         }
 
-        .input_section input#new-subject-content{
+        .input_section input#new-subject-content {
             flex: 1 1 50%;
         }
     </style>
@@ -157,14 +157,16 @@
                                 <div class="header">Görüləcək işlər</div>
 
                                 <div id="left" class="container_dragula">
-                                    @foreach($uncompleted_reports as $uncompleted_report)
-                                        @foreach($uncompleted_report->reports_subjects->where('status', 0) as $subject_key0 => $subject0)
-                                        <div>
-                                            <div class="list_item"><p data-id="{{ $subject0->id }}">{{ $subject0->project_name ?? NULL }} - {{ $subject0->subject}}</p></div>
-                                            <button data-id="{{ $subject0->id }}" class="remove-button">Sil</button>
-                                        </div>
+                                    @if($uncompleted_reports)
+                                        @foreach($uncompleted_reports->reports_subjects->where('status', 0) as $subject_key0 => $subject0)
+                                            <div>
+                                                <div class="list_item"><p
+                                                        data-id="{{ $subject0->id }}">{{ $subject0->project_name ?? NULL }}
+                                                        - {{ $subject0->subject}}</p></div>
+                                                <button data-id="{{ $subject0->id }}" class="remove-button">Sil</button>
+                                            </div>
                                         @endforeach
-                                    @endforeach
+                                    @endif
                                 </div>
 
                                 <div class="input_section">
@@ -178,17 +180,19 @@
                             <div class="right_container">
                                 <div class="header">Hesabat tərkibi</div>
                                 <div id="right" class="container_dragula">
-                                        @foreach($completed_reports as  $completed_report)
-                                            @foreach($completed_report->reports_subjects->where('status', 1) as $subject_key1 => $subject1)
-                                                <div>
-                                                    <div class="list_item"><p data-id="{{ $subject1->id }}">{{ $subject1->project_name ?? NULL }} - {{ $subject1->subject}}</p></div>
-                                                    <button data-id="{{ $subject1->id }}" class="remove-button">Sil</button>
-                                                </div>
-                                            @endforeach
+                                    @if($uncompleted_reports)
+                                        @foreach($uncompleted_reports->reports_subjects->where('status', 1) as $subject_key1 => $subject1)
+                                            <div>
+                                                <div class="list_item"><p
+                                                        data-id="{{ $subject1->id }}">{{ $subject1->project_name ?? NULL }}
+                                                        - {{ $subject1->subject}}</p></div>
+                                                <button data-id="{{ $subject1->id }}" class="remove-button">Sil</button>
+                                            </div>
                                         @endforeach
+                                    @endif
                                 </div>
 
-                                <div class="input_section">
+                                <div class="input_section" id="submit-report-div">
                                     <div style='visibility: hidden; flex: 1 1 80%;'></div>
                                     <button type="button" id="submit-report">Hesabatı təsdiqlə</button>
                                 </div>
@@ -204,33 +208,37 @@
                     <h3>Həftəlik hesabatlar</h3>
                 </div>
                 <div class="card-body">
-                <div class="accordion" id="accordionRightIcon">
-                    @foreach($completed_reports as $completed_report)
-                        <div class="card p-8">
-                            <div class="card-header header-elements-inline">
-                                <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
-                                    <a data-toggle="collapse" class="text-default collapsed"
-                                    href="#accordion-item-icons-{{ $completed_report->id }}" aria-expanded="false">
-                                        <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
-                                        {{ \Carbon\Carbon::parse($completed_report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat</a>
-                                </h6>
-                            </div>
-                            <div id="accordion-item-icons-{{ $completed_report->id }}" class="collapse" data-parent="#accordionRightIcon"
-                                style="">
-                                <div class="card-body">
-                                    <p><strong>Kullanıcı Adı:</strong> {{ $completed_report->user->name }}</p>
-                                    <ul class="list-group">
-                                        @foreach($completed_report->reports_subjects as $subject_key => $subject)
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <p class="text-primary">{{ $subject_key+1 }}. {{ $subject->subject }}</p>
-                                                <strong>{{ $subject->project_name }}</strong>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                    <div class="accordion" id="accordionRightIcon">
+                        @foreach($completed_reports as $completed_report)
+                            <div class="card p-8">
+                                <div class="card-header header-elements-inline">
+                                    <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
+                                        <a data-toggle="collapse" class="text-default collapsed"
+                                           href="#accordion-item-icons-{{ $completed_report->id }}"
+                                           aria-expanded="false">
+                                            <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
+                                            {{ \Carbon\Carbon::parse($completed_report->report_date)->format('d.m.Y') }}
+                                            tarixi üçün həftəlik hesabat</a>
+                                    </h6>
+                                </div>
+                                <div id="accordion-item-icons-{{ $completed_report->id }}" class="collapse"
+                                     data-parent="#accordionRightIcon"
+                                     style="">
+                                    <div class="card-body">
+                                        <p><strong>Kullanıcı Adı:</strong> {{ $completed_report->user->name }}</p>
+                                        <ul class="list-group">
+                                            @foreach($completed_report->reports_subjects as $subject_key => $subject)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <p class="text-primary">{{ $subject_key+1 }}
+                                                        . {{ $subject->subject }}</p>
+                                                    <strong>{{ $subject->project_name }}</strong>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -241,9 +249,9 @@
 @endsection
 
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script> -->
-<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.6.6/dragula.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script> -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.6.6/dragula.min.js'></script>
     <script>
         $(document).ready(function () {
             $('#reports-table').DataTable({
@@ -292,43 +300,65 @@
         });
 
 
-        dragula([document.querySelector('#left'), document.querySelector('#right')]).on('drop', function(el, target, source, sibling) {
+        dragula([document.querySelector('#left'), document.querySelector('#right')]).on('drop', function (el, target, source, sibling) {
             const data_id = target.querySelector('p').getAttribute('data-id');
             const target_id = target.id
-
-            if(target_id == 'right')
-            {
+            if (target_id == 'right') {
                 $.ajax({
-                    url:"{{ route('employee.update-reports-subjects') }}",
-                    method:"POST",
+                    url: "{{ route('employee.update-reports-subjects') }}",
+                    method: "POST",
                     data: {
-                        "_token":"{{csrf_token()}}",
-                        "data_id":data_id,
+                        "_token": "{{csrf_token()}}",
+                        "data_id": data_id,
+                        "target": "right",
                         "status": 1
                     },
-                    success:function (response) {
-                        Toast.fire({
-                            icon: response.icon,
-                            title: response.message
-                        });
+                    success: function (response) {
+                        let timerInterval;
+                        Swal.fire({
+                            html: response.message,
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        })
                     }
                 })
-            }
-            else if(target_id == 'left')
-            {
+            } else if (target_id == 'left') {
                 $.ajax({
-                    url:"{{ route('employee.update-reports-subjects') }}",
-                    method:"POST",
+                    url: "{{ route('employee.update-reports-subjects') }}",
+                    method: "POST",
                     data: {
-                        "_token":"{{csrf_token()}}",
-                        "data_id":data_id,
+                        "_token": "{{csrf_token()}}",
+                        "data_id": data_id,
+                        "target": "right",
                         "status": 0
                     },
-                    success:function (response) {
-                        Toast.fire({
-                            icon: response.icon,
-                            title: response.message
-                        });
+                    success: function (response) {
+                        let timerInterval;
+                        Swal.fire({
+                            html: response.message,
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        })
                     }
                 })
             }
@@ -338,25 +368,22 @@
             const project_name = $('#new-subject-project').val();
             const subject_content = $('#new-subject-content').val();
 
-            if(subject_content.trim() == '')
-            {
+            if (subject_content.trim() == '') {
                 $('#subject-content-error').html('Tapşırıq məzmununu daxil edin');
-            }
-            else
-            {
+            } else {
                 $('#subject-content-error').html('');
                 $.ajax({
-                    url:"{{ route('employee.create-reports-subjects') }}",
-                    method:"POST",
+                    url: "{{ route('employee.create-reports-subjects') }}",
+                    method: "POST",
                     data: {
-                        "_token":"{{csrf_token()}}",
-                        "project_name":project_name,
-                        "subject_content":subject_content,
+                        "_token": "{{csrf_token()}}",
+                        "project_name": project_name,
+                        "subject_content": subject_content,
                         "status": 0
                     },
-                    success:function (response) {
+                    success: function (response) {
 
-                        $('#left').append('<div><div class="list_item"><p data-id="'+response.subjects.id+'">'+response.subjects.project_name+' - '+response.subjects.subject+'</p></div> <button data-id="'+response.subjects.id+'" class="remove-button">Sil</button></div>')
+                        $('#left').append('<div><div class="list_item"><p data-id="' + response.subjects.id + '">' + response.subjects.project_name + ' - ' + response.subjects.subject + '</p></div> <button data-id="' + response.subjects.id + '" class="remove-button">Sil</button></div>')
 
                         Toast.fire({
                             icon: response.icon,
@@ -374,7 +401,6 @@
 
         $('.remove-button').on("click", function (e) {
             const data_id = $(this).data('id');
-
             Swal.fire({
                 title: "Silmək istədiyinizdən əminsiniz ?",
                 showCancelButton: true,
@@ -383,21 +409,21 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url:"{{ route('employee.delete-reports-subjects') }}",
-                        method:"POST",
+                        url: "{{ route('employee.delete-reports-subjects') }}",
+                        method: "POST",
                         data: {
-                            "_token":"{{csrf_token()}}",
-                            "data_id":data_id
+                            "_token": "{{csrf_token()}}",
+                            "data_id": data_id
                         },
-                        success:function (response) {
-                            if(response.icon === 'success') {
+                        success: function (response) {
+                            if (response.icon === 'success') {
                                 $(`[data-id='${response.subject_id}']`).closest('div').remove();
                                 Swal.fire("Məlumatlar silindi!", "", "success");
                             } else {
                                 Swal.fire("Xəta baş verdi!", "", "error");
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             Swal.fire("Xəta baş verdi!", "", "error");
                             console.error(xhr.responseText);
                         }
@@ -405,6 +431,59 @@
                 }
             });
         });
+
+        $('#submit-report').on("click", function () {
+                var pCount = $("#right .list_item").find("p").length;
+                if(pCount>0) {
+                    Swal.fire({
+                        title: "Hesabatın tərkibini təsdiqləyirsiniz ?",
+                        showCancelButton: true,
+                        cancelButtonText: "Ləğv et",
+                        confirmButtonText: "Təsdiqlə",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "{{ route('employee.confirm-reports') }}",
+                                method: "POST",
+                                data: {
+                                    "_token": "{{csrf_token()}}",
+                                },
+                                success: function (response) {
+                                    if (response.icon === 'success') {
+                                        Swal.fire({
+                                            icon: response.icon,
+                                            title: response.message,
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        }).then(function () {
+                                            window.location.href = response.route;
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: response.icon,
+                                            title: response.message
+                                        });
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Xəta baş verdi'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Həftəlik hesabat tərkibi boşdur'
+                    });
+                }
+
+
+        })
 
 
     </script>

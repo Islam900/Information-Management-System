@@ -13,13 +13,14 @@ class EmployeeReportsSubjectsController extends Controller
     function update_reports_subjects(Request $request)
     {
         $subjects = ReportsSubjects::find($request->data_id);
+
         if ($subjects) {
             $subjects->status = $request->status;
 
             if ($subjects->save()) {
                 return response()->json(
                     [
-                        'message' => 'Tapşırıq həftəlik hesabat tərkibinə əlavə olundu',
+                        'message' => $request->target == "right" ? 'Tapşırıq Həftəlik hesabat tərkibinə əlavə olundu' : 'Tapşırıq Görüləcək işlər siyahısına əlavə olundu',
                         'icon' => 'success',
                     ], 200);
             } else {
@@ -42,8 +43,20 @@ class EmployeeReportsSubjectsController extends Controller
 
     function create_reports_subjects(Request $request)
     {
+        $report = Reports::where('user_id', Auth::user()->id)->where('status', 0)->first();
+
+        if(!$report)
+        {
+            $report = new Reports();
+            $report->departments_id = Auth::user()->departments_id ?? NULL;
+            $report->branches_id = Auth::user()->branches_id ?? NULL;
+            $report->user_id = Auth::user()->id;
+            $report->report_date = NULL;
+            $report->save();
+        }
+
         $subject = ReportsSubjects::create([
-            'reports_id' => NULL,
+            'reports_id' => $report->id,
             'project_name' => $request->project_name ?? NULL,
             'subject' => $request->subject_content ?? NULL,
             'status' => $request->status
