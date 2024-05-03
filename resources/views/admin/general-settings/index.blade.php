@@ -122,16 +122,31 @@
                                                 <h3>İşçilər</h3>
                                                 <div class="row">
                                                     @foreach ($users as $user_key => $user)
-                                                        <div class="col-4">
-                                                            <label class="checkbox checkbox-primary">
-                                                                <input type="checkbox" class="report-users" {{ in_array($user->id, $report_users) ? 'checked' : '' }} id="{{$user_key}}"
-                                                                       name="w_user_id[]"
-                                                                       data-branch-id="{{ !is_null($user->branches) ? $user->branches->id : '' }}"
-                                                                       data-department-id="{{ !is_null($user->departments) ? $user->departments->id : '' }}"
-                                                                       value="{{$user->id}}">
-                                                                <span>{{ $user->name}}</span>
-                                                                <span class="checkmark"></span>
-                                                            </label>
+                                                        <div class="col-4 mt-4">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <label class="checkbox checkbox-primary">
+                                                                        <input type="checkbox" class="report-users" {{ in_array($user->id, $report_users) ? 'checked' : '' }} id="{{$user_key}}"
+                                                                               name="w_user_id[]"
+                                                                               data-branch-id="{{ !is_null($user->branches) ? $user->branches->id : '' }}"
+                                                                               data-department-id="{{ !is_null($user->departments) ? $user->departments->id : '' }}"
+                                                                               value="{{$user->id}}">
+                                                                        <span>{{ $user->name}}</span>
+                                                                        <span class="checkmark"></span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <select name="report_receiver_id" class="form-control report_receiver_list">
+                                                                        <option selected value="NULL">Seçim edin</option>
+                                                                        @foreach($report_receiver_positions as $positions)
+                                                                            @foreach($positions->users as $position_user)
+                                                                                <option value="{{ $position_user->id }}" data-user-id="{{ $user->id }}" {{ $user->report_receiver_id == $position_user->id ? 'selected' : '' }}>{{ $position_user->positions->name }} - {{ $position_user->name }}</option>
+                                                                            @endforeach
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+
+                                                            </div>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -585,19 +600,19 @@
             });
 
             $('#unselect-all-permissions').change(function () {
-                var isChecked = $(this).prop('checked', false);
+                const isChecked = $(this).prop('checked', false);
                 $('input[name="permissions[]"]').prop('checked', false);
                 $('#select-all-permissions').prop('checked', false);
             });
 
             $('.report-departments').on('change', function() {
                 if ($(this).is(':checked')) {
-                    var department_id = $(this).val();
+                    const department_id = $(this).val();
                     $('.report-branches[data-department-id="' + department_id + '"]').prop('checked', true);
                     $('.report-users[data-department-id="' + department_id + '"]').prop('checked', true);
                 }
                 else {
-                    var department_id = $(this).val();
+                    const department_id = $(this).val();
                     $('.report-branches[data-department-id="' + department_id + '"]').prop('checked', false);
                     $('.report-users[data-department-id="' + department_id + '"]').prop('checked', false);
                 }
@@ -605,14 +620,49 @@
 
             $('.report-branches').on('change', function() {
                 if ($(this).is(':checked')) {
-                    var branch_id = $(this).val();
+                    const branch_id = $(this).val();
                     console.log(branch_id);
                     $('.report-users[data-branch-id="' + branch_id + '"]').prop('checked', true);
                 }
                 else {
-                    var branch_id = $(this).val();
+                    const branch_id = $(this).val();
                     $('.report-users[data-branch-id="' + branch_id + '"]').prop('checked', false);
                 }
+            });
+
+            $('.report_receiver_list').on("change", function (e) {
+                const selectedOption = $(this).find('option:selected');
+                const selectedOptionValue = $(this).find('option:selected').val();
+                const userId = selectedOption.attr('data-user-id');
+                $.ajax({
+                    url:"{{ route('admin.update-user-report-receiver-data') }}",
+                    method:"POST",
+                    data:{
+                        "_token":"{{csrf_token()}}",
+                        "report_receiver_id":selectedOptionValue,
+                        "user_id": userId
+                    },
+                    success:function (response) {
+                        if(response.status == 200)
+                        {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                            });
+                            Toast.fire({
+                                icon: response.icon,
+                                title: response.message
+                            });
+                        }
+                    }
+                })
             });
         })
 

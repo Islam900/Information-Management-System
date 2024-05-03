@@ -110,6 +110,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('store-roles', [GeneralSettingsController::class, 'store_roles'])->name('store-roles');
     Route::post('store-permissions', [GeneralSettingsController::class, 'store_permissions'])->name('store-permissions');
     Route::post('add-permission-to-role', [GeneralSettingsController::class, 'add_permission_to_role'])->name('add-permission-to-role');
+    Route::post('update-user-report-receiver-data', [UsersController::class, 'update_user_report_receiver_data'])->name('update-user-report-receiver-data');
 
     Route::resource('projects', ProjectsController::class);
 
@@ -160,6 +161,8 @@ Route::prefix('employee')->name('employee.')->middleware(['auth', 'check_role:em
     Route::post('create-reports-subjects', [EmployeeReportsSubjectsController::class, 'create_reports_subjects'])->name('create-reports-subjects');
     Route::post('delete-reports-subjects', [EmployeeReportsSubjectsController::class, 'delete_reports_subjects'])->name('delete-reports-subjects');
     Route::post('confirm-reports', [EmployeeReportsController::class, 'confirm_reports'])->name('confirm-reports');
+    Route::get('report-list', [EmployeeReportsController::class, 'report_list'])->name('report-list');
+    Route::post('update-report-status', [EmployeeReportsController::class, 'update_report_status'])->name('update-report-status');
 });
 
 

@@ -9,7 +9,7 @@ class Positions extends Model
 {
     use HasFactory;
     protected $table = 'positions';
-    protected $fillable = ['departments_id', 'branches_id', 'name', 'count' ,'status'];
+    protected $fillable = ['departments_id', 'branches_id', 'name', 'count', 'report_receiver' ,'status'];
 
     public function users()
     {

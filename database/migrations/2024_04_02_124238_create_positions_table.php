@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('branches_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('name');
             $table->integer('count')->default(1);
+            $table->integer('report_receiver')->default(0);
             $table->integer('status')->default(1);
             $table->timestamps();
         });

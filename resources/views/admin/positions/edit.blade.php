@@ -56,6 +56,19 @@
                             </div>
 
                             <div class="col-md-3 form-group mb-3">
+                                <div class="select_label ui sub header ">Hesabat qəbulu</div>
+                                <select id="report_receiver" name="report_receiver"
+                                        class="form-control ui fluid search dropdown create_form_dropdown">
+                                    <option value="1" {{ $position->report_receiver == '1' ?  'selected' : '' }}>Qəbul edə bilər</option>
+                                    <option value="0" {{ $position->report_receiver == '0' ?  'selected' : '' }}>Qəbul edə bilməz</option>
+                                </select>
+
+                                @if($errors->has('report_receiver'))
+                                    <span class="text-danger">{{ $errors->first('report_receiver') }}</span>
+                                @endif
+                            </div>
+
+                            <div class="col-md-3 form-group mb-3">
                                 <div class="select_label ui sub header ">Status</div>
                                 <select id="status" name="status"
                                         class="form-control ui fluid search dropdown create_form_dropdown">

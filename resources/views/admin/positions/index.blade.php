@@ -28,6 +28,7 @@
                                 <th>Departament</th>
                                 <th>Şöbə</th>
                                 <th>Vəzifə</th>
+                                <th>Hesabat qəbulu</th>
                                 <th>Ştat</th>
                                 <th>Status</th>
                                 <th>Əməliyyatlar</th>
@@ -40,6 +41,11 @@
                                     <td>{{!is_null($item->departments) ? $item->departments->name : 'İdarə heyəti'}}</td>
                                     <td>{{!is_null($item->branches) ? $item->branches->name : 'Şöbə yoxdur'}}</td>
                                     <td>{{$item->name}}</td>
+                                    <td>
+                                        <strong class="{{ $item->report_receiver == 1 ? 'text-success' : 'text-danger' }}">
+                                            {{ $item->report_receiver == 1 ? 'Hesabat qəbul edə bilər' : 'Hesabat qəbul edə bilməz' }}
+                                        </strong>
+                                    </td>
                                     <td>
                                         {{ $item->count }}
                                     </td>

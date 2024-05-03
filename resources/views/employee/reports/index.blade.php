@@ -136,6 +136,28 @@
         .input_section input#new-subject-content {
             flex: 1 1 50%;
         }
+
+        .data_head_container{
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+        }
+
+        .data_head_container a{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data_head_container .profile_container{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .data_head_container .profile_owner{
+            color: #6a6a6a;
+        }
     </style>
     <div class="row mb-4">
         <div class="col-md-12 mb-4">
@@ -145,7 +167,14 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h3>Hesabat tərkibi</h3>
-
+                        <strong>Hesabatı qəbul edən: {{ $receiver->name }}</strong>
+                        @if(\Illuminate\Support\Facades\Auth::user()->report_sender->count() > 0)
+                            <a href="{{ route('employee.report-list') }}">
+                                <button class="btn btn-warning">
+                                    Sizə göndərilən hesabatlar
+                                </button>
+                            </a>
+                        @endif
                     </div>
 
                 </div>
@@ -209,28 +238,37 @@
                 </div>
                 <div class="card-body">
                     <div class="accordion" id="accordionRightIcon">
-                        @foreach($completed_reports as $completed_report)
+                        @foreach($completed_reports as $report)
                             <div class="card p-8">
                                 <div class="card-header header-elements-inline">
-                                    <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
+                                    <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0 data_head_container">
+                                        <div class="profile_container">
+                                            <div class="profile_img">
+                                                @if(!is_null(\Illuminate\Support\Facades\Auth::user()->avatar))
+                                                    <img src="{{ asset('assets/images/avatars').'/'.\Illuminate\Support\Facades\Auth::user()->avatar }}" height="26px" alt="">
+                                                @else
+                                                    <i class="nav-icon i-Checked-User" style="font-size: 26px;"></i>
+                                                @endif
+                                            </div>
+                                            <div class="profile_owner">{{ \Illuminate\Support\Facades\Auth::user()->name }}</div>
+                                        </div>
+
                                         <a data-toggle="collapse" class="text-default collapsed"
-                                           href="#accordion-item-icons-{{ $completed_report->id }}"
-                                           aria-expanded="false">
+                                           href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">
                                             <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
-                                            {{ \Carbon\Carbon::parse($completed_report->report_date)->format('d.m.Y') }}
-                                            tarixi üçün həftəlik hesabat</a>
+                                            {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat <strong class="text-{{$report->status == 2 ? 'success' : 'primary'}}">({{ $report->status==2 ? $receiver->name .' tərəfindən təsdiq olundu' : 'Təsdiq üçün göndərildi' }})</strong></a>
                                     </h6>
+
                                 </div>
-                                <div id="accordion-item-icons-{{ $completed_report->id }}" class="collapse"
-                                     data-parent="#accordionRightIcon"
+
+
+                                <div id="accordion-item-icons-{{ $report->id }}" class="collapse" data-parent="#accordionRightIcon"
                                      style="">
                                     <div class="card-body">
-                                        <p><strong>Kullanıcı Adı:</strong> {{ $completed_report->user->name }}</p>
                                         <ul class="list-group">
-                                            @foreach($completed_report->reports_subjects as $subject_key => $subject)
+                                            @foreach($report->reports_subjects as $subject_key => $subject)
                                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <p class="text-primary">{{ $subject_key+1 }}
-                                                        . {{ $subject->subject }}</p>
+                                                    <p class="text-primary">{{ $subject_key+1 }}. {{ $subject->subject }}</p>
                                                     <strong>{{ $subject->project_name }}</strong>
                                                 </li>
                                             @endforeach
@@ -301,8 +339,11 @@
 
 
         dragula([document.querySelector('#left'), document.querySelector('#right')]).on('drop', function (el, target, source, sibling) {
-            const data_id = target.querySelector('p').getAttribute('data-id');
+            const data_id = el.querySelector('p').getAttribute('data-id');
             const target_id = target.id
+            console.log(data_id)
+            console.log(target);
+            // console.log(data_id);
             if (target_id == 'right') {
                 $.ajax({
                     url: "{{ route('employee.update-reports-subjects') }}",
@@ -322,9 +363,9 @@
                             didOpen: () => {
                                 Swal.showLoading();
                                 const timer = Swal.getPopup().querySelector("b");
-                                timerInterval = setInterval(() => {
-                                    timer.textContent = `${Swal.getTimerLeft()}`;
-                                }, 100);
+                                // timerInterval = setInterval(() => {
+                                //     timer.textContent = `${Swal.getTimerLeft()}`;
+                                // }, 100);
                             },
                             willClose: () => {
                                 clearInterval(timerInterval);
@@ -339,7 +380,7 @@
                     data: {
                         "_token": "{{csrf_token()}}",
                         "data_id": data_id,
-                        "target": "right",
+                        "target": "left",
                         "status": 0
                     },
                     success: function (response) {
@@ -351,9 +392,9 @@
                             didOpen: () => {
                                 Swal.showLoading();
                                 const timer = Swal.getPopup().querySelector("b");
-                                timerInterval = setInterval(() => {
-                                    timer.textContent = `${Swal.getTimerLeft()}`;
-                                }, 100);
+                                // timerInterval = setInterval(() => {
+                                //     timer.textContent = `${Swal.getTimerLeft()}`;
+                                // }, 100);
                             },
                             willClose: () => {
                                 clearInterval(timerInterval);

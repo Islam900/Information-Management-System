@@ -26,7 +26,8 @@ class User extends Authenticatable
         'email',
         'type',
         'password',
-        'b_day'
+        'b_day',
+        'report_receiver_id'
     ];
 
     /**
@@ -95,6 +96,16 @@ class User extends Authenticatable
     public function local_numbers()
     {
         return $this->hasMany(LocalNumbers::class);
+    }
+
+    public function report_receiver()
+    {
+        return $this->belongsTo(User::class, 'report_reveiver_id');
+    }
+
+    public function report_sender()
+    {
+        return $this->hasMany(User::class, 'report_receiver_id');
     }
 
 }

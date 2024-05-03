@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Reports;
 use App\Models\ReportsSubjects;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +17,11 @@ class EmployeeReportsController extends Controller
      */
     public function index()
     {
-        $completed_reports = Reports::with('reports_subjects')->where('user_id', Auth::user()->id)->where('status', 2)->get();
+        $receiver = User::where('id', Auth::user()->report_receiver_id)->select('name')->first();
+        $completed_reports = Reports::with('reports_subjects')->where('user_id', Auth::user()->id)->whereIn('status',[1, 2])->get();
         $uncompleted_reports = Reports::with('reports_subjects')->where('user_id', Auth::user()->id)->where('status', 0)->first();
 
-        return view('employee.reports.index', compact( 'completed_reports', 'uncompleted_reports'));
+        return view('employee.reports.index', compact( 'completed_reports', 'uncompleted_reports', 'receiver'));
     }
 
     /**
@@ -27,7 +29,6 @@ class EmployeeReportsController extends Controller
      */
     public function create()
     {
-        return view('employee.reports.create');
     }
 
     /**
@@ -57,6 +58,33 @@ class EmployeeReportsController extends Controller
 
     }
 
+    public function report_list()
+    {
+        $report_user_list = User::with(['reports' => function($query) {
+            $query->where('status', '!=', 0);
+        }, 'reports.reports_subjects'])
+            ->whereHas('reports', function ($query) {
+                $query->where('status', '!=', 0);
+            })
+            ->where('report_receiver_id', Auth::user()->id)
+            ->get();
+        return view('employee.reports.report-list', compact('report_user_list'));
+    }
+
+    public function update_report_status(Request $request)
+    {
+        $report = Reports::find($request->report_id);
+        $report->status = 2;
+        $report->save();
+
+        return response()->json(
+            [
+                'message' => 'Hesabat təsdiqləndi',
+                'icon' => 'success',
+            ], 200);
+
+
+    }
     public function confirm_reports(Request $request)
     {
         $report = Reports::where('user_id', Auth::user()->id)->where('status', 0)->first();

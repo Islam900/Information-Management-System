@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->date('b_day');
+            $table->foreignId('report_receiver_id')->nullable()->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('type')->default('employee');
             $table->rememberToken();
             $table->timestamps();

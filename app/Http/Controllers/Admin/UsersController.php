@@ -98,4 +98,20 @@ class UsersController extends Controller
     {
         //
     }
+
+    public function update_user_report_receiver_data(Request $request)
+    {
+        $data = $request->all();
+        $user = User::find($data['user_id']);
+        $user->report_receiver_id = $data['report_receiver_id'];
+        $user->save();
+
+        $user_receiver = User::find($data['report_receiver_id']);
+
+        return response()->json([
+            'message' => $user->positions->name.' vəzifəsində çalışan '.$user->name .' üçün hesabatları qəbul edən '. $user_receiver->positions->name .' vəzifəsində çalışan '. $user_receiver->name .' təyin edildi',
+            'icon' => 'success',
+            'status' => 200
+        ]);
+    }
 }

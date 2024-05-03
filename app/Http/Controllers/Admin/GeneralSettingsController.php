@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Branches;
 use App\Models\GeneralSettings;
+use App\Models\Positions;
 use App\Models\TicketReasons;
 use App\Models\User;
 use App\Models\Departments;
@@ -24,6 +25,7 @@ class GeneralSettingsController extends Controller
         $roles = Role::withCount('permissions')->withCount('users')->get();
         $permissions = Permission::all();
         $technical_users = User::where('type', '!=', 'employee')->get();
+        $report_receiver_positions = Positions::with('departments','users')->where('report_receiver', 1)->get();
         return view('admin.general-settings.index', compact(
             'item',
             'departments',
@@ -32,7 +34,8 @@ class GeneralSettingsController extends Controller
             'reasons',
             'roles',
             'permissions',
-            'technical_users'
+            'technical_users',
+            'report_receiver_positions'
         ));
     }
 
@@ -82,6 +85,8 @@ class GeneralSettingsController extends Controller
         return redirect()->back()->with('success', 'Məlumatlar dəyişdirildi');
 
     }
+
+
 
     public function store_ticket_reasons(Request $request)
     {

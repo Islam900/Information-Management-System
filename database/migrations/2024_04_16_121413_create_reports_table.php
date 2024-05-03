@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('departments_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('branches_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('departments_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('branches_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->date('report_date')->nullable();
             $table->integer('status')->default(0);
