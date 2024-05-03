@@ -74,12 +74,17 @@ class EmployeeReportsController extends Controller
     public function update_report_status(Request $request)
     {
         $report = Reports::find($request->report_id);
-        $report->status = 2;
+
+        $status = $request->type == 'accept' ? 2 : 1;
+
+        $report->status = $status;
         $report->save();
 
+        $message = $request->type == 'accept' ? 'Hesabat təsdiqləndi' : 'Hesabat geri göndərildi';
         return response()->json(
             [
-                'message' => 'Hesabat təsdiqləndi',
+                'route' => route('employee.report-list'),
+                'message' => $message,
                 'icon' => 'success',
             ], 200);
 

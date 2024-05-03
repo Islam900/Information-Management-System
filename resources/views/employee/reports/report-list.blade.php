@@ -46,58 +46,66 @@
 
                         @foreach($report_user_list as $report_user)
                             @foreach($report_user->reports as $report)
-                                    <div class="card p-8">
-                                        <div class="card-header header-elements-inline">
-                                            <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0 data_head_container">
-                                                <div class="profile_container">
-                                                    <div class="profile_img">
-                                                        @if(!is_null($report_user->avatar))
-                                                            <img
-                                                                src="{{ asset('assets/images/avatars').'/'.$report_user->avatar }}"
-                                                                height="26px" alt="">
-                                                        @else
-                                                            <i class="nav-icon i-Checked-User" style="font-size: 26px;"></i>
-                                                        @endif
-                                                    </div>
-                                                    <div class="profile_owner">{{ $report_user->name }}</div>
+                                <div class="card p-8">
+                                    <div class="card-header header-elements-inline">
+                                        <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0 data_head_container">
+                                            <div class="profile_container">
+                                                <div class="profile_img">
+                                                    @if(!is_null($report_user->avatar))
+                                                        <img
+                                                            src="{{ asset('assets/images/avatars').'/'.$report_user->avatar }}"
+                                                            height="26px" alt="">
+                                                    @else
+                                                        <i class="nav-icon i-Checked-User" style="font-size: 26px;"></i>
+                                                    @endif
                                                 </div>
-
-                                                <a data-toggle="collapse" class="text-default collapsed"
-                                                   href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">
-                                                    <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
-                                                    {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }}
-                                                    tarixi üçün həftəlik hesabat <strong
-                                                        class="text-{{$report->status == 2 ? 'success' : 'primary'}}">({{ $report->status==2 ? 'Hesabatı təsdiq etdiniz' : 'Təsdiq üçün göndərildi' }}
-                                                        )</strong></a>
-                                            </h6>
-
-                                        </div>
-
-
-                                        <div id="accordion-item-icons-{{ $report->id }}" class="collapse"
-                                             data-parent="#accordionRightIcon"
-                                             style="">
-                                            <div class="card-body">
-                                                <ul class="list-group">
-                                                    @foreach($report->reports_subjects as $subject_key => $subject)
-                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <p class="text-primary">{{ $subject_key+1 }}
-                                                                . {{ $subject->subject }}</p>
-                                                            <strong>{{ $subject->project_name }}</strong>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
+                                                <div class="profile_owner">{{ $report_user->name }}</div>
                                             </div>
 
-                                                @if($report->status == 1)
-                                                <div class="card-footer">
-                                                    <button class="btn btn-success accept-report" type="button" data-report-id="{{ $report->id }}">
-                                                        Hesabatı təsdiq edin
-                                                    </button>
-                                                </div>
-                                            @endif
-                                        </div>
+                                            <a data-toggle="collapse" class="text-default collapsed"
+                                               href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">
+                                                <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
+                                                {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }}
+                                                tarixi üçün həftəlik hesabat <strong
+                                                    class="text-{{$report->status == 2 ? 'success' : 'primary'}}">({{ $report->status==2 ? 'Hesabatı təsdiq etdiniz' : 'Təsdiq üçün göndərildi' }}
+                                                    )</strong></a>
+                                        </h6>
+
                                     </div>
+
+
+                                    <div id="accordion-item-icons-{{ $report->id }}" class="collapse"
+                                         data-parent="#accordionRightIcon"
+                                         style="">
+                                        <div class="card-body">
+                                            <ul class="list-group">
+                                                @foreach($report->reports_subjects as $subject_key => $subject)
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <p class="text-primary">{{ $subject_key+1 }}
+                                                            . {{ $subject->subject }}</p>
+                                                        <strong>{{ $subject->project_name }}</strong>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+
+                                        @if($report->status == 1)
+                                            <div class="card-footer">
+                                                <button class="btn btn-success accept-report" data-type="accept" type="button"
+                                                        data-report-id="{{ $report->id }}">
+                                                    Hesabatı təsdiq edin
+                                                </button>
+                                            </div>
+                                        @elseif($report->status == 2)
+                                            <div class="card-footer">
+                                                <button class="btn btn-danger accept-report"  data-type="reject" type="button"
+                                                        data-report-id="{{ $report->id }}">
+                                                    Geri göndərin
+                                                </button>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
                             @endforeach
                         @endforeach
                     </div>
@@ -210,17 +218,23 @@
 
         $('.accept-report').on("click", function (e) {
             const report_id = $(this).data('report-id');
+            const type = $(this).data('type');
             $.ajax({
                 url: "{{ route('employee.update-report-status') }}",
-                method:"POST",
-                data:{
-                    "_token":"{{ csrf_token() }}",
-                    "report_id":report_id
+                method: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "report_id": report_id,
+                    "type": type
                 },
-                success:function (response) {
+                success: function (response) {
                     Swal.fire({
                         icon: response.icon,
                         title: response.message
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.href = response.route;
+                        }
                     });
                 }
             })
