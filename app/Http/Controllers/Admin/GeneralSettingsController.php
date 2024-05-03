@@ -41,27 +41,30 @@ class GeneralSettingsController extends Controller
 
     public function update_general_settings(Request $request)
     {
-
         $report_data = [
             'departments' => [],
             'branches' => [],
             'users' => []
         ];
-        foreach ($request->w_user_id as $user_id) {
-            $user = User::find($user_id);
-            $departments_id = !is_null($user->departments) ? $user->departments->id : NULL;
-            $branches_id = !is_null($user->branches) ? $user->branches->id : NULL;
-
-            if (!in_array($departments_id, $report_data['departments'])) {
-                $report_data['departments'][] = $departments_id;
+        if(!is_null($request->w_user_id)){
+            foreach ($request->w_user_id as $user_id) {
+                $user = User::find($user_id);
+                $departments_id = !is_null($user->departments) ? $user->departments->id : NULL;
+                $branches_id = !is_null($user->branches) ? $user->branches->id : NULL;
+    
+                if (!in_array($departments_id, $report_data['departments'])) {
+                    $report_data['departments'][] = $departments_id;
+                }
+    
+                if (!in_array($branches_id, $report_data['branches'])) {
+                    $report_data['branches'][] = $branches_id;
+                }
+    
+                $report_data['users'][] = $user_id;
             }
-
-            if (!in_array($branches_id, $report_data['branches'])) {
-                $report_data['branches'][] = $branches_id;
-            }
-
-            $report_data['users'][] = $user_id;
         }
+            
+        
 
         $general_settings = GeneralSettings::updateOrCreate(
             ['id' => 1],
@@ -72,6 +75,7 @@ class GeneralSettingsController extends Controller
                 'weekly_report_module' => isset($request->weekly_report_module) && $request->weekly_report_module == "on" ? 1 : 0,
                 'weekly_report_module_users' => isset($request->weekly_report_module) && $request->weekly_report_module == "on" ? json_encode($report_data) : json_encode([]),
                 'ticket_module' => isset($request->ticket_module) && $request->ticket_module == "on" ? 1 : 0,
+                'assets_requests' => isset($request->assets_requests) && $request->assets_requests == "on" ? 1 : 0,
                 'delivery_act_generation' => isset($request->delivery_act_generation) && $request->delivery_act_generation == "on" ? 1 : 0,
                 'delivery_act_content' => $request->delivery_act_content ?? NULL,
                 'delivery_to_another_employee_act_generation' => isset($request->delivery_to_another_employee_act_generation) && $request->delivery_to_another_employee_act_generation == "on" ? 1 : 0,

@@ -108,4 +108,10 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'report_receiver_id');
     }
 
+    public function assets_requests(){
+
+        return $this->hasMany(User::class);
+
+    }
+
 }

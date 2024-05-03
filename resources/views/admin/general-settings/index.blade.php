@@ -163,18 +163,43 @@
                                 <div class="card-header header-elements-inline">
                                     <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
                                         <a data-toggle="collapse" class="text-default collapsed"
-                                           href="#accordion-item-icons-4" aria-expanded="false">
+                                           href="#accordion-item-icons-13" aria-expanded="false">
                                             <span><i class="i-Big-Data ul-accordion__font"> </i></span>
                                             Ticket modulu</a>
                                     </h6>
                                 </div>
-                                <div id="accordion-item-icons-4" class="collapse"
+                                <div id="accordion-item-icons-13" class="collapse"
                                      data-parent="#accordionRightIcon" style="">
                                     <div class="card-body">
                                         <label class="checkbox checkbox-warning">
                                             <input type="checkbox"
                                                    name="ticket_module" {{ $item->ticket_module == 1 ? 'checked' : ''}}>
                                             <span>Ticket modulu</span>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ASSETS REQUEST MODULE START   -->
+                        <div class="accordion mt-2" id="AssetsRequestsModule">
+                            <div class="card">
+                                <div class="card-header header-elements-inline">
+                                    <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
+                                        <a data-toggle="collapse" class="text-default collapsed"
+                                           href="#accordion-item-icons-4" aria-expanded="false">
+                                            <span><i class="i-Big-Data ul-accordion__font"> </i></span>
+                                            Mal-material modulu</a>
+                                    </h6>
+                                </div>
+                                <div id="accordion-item-icons-4" class="collapse"
+                                     data-parent="#AssetsRequestsModule" style="">
+                                    <div class="card-body">
+                                        <label class="checkbox checkbox-warning">
+                                            <input type="checkbox"
+                                                   name="assets_requests" {{ $item->assets_requests == 1 ? 'checked' : ''}}>
+                                            <span>Mal-material modulu </span>
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>

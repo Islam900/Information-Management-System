@@ -16,6 +16,7 @@ class GeneralSettings extends Model
         'weekly_report_module',
         'weekly_report_module_users',
         'ticket_module',
+        'assets_requests',
         'delivery_act_generation',
         'delivery_act_content',
         'delivery_to_another_employee_act_generation',
