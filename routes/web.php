@@ -8,7 +8,8 @@ use \App\Http\Controllers\User\{
     EmployeInventoriesController,
     EmployeeTicketController,
     EmployeeReportsController,
-    EmployeeReportsSubjectsController
+    EmployeeReportsSubjectsController,
+    EmployeeAssetsRequestsController
 };
 
 use \App\Http\Controllers\Admin\{
@@ -155,6 +156,7 @@ Route::prefix('employee')->name('employee.')->middleware(['auth', 'check_role:em
     Route::get('employee-appointments', [EmployeInventoriesController::class, 'index'])->name('employee-appointments');
     Route::resource('tickets', EmployeeTicketController::class);
     Route::resource('reports', EmployeeReportsController::class);
+    Route::resource('assets-requests', EmployeeAssetsRequestsController::class);
     Route::post('update-ticket', [EmployeeTicketController::class, 'update_ticket'])->name('update-ticket');
 
     Route::post('update-reports-subjects', [EmployeeReportsSubjectsController::class, 'update_reports_subjects'])->name('update-reports-subjects');

@@ -27,7 +27,8 @@ class User extends Authenticatable
         'type',
         'password',
         'b_day',
-        'report_receiver_id'
+        'report_receiver_id',
+        'assets_requests_confirm',
     ];
 
     /**
@@ -108,10 +109,14 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'report_receiver_id');
     }
 
-    public function assets_requests(){
-
+    public function assets_requests()
+    {
         return $this->hasMany(User::class);
+    }
 
+    public function assets_requests_details()
+    {
+        return $this->hasMany(AssetsRequestsDetails::class);
     }
 
 }

@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="BRo50BKcBSbFtNDV2aE5RHXS6DX69Y6ll9PEvImY">
     <title>İnventar İdarə Sistemi</title>
     <link id="gull-theme" rel="stylesheet" href="{{ asset('assets/styles/css/themes/create_foreign_broadcast.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/styles/vendor/smart.wizard/smart_wizard_theme_dots.min.css')}}">
     <link id="gull-theme" rel="stylesheet" href="{{ asset('assets/styles/css/themes/lite-purple.min.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/styles/vendor/perfect-scrollbar.css')}}">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
@@ -87,6 +88,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/4.13.1/dragula.min.js"></script>
+<script src="{{ asset('assets/js/vendor/jquery.smartWizard.min.js')}}"></script>
+<script src="{{ asset('assets/js/smart.wizard.script.js')}}"></script>
 
 
 <script>

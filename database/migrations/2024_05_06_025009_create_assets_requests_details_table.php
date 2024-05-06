@@ -10,10 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('assets_requests', function (Blueprint $table) {
+        Schema::create('assets_requests_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('assets_requests_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('users_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('content');
+            $table->integer('status')->default(0);
+            $table->string('reject_reason');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('assets_requests');
+        Schema::dropIfExists('assets_requests_details');
     }
 };
