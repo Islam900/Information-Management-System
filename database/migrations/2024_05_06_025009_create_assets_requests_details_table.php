@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('assets_requests_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('users_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->integer('status')->default(0);
-            $table->string('reject_reason');
+            $table->integer('status')->default(1);
+            $table->string('reject_reason')->nullable();
             $table->timestamps();
         });
     }

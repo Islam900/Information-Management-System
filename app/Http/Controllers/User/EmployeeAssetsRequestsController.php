@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\AssetsRequests;
+use App\Models\AssetsRequestsDetails;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeAssetsRequestsController extends Controller
 {
@@ -12,7 +16,9 @@ class EmployeeAssetsRequestsController extends Controller
      */
     public function index()
     {
-        return view('employee.assets-requests.index');
+        $user_assets_requests = Auth::user()->assets_requests()->with('assets_requests_details')->get();
+        $users = User::whereNotNull('assets_requests_id')->orderBy('assets_requests_id', 'ASC')->get();
+        return view('employee.assets-requests.index', compact('users', 'user_assets_requests'));
     }
 
     /**
@@ -20,7 +26,7 @@ class EmployeeAssetsRequestsController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -28,7 +34,24 @@ class EmployeeAssetsRequestsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $first_request = AssetsRequests::create([
+            'user_id' => Auth::user()->id,
+            'content' => $request->assets_content
+        ]);
+
+        $user_selected = User::whereNotNull('assets_requests_id')->orderBy('assets_requests_id', 'ASC')->get();
+        foreach($user_selected as $user){
+            AssetsRequestsDetails::create([
+                'assets_requests_id' => $first_request->id,
+                'users_id' => $user->id,
+                'status' => 1
+            ]);
+        }
+        return response()->json([
+            'route' => route('employee.assets-requests.index'),
+            'message' => 'Mal-material sorğusu müvəffəqiyyətlə yaradıldı',
+            'status' => 200
+        ]);
     }
 
     /**

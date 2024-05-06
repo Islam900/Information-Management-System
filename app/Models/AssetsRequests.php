@@ -10,7 +10,7 @@ class AssetsRequests extends Model
     use HasFactory;
 
     protected $table = 'assets_requests';
-    protected $fillable = ['users_id', 'content'];
+    protected $fillable = ['user_id', 'content'];
 
     public function users()
     {

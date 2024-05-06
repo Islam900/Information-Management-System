@@ -111,7 +111,7 @@ class User extends Authenticatable
 
     public function assets_requests()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(AssetsRequests::class);
     }
 
     public function assets_requests_details()
