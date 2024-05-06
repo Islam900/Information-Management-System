@@ -190,7 +190,7 @@
                                         <a data-toggle="collapse" class="text-default collapsed"
                                            href="#accordion-item-icons-4" aria-expanded="false">
                                             <span><i class="i-Big-Data ul-accordion__font"> </i></span>
-                                            Mal-material modulu</a>
+                                            Mal-material sorğusu modulu</a>
                                     </h6>
                                 </div>
                                 <div id="accordion-item-icons-4" class="collapse"
@@ -199,9 +199,45 @@
                                         <label class="checkbox checkbox-warning">
                                             <input type="checkbox"
                                                    name="assets_requests" {{ $item->assets_requests == 1 ? 'checked' : ''}}>
-                                            <span>Mal-material modulu </span>
+                                            <span>Mal-material sorğusu modulu </span>
                                             <span class="checkmark"></span>
                                         </label>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-12 mt-2">
+                                                <h3>Sorğunu qəbul edən səlahiyyətli şəxslər</h3>
+                                                <div class="row">
+                                                    @foreach ($all_users as $all_user_key => $all_user)
+                                                        <div class="col-4 mt-4">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <label class="checkbox checkbox-primary">
+                                                                        <input type="checkbox" id="{{$all_user_key}}"
+                                                                               name="assets_requests_confirm[{{$all_user_key}}]"
+                                                                               value="{{$all_user->id}}" {{ in_array($all_user->id, $assets_requests_users_id) ? 'checked' : ''}}>
+                                                                        <span>{{ $all_user->name}}</span>
+                                                                        <span class="checkmark"></span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <select name="assets_requests_confirm_order[{{$all_user_key}}]" class="form-control">
+                                                                        <option selected value="NULL">Seçim edin</option>
+                                                                        @for($i=1; $i<=10; $i++)
+                                                                                <option value="{{ $i }}" {{ $all_user->assets_requests_id == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                                                        @endfor
+                                                                    </select>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                     </div>
                                 </div>
                             </div>

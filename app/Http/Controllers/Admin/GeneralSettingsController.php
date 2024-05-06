@@ -21,22 +21,29 @@ class GeneralSettingsController extends Controller
         $departments = Departments::withCount('branches')->withCount('users')->where('status', 1)->get();
         $branches = Branches::withCount('users')->where('status', 1)->get();
         $users = User::where('type', 'employee')->get();
+        $all_users = User::all();
+        $assets_requests_users_id = User::whereNotNull('assets_requests_id')->pluck('id')->toArray();
         $reasons = TicketReasons::withCount('tickets')->get();
         $roles = Role::withCount('permissions')->withCount('users')->get();
         $permissions = Permission::all();
         $technical_users = User::where('type', '!=', 'employee')->get();
-        $report_receiver_positions = Positions::with('departments','users')->where('report_receiver', 1)->get();
-        return view('admin.general-settings.index', compact(
-            'item',
-            'departments',
-            'branches',
-            'users',
-            'reasons',
-            'roles',
-            'permissions',
-            'technical_users',
-            'report_receiver_positions'
-        ));
+        $report_receiver_positions = Positions::with('departments', 'users')->where('report_receiver', 1)->get();
+        return view(
+            'admin.general-settings.index',
+            compact(
+                'item',
+                'departments',
+                'branches',
+                'users',
+                'all_users',
+                'reasons',
+                'roles',
+                'permissions',
+                'technical_users',
+                'report_receiver_positions',
+                'assets_requests_users_id'
+            )
+        );
     }
 
     public function update_general_settings(Request $request)
@@ -46,25 +53,25 @@ class GeneralSettingsController extends Controller
             'branches' => [],
             'users' => []
         ];
-        if(!is_null($request->w_user_id)){
+        if (!is_null($request->w_user_id)) {
             foreach ($request->w_user_id as $user_id) {
                 $user = User::find($user_id);
                 $departments_id = !is_null($user->departments) ? $user->departments->id : NULL;
                 $branches_id = !is_null($user->branches) ? $user->branches->id : NULL;
-    
+
                 if (!in_array($departments_id, $report_data['departments'])) {
                     $report_data['departments'][] = $departments_id;
                 }
-    
+
                 if (!in_array($branches_id, $report_data['branches'])) {
                     $report_data['branches'][] = $branches_id;
                 }
-    
+
                 $report_data['users'][] = $user_id;
             }
         }
-            
-        
+
+
 
         $general_settings = GeneralSettings::updateOrCreate(
             ['id' => 1],
@@ -85,6 +92,14 @@ class GeneralSettingsController extends Controller
                 'hr_blog_module' => isset($request->hr_blog_module) && $request->hr_blog_module == "on" ? 1 : 0
             ]
         );
+
+        if ($request->assets_requests_confirm) {
+            foreach ($request->assets_requests_confirm as $confirm_key => $confirm) {
+                $user = User::find($confirm);
+                $user->assets_requests_id = $request->assets_requests_confirm_order[$confirm_key];
+                $user->save();
+            }
+        }
 
         return redirect()->back()->with('success', 'Məlumatlar dəyişdirildi');
 

@@ -12,7 +12,7 @@ class EmployeeAssetsRequestsController extends Controller
      */
     public function index()
     {
-        //
+        return view('employee.assets-requests.index');
     }
 
     /**
