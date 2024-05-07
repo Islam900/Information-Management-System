@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LogController;
+use Session;
 
 class LoginController extends Controller
 {
@@ -51,13 +52,30 @@ class LoginController extends Controller
         $general_settings = GeneralSettings::first();
         $repair_mode = $general_settings->repair_mode;
 
+
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
+
             $user = User::find(Auth::user()->id);
             $user->active_status = 1;
             $user->save();
 
-            if($user->type != 'administrator')
+            $user_role_count = explode(',',$user->type);
+            if(count($user_role_count) > 1){
+                $user_type = $request->selectedRole; 
+            } else {
+                $user_type = $user->type;
+            }
+            $user_all_types = ['employee', 'warehouseman', 'administrator', 'hr', 'finance'];
+
+            foreach($user_role_count as $role) {
+                $key = array_search($role, $user_all_types);
+                if ($key !== false) {
+                    unset($user_all_types[$key]);
+                }
+            }
+
+            if($user_type != 'administrator')
             {
                 if ($repair_mode == 1) {
                     $site_under_construction_text = $general_settings->repair_mode_message;
@@ -67,13 +85,13 @@ class LoginController extends Controller
             }
 
             (new LogController())->create_logs($user->name . ' sistemə giriş etdi.', 'Sistemə giriş');
-            if (Auth::check() && $user->type == 'administrator') {
+            if (Auth::check() && $user_type == 'administrator') {
                 return redirect()->route('admin.dashboard')->with('login_success', 'Sistemə daxil oldunuz');
-            } elseif (Auth::check() && $user->type == 'warehouseman') {
+            } elseif (Auth::check() && $user_type == 'warehouseman') {
                 return redirect()->route('warehouseman.warehouseman')->with('login_success', 'Sistemə daxil oldunuz');
-            } elseif (Auth::check() && $user->type == 'employee') {
+            } elseif (Auth::check() && $user_type == 'employee') {
                 return redirect()->route('employee.home')->with('login_success', 'Sistemə daxil oldunuz');
-            } elseif (Auth::check() && $user->type == 'support') {
+            } elseif (Auth::check() && $user_type == 'support') {
                 return redirect()->route('support.home')->with('login_success', 'Sistemə daxil oldunuz');
             }
         }
@@ -89,4 +107,34 @@ class LoginController extends Controller
         Auth::logout();
         return redirect('/');
     }
+
+
+    public function checkUserStatus(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        
+        if ($user) {
+            $roles = explode(',', $user->type); // Split roles separated by commas
+            
+            if (count($roles) > 1) {
+                return response()->json([
+                    'status' => 'multiple_roles',
+                    'roles' => $roles
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'single_role',
+                    'role' => $roles[0] // Return the single role
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found'
+            ], 404);
+        }
+    }
+
+
+
 }

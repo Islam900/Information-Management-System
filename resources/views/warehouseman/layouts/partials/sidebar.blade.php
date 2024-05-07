@@ -25,6 +25,15 @@
             <div class="triangle"></div>
         </li>
 
+        @if($general_settings->assets_requests == 1)
+            <li class="nav-item">
+                <a class="nav-item-hold" href="{{ route('warehouseman.assets-requests.index') }}">
+                    <i class="nav-icon i-Bag-Items"></i>
+                    <span class="nav-text">Mal-material sorğusu</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+        @endif
     </ul>
 </div>
 

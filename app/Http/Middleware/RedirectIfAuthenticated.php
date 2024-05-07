@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-
+use Session;
 class RedirectIfAuthenticated
 {
     /**
@@ -20,14 +20,23 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                if (Auth::user()->type == 'administrator') {
+            if (Auth::guard($guard)->check()) 
+                if (Session::get('current_role') == 'administrator') {
                     return redirect()->route('admin.dashboard');
-                } elseif (Auth::user()->type == 'warehouseman') {
+                } elseif (Session::get('current_role') == 'warehouseman') {
                     return redirect()->route('warehouseman.warehouseman');
+                } elseif (Session::get('current_role') == 'employee') {
+                    return redirect()->route('employee.home');
                 }
-            }
+                elseif (Session::get('current_role') == 'hr') {
+                    return redirect()->route('hr.dashboard');
+                }
+                elseif (Session::get('current_role') == 'finance') {
+                    return redirect()->route('finance.dashboard');
+                }
+            
         }
+        
 
         return $next($request);
     }

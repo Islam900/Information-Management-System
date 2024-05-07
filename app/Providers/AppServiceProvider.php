@@ -26,4 +26,7 @@ class AppServiceProvider extends ServiceProvider
 
         View::share(['general_settings' => $general_settings, 'report_users' => $report_users]);
     }
+
+
+
 }

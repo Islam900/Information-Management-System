@@ -25,6 +25,9 @@
             <div class="user col align-self-end">
                 <a href="#" id="userDropdown" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <h5 style="text-align: right">{{Auth::user()->name}}
+                    @if ($role == 'employee')
+                        <h1>ishci</h1>
+                    @endif
                     </h5>
                     <p style="text-align: right; margin-bottom: 0;";>{{\Illuminate\Support\Facades\Auth::user()->position}}</p>
                 </a>

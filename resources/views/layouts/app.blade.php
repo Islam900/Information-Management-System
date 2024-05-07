@@ -39,7 +39,6 @@
 <!-- ============Deafult  Large SIdebar Layout start ============= -->
 <div class="app-admin-wrap layout-sidebar-large clearfix">
     @yield('main-content')
-
     <!-- ============ Body content End ============= -->
 </div>
 
@@ -62,7 +61,9 @@
         </div>
     </div>
 </div>
+
 @endif
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('assets/js/common-bundle-script.js')}}"></script>

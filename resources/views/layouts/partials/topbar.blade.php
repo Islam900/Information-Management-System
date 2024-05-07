@@ -25,6 +25,8 @@
             <div class="user col align-self-end">
                 <a href="#" id="userDropdown" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <h5 style="text-align: right">{{Auth::user()->name}}
+            <h1>salama</h1>
+
                     </h5>
                     <p style="text-align: right; margin-bottom: 0;";>{{\Illuminate\Support\Facades\Auth::user()->name}}</p>
                 </a>

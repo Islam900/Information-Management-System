@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\User\TicketController;
 use Illuminate\Support\Facades\Route;
+
+
+
 use \App\Http\Controllers\User\{
     EmployeeController,
     EmployeInventoriesController,
@@ -41,7 +45,8 @@ use \App\Http\Controllers\Warehouseman\{
     WHMProductsController,
     WHMVendorsController,
     WHMHandRegistersController,
-    WHMWarehousesController
+    WHMWarehousesController,
+    WHMAssetsController
 };
 
 use \App\Http\Controllers\Support\{
@@ -144,6 +149,7 @@ Route::prefix('warehouseman')->name('warehouseman.')->middleware(['auth', 'check
     Route::get('appointments/{id}/refund', [WHMAppointmentsController::class, 'refund'])->name('appointments.refund');
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
+    Route::resource('assets-requests', WHMAssetsController::class);
 
 });
 
@@ -179,5 +185,8 @@ Route::prefix('support')->name('support.')->middleware(['auth', 'check_role:supp
     Route::post('update-ticket', [SupportTicketsController::class, 'update_ticket'])->name('update-ticket');
 });
 
+
+//Togrul deysihiklik
+Route::post('/check-user-status', [LoginController::class, 'checkUserStatus'])->name('check.user.status');
 
 // FINANCE ROUTES
