@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->integer('notification_module')->default(0);
             $table->text('notification_content')->nullable();
             $table->integer('hr_blog_module')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

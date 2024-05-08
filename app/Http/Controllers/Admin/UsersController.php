@@ -96,7 +96,11 @@ class UsersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        User::find($id)->delete();
+        return response()->json([
+            'message' => 'Məlumatlar müvəffəqiyyətlə silind',
+            'route' => route('admin.users.index')
+        ]);
     }
 
     public function update_user_report_receiver_data(Request $request)

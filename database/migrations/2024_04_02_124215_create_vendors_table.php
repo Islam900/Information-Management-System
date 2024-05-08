@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('relevant_person', 255)->nullable();
             $table->string('phone_number', 255)->nullable();
             $table->integer('status')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

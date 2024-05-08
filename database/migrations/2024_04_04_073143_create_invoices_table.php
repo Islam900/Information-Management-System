@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vendors_id')->constrained()->cascadeOnUpdate()->cascadeOnUpdate();
-            $table->foreignId('categories_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('vendors_id')->constrained('vendors')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('categories_id')->constrained('categories')->onUpdate('cascade')->onDelete('cascade');
             $table->string('e_invoice_number', 50)->nullable();
             $table->string('e_invoice_serial_number', 50)->nullable();
             $table->float('total_amount');
             $table->float('edv_total_amount');
             $table->text('note')->nullable();
             $table->date('e_invoice_date');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

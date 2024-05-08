@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('main-content')
-    @include('employee.layouts.partials.topbar', ['role'=>$role])
+    @include('employee.layouts.partials.topbar')
     <!-- header top menu end -->
 
 

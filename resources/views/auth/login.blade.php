@@ -43,10 +43,9 @@
                             <div class="form-group">
                                 <label for="password">Şifrə</label>
                                 <input id="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="********" type="password">
+                                <input type="text" hidden id="selectedRole" name="selectedRole" value="">
                             </div>
-                            <!-- Add a hidden input field to capture the selected role -->
-                            <input type="hidden" id="selectedRole" name="selectedRole">
-                            <!-- Modify your login button to trigger role selection if needed -->
+
                             <button class="btn btn-primary btn-block mt-2" id="loginButton">Daxil olun</button>
                         </form>
                     </div>
@@ -55,120 +54,78 @@
         </div>
     </div>
 </div>
-<!-- Add a modal for role selection -->
-<div class="modal" id="roleSelectionModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Səlahiyyət seçimi</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Hansı səlahiyyətlərlə daxil olmaq istəyirsiniz:</p>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="roleSelection" id="roleEmployee" value="employee">
-                    <label class="form-check-label" for="roleEmployee">
-                        Employee
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="roleSelection" id="roleWarehouseman" value="warehouseman">
-                    <label class="form-check-label" for="roleWarehouseman">
-                        Warehouseman
-                    </label>
-                </div>
-                <!-- Add other roles as needed -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="confirmRoleSelection">Təsdiqlə</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <script src="{{ asset('assets/js/common-bundle-script.js') }}"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('assets/js/script.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
     $('#loginButton').click(function (e) {
         e.preventDefault();
 
         var email = $('#email').val();
         var password = $('#password').val();
-
-        // Get CSRF token from the page's meta tags
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        // Send AJAX request to check user status
         $.ajax({
             type: "POST",
             url: "{{ route('check.user.status') }}",
             headers: {
-                'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers
+                'X-CSRF-TOKEN': csrfToken
             },
             data: {
                 email: email,
                 password: password
             },
             success: function (response) {
-                console.log(response);
 
-                if (response.status === 'multiple_roles') {
-                    // Display modal
-                    $('#roleSelectionModal').modal('show');
+                if (response.status == 'multiple_roles') {
+                    let selectHTML = '<select id="roleSelect" class="form-control">';
+                    const roles_array = [
+                        { value: 'employee', label: 'İşçi' },
+                        { value: 'warehouseman', label: 'Təhcizatçı' },
+                        { value: 'finance', label: 'Mühasib' },
+                        { value: 'administrator', label: 'Administrator' },
+                        { value: 'hr', label: 'İnsan resursları' },
+                        { value: 'support', label: 'Texniki dəstək' },
+                    ];
 
-                    // Populate modal with roles
-                    var roles = response.roles;
-                    var modalBody = $('#roleSelectionModal .modal-body');
-                    modalBody.empty(); // Clear existing content
-
-                    // Create radio buttons for each role
-                    var roleTranslations = {
-                        'employee': 'İşçi',
-                        'warehouseman': 'Anbardar',
-                        'hr': 'İnsan Resursları',
-                        'finance': 'Mühasib',
-                        'administrator': 'Administrator' // Add translations for other roles as needed
-                    };
-
-                    roles.forEach(function(role) {
-                        var translatedRole = roleTranslations[role] || role;
-                        var radioButton = $('<input type="radio" name="roleSelection" value="' + role + '">');
-                        var label = $('<label>').text(translatedRole);
-                        modalBody.append(radioButton).append(label).append('<br>');
+                    const rolesObject = {};
+                    roles_array.forEach(function(role) {
+                        rolesObject[role.value] = role.label;
                     });
-                } else if (response.status === 'single_role') {
-                    // Submit the form if user has only one role
-                    $('#selectedRole').val(response.role);
-                    $('#loginForm').submit();
-                } else {
-                    // Show error message if credentials are invalid or user not found
+
+                    response.roles.forEach(function(role) {
+                        selectHTML += '<option value="' + role + '">' + rolesObject[role] + '</option>';
+                    });
+                    selectHTML += '</select>';
+
+
                     Swal.fire({
-                        title: 'Error!',
-                        text: response.message || 'Invalid credentials or user not found',
-                        icon: 'error',
-                        showConfirmButton: true
+                        title: "<strong>Subyekti seçin</strong>",
+                        icon: "info",
+                        html: selectHTML,
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: `<i class="fa fa-thumbs-up"></i> Sistemə daxil olun`,
+                        confirmButtonAriaLabel: "Sistemə daxil olun",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const selected_role = $('#roleSelect').val();
+                            $('#selectedRole').val(selected_role);
+                            $('#loginForm').submit();
+                        }
                     });
+                } else {
+                    const selectedRole = $('#roleSelect').val();
+                    $('#selectedRole').val('employee');
+                    $('#loginForm').submit();
                 }
             },
-            error: function (xhr, status, error) {
-                // Show detailed error message if request fails
-                var errorMessage = xhr.status + ': ' + xhr.statusText;
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage += ' - ' + xhr.responseJSON.message;
-                }
-                Swal.fire({
-                    title: 'Error!',
-                    text: errorMessage,
-                    icon: 'error',
-                    showConfirmButton: true
-                });
-            }
         });
     });
 

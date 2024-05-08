@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LogController;
+use Illuminate\Support\Facades\DB;
 use Session;
 
 class LoginController extends Controller
@@ -49,6 +50,7 @@ class LoginController extends Controller
     }
     public function login(Request $request)
     {
+
         $general_settings = GeneralSettings::first();
         $repair_mode = $general_settings->repair_mode;
 
@@ -62,7 +64,7 @@ class LoginController extends Controller
 
             $user_role_count = explode(',',$user->type);
             if(count($user_role_count) > 1){
-                $user_type = $request->selectedRole; 
+                $user_type = $request->selectedRole;
             } else {
                 $user_type = $user->type;
             }
@@ -85,6 +87,8 @@ class LoginController extends Controller
             }
 
             (new LogController())->create_logs($user->name . ' sistemə giriş etdi.', 'Sistemə giriş');
+
+
             if (Auth::check() && $user_type == 'administrator') {
                 return redirect()->route('admin.dashboard')->with('login_success', 'Sistemə daxil oldunuz');
             } elseif (Auth::check() && $user_type == 'warehouseman') {
@@ -93,6 +97,10 @@ class LoginController extends Controller
                 return redirect()->route('employee.home')->with('login_success', 'Sistemə daxil oldunuz');
             } elseif (Auth::check() && $user_type == 'support') {
                 return redirect()->route('support.home')->with('login_success', 'Sistemə daxil oldunuz');
+            } elseif (Auth::check() && $user_type == 'hr') {
+                return redirect()->route('hr.home')->with('login_success', 'Sistemə daxil oldunuz');
+            } elseif (Auth::check() && $user_type == 'finance') {
+                return redirect()->route('finance.home')->with('login_success', 'Sistemə daxil oldunuz');
             }
         }
         return redirect()->back()->withInput(request()->only('email'))->with('login_error', 'Daxil etdiyiniz məlumatlar doğru deyil');
@@ -103,6 +111,7 @@ class LoginController extends Controller
         $user->active_status = 0;
         $user->save();
 
+        Session::forget('user_current_type');
         (new LogController())->create_logs(Auth::user()->name . ' sistemdən çıxış etdi.', 'Sistemdən çıxış');
         Auth::logout();
         return redirect('/');
@@ -111,11 +120,11 @@ class LoginController extends Controller
 
     public function checkUserStatus(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
-        
+        $user = DB::table('users')->where('email', $request->email)->first();
+
         if ($user) {
-            $roles = explode(',', $user->type); // Split roles separated by commas
-            
+            $roles = explode(',', $user->type);
+
             if (count($roles) > 1) {
                 return response()->json([
                     'status' => 'multiple_roles',
@@ -124,14 +133,14 @@ class LoginController extends Controller
             } else {
                 return response()->json([
                     'status' => 'single_role',
-                    'role' => $roles[0] // Return the single role
+                    'role' => $roles[0]
                 ]);
             }
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'User not found'
-            ], 404);
+                'message' => 'Daxil etdiyiniz məlumatlara uyğun istifadəçi tapılmadı..'
+            ]);
         }
     }
 

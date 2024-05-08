@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('warehouses_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('warehouses_id')->constrained('warehouses')->onUpdate('cascade')->onDelete('cascade');
             $table->string('product_unical_code');
             $table->float('purchase_count')->default(0);
             $table->float('stock_count')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

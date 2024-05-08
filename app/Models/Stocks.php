@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Stocks extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table = 'stocks';
     protected $fillable = ['warehouses_id','product_unical_code', 'purchase_count', 'stock_count'];
 

@@ -12,8 +12,9 @@ return new class extends Migration {
     {
         Schema::create('assets_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->string('content');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Departments;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentsController extends Controller
 {
@@ -69,8 +70,12 @@ class DepartmentsController extends Controller
      */
     public function destroy(string $id)
     {
-        $department = Departments::findOrFail($id);
+        $department = Departments::find($id);
         $department->delete();
-        return redirect()->route('admin.admin.departments.index')->with('success', 'Məlumatlar silindi');
+        return response()->json([
+            'message' => 'Məlumatlar müvəffəqiyyətlə silind',
+            'route' => route('admin.departments.index')
+        ]);
     }
+
 }

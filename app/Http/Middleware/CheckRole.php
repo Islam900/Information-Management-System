@@ -16,15 +16,8 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        $ourRoles = ['employee', 'warehouseman', 'hr', 'finance', 'administrator'];
-        // $userRoles = ['employee', 'warehouseman'];
         $userRolesArray = explode(',', Auth::user()->type);
-        
 
-        $unassignedRoles = array_diff($ourRoles, $userRolesArray);
-
-
-        
         if(Auth::check() && in_array($role, $userRolesArray))
         {
             return $next($request);

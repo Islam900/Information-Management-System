@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('hand_registers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoices_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnUpdate();
-            $table->foreignId('vendors_id')->constrained()->cascadeOnUpdate()->cascadeOnUpdate();
-            $table->foreignId('categories_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('invoices_id')->nullable()->constrained('invoices')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('vendors_id')->constrained('vendors')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('categories_id')->constrained('categories')->onUpdate('cascade')->onDelete('cascade');
             $table->string('register_number', 50)->nullable();
             $table->float('total_amount');
             $table->float('edv_total_amount');
             $table->text('note')->nullable();
             $table->date('register_date');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

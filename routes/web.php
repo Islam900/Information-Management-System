@@ -99,7 +99,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::resource('appointments', AppointmentsController::class);
     Route::resource('tickets', TicketsController::class);
     Route::resource('reports', ReportsController::class);
-    Route::get('appointments/{id}/refund', [InventoriesController::class, 'refund'])->name('appointments.refund');
+    Route::get('appointments/{id}/refund', [AppointmentsController::class, 'refund'])->name('appointments.refund');
     Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
     Route::resource('users', UsersController::class);
     Route::resource('local-numbers', LocalNumbersController::class);
@@ -118,7 +118,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('add-permission-to-role', [GeneralSettingsController::class, 'add_permission_to_role'])->name('add-permission-to-role');
     Route::post('update-user-report-receiver-data', [UsersController::class, 'update_user_report_receiver_data'])->name('update-user-report-receiver-data');
 
-    Route::resource('projects', ProjectsController::class);
 
 
     Route::get('logs', [LogController::class, 'logs'])->name('logs');

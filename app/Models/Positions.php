@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Positions extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes, SoftDeletes;
     protected $table = 'positions';
     protected $fillable = ['departments_id', 'branches_id', 'name', 'count', 'report_receiver' ,'status'];
 

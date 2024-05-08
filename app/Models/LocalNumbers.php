@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LocalNumbers extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table = 'local_numbers';
     protected $fillable = ['department_id', 'branch_id', 'room_id' , 'user_id' , 'number'];
 

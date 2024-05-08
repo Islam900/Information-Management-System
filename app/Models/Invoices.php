@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoices extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes, CascadeSoftDeletes;
     protected $table = 'invoices';
     protected $fillable = ['vendors_id' , 'categories_id' ,'e_invoice_number', 'e_invoice_serial_number', 'total_amount', 'edv_total_amount' ,'note', 'e_invoice_date'];
 

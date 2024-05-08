@@ -12,19 +12,20 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('departments_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('branches_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('positions_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('rooms_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('departments_id')->nullable()->constrained('departments')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('branches_id')->nullable()->constrained('branches')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('positions_id')->nullable()->constrained('positions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('rooms_id')->constrained('rooms')->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->date('b_day');
-            $table->foreignId('report_receiver_id')->nullable()->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('report_receiver_id')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('assets_requests_confirm')->nullable();
             $table->string('type')->default('employee');
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

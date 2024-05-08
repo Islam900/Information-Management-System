@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('departments_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->unsignedBigInteger('departments_id')->nullable();
+            $table->foreign('departments_id')->references('id')->on('departments')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name', 255);
             $table->integer('status')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

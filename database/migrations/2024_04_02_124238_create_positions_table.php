@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('departments_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('branches_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('departments_id')->nullable()->constrained('departments')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('branches_id')->nullable()->constrained('branches')->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
             $table->integer('count')->default(1);
             $table->integer('report_receiver')->default(0);
             $table->integer('status')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
