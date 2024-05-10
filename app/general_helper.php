@@ -26,6 +26,10 @@ function display_user_types()
         'support' => [
             'name' => 'Texniki dəstək',
             'route' => route('support.home')
+        ],
+        'itd-leader' => [
+            'name' => 'IKT rəhbəri',
+            'route' => route('itd-leader.home')
         ]
     ];
 

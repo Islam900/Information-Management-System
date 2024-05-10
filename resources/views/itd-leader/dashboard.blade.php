@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('itd-leader.layouts.app')
 
 @section('content')
         <div class="row">
@@ -10,8 +10,6 @@
                                 (version 1.0.0)
                             </code>
                         </h3>
-
-
 
                         <div>
                             @if(is_array(display_user_types()) && count(display_user_types())>1)

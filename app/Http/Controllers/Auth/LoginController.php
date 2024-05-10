@@ -101,6 +101,8 @@ class LoginController extends Controller
                 return redirect()->route('hr.home')->with('login_success', 'Sistemə daxil oldunuz');
             } elseif (Auth::check() && $user_type == 'finance') {
                 return redirect()->route('finance.home')->with('login_success', 'Sistemə daxil oldunuz');
+            } elseif (Auth::check() && $user_type == 'itd-leader') {
+                return redirect()->route('itd-leader.home')->with('login_success', 'Sistemə daxil oldunuz');
             }
         }
         return redirect()->back()->withInput(request()->only('email'))->with('login_error', 'Daxil etdiyiniz məlumatlar doğru deyil');

@@ -92,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         { value: 'administrator', label: 'Administrator' },
                         { value: 'hr', label: 'İnsan resursları' },
                         { value: 'support', label: 'Texniki dəstək' },
+                        { value: 'itd-leader', label: 'İKT rəhbəri' },
                     ];
 
                     const rolesObject = {};

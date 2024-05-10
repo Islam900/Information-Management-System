@@ -1,58 +1,72 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\LogController;
-use App\Http\Controllers\User\TicketController;
-use Illuminate\Support\Facades\Route;
-
-
-
-use \App\Http\Controllers\User\{
-    EmployeeController,
-    EmployeInventoriesController,
-    EmployeeTicketController,
-    EmployeeReportsController,
-    EmployeeReportsSubjectsController,
-    EmployeeAssetsRequestsController
-};
-
-use \App\Http\Controllers\Admin\{
-    DepartmentsController,
-    BranchesController,
-    PositionsController,
-    RoomsController,
+use App\Http\Controllers\Admin\{
     AppointmentsController,
-    InvoicesController,
-    TicketsController,
-    GeneralSettingsController,
-    VendorsController,
+    BranchesController,
     CategoriesController,
+    DepartmentsController,
+    GeneralSettingsController,
+    HandRegistersController,
+    InvoicesController,
+    LocalNumbersController,
+    PositionsController,
     ProductsController,
-    StructureController,
-    UsersController,
     ProjectsController,
     ReportsController,
-    HandRegistersController,
-    LocalNumbersController,
+    RoomsController,
+    StructureController,
+    TicketsController,
+    VendorsController,
     WarehousesController
 };
 
-use \App\Http\Controllers\Warehouseman\{
+use App\Http\Controllers\Auth\LoginController;
+
+use App\Http\Controllers\ITD\{
+    ITDLeaderController,
+    ITDAppointmentsController,
+    ITDBranchesController,
+    ITDDepartmentsController,
+    ITDLocalNumbersController,
+    ITDPositionsController,
+    ITDReportsController,
+    ITDRoomsController,
+    ITDStructureController,
+    ITDTicketsController,
+    UsersController
+};
+
+use App\Http\Controllers\LogController;
+
+use App\Http\Controllers\Support\{
+    SupportController,
+    SupportTicketsController
+};
+
+use App\Http\Controllers\User\{
+    EmployeeAssetsRequestsController,
+    EmployeeController,
+    EmployeeReportsController,
+    EmployeeReportsSubjectsController,
+    EmployeeTicketController,
+    EmployeInventoriesController
+};
+
+use App\Http\Controllers\User\TicketController;
+
+use App\Http\Controllers\Warehouseman\{
     WarehousemanController,
-    WHMCategoriesController,
     WHMAppointmentsController,
+    WHMAssetsController,
+    WHMCategoriesController,
+    WHMHandRegistersController,
     WHMInvoicesController,
     WHMProductsController,
     WHMVendorsController,
-    WHMHandRegistersController,
-    WHMWarehousesController,
-    WHMAssetsController
+    WHMWarehousesController
 };
 
-use \App\Http\Controllers\Support\{
-  SupportController,
-  SupportTicketsController
-};
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,27 +148,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
 
 
 // ITDLEADER ROUTES
-Route::prefix('itdleader')->name('itdleader.')->middleware(['auth', 'check_role:itdleader'])->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
-    Route::get('profile', [\App\Http\Controllers\HomeController::class, 'profile'])->name('profile');
-    Route::put('update-profile/{id}', [\App\Http\Controllers\HomeController::class, 'update_profile'])->name('update-profile');
-    Route::resource('departments', DepartmentsController::class);
-    Route::resource('branches', BranchesController::class);
-    Route::resource('positions', PositionsController::class);
-    Route::resource('rooms', RoomsController::class);
-    Route::resource('vendors', VendorsController::class);
-    Route::resource('categories', CategoriesController::class);
-    Route::resource('products', ProductsController::class);
-    Route::resource('invoices', InvoicesController::class);
-    Route::resource('hand-registers', HandRegistersController::class);
-    Route::resource('appointments', AppointmentsController::class);
-    Route::resource('tickets', TicketsController::class);
-    Route::resource('reports', ReportsController::class);
-    Route::get('appointments/{id}/refund', [AppointmentsController::class, 'refund'])->name('appointments.refund');
-    Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
-    Route::resource('users', UsersController::class);
-    Route::resource('local-numbers', LocalNumbersController::class);
-    Route::resource('warehouses', WarehousesController::class);
+Route::prefix('itd-leader')->name('itd-leader.')->middleware(['auth', 'check_role:itd-leader'])->group(function () {
+    Route::get('/dashboard', [ITDLeaderController::class, 'index'])->name('home');
+    Route::get('profile', [ITDLeaderController::class, 'profile'])->name('profile');
+    Route::put('update-profile/{id}', [ITDLeaderController::class, 'update_profile'])->name('update-profile');
+    Route::resource('departments', ITDDepartmentsController::class);
+    Route::resource('branches', ITDBranchesController::class);
+    Route::resource('positions', ITDPositionsController::class);
+    Route::resource('rooms', ITDRoomsController::class);
+    Route::resource('appointments', ITDAppointmentsController::class);
+    Route::resource('tickets', ITDTicketsController::class);
+    Route::resource('reports', ITDReportsController::class);
+    Route::get('structure', [ITDStructureController::class, 'index'])->name('structures.index');
+    Route::resource('users', ITDUsersController::class);
+    Route::resource('local-numbers', ITDLocalNumbersController::class);
 });
 
 

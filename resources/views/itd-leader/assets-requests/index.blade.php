@@ -1,4 +1,4 @@
-@extends('warehouseman.layouts.app')
+@extends('itd-leader.layouts.app')
 @section('content')
     <style>
         .steps {
@@ -166,7 +166,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    @foreach($assets as $asset_key => $assets_requests)
+                    @foreach($user_assets_requests as $asset_key => $assets_requests)
                         <div class="card mt-2">
                             <div class="p-5 mb-sm-4">
                                 <!-- Details-->
@@ -174,11 +174,9 @@
                                 <!-- Progress-->
                                 <div class="steps">
                                     <div class="steps-header">
-                                    <div class="p-4">
-                                        <h4>{{ $assets_requests->user->name}}: {{ $assets_requests->content }}</h4>
-                                        <br>
-                                        <h5>Sorğunun yaradılma tarixi: {{ $assets_requests->created_at->format('H:i d.m.Y') }}</h5>
-                                    </div>
+                                        <div class="p-4">
+                                            <h4>{{ $assets_requests->content }}</h4>
+                                        </div>
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: {{20+$assets_requests->assets_requests_details()->where('status', 2)->count()*20}}%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
@@ -196,16 +194,9 @@
                                             <div class="step step-completed">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <img src="{{ asset('assets/images/').'/'.$detail->status.'.png' }}" height="150px;"  width="150px;" alt="">
-                                                    <strong>{{ $detail->users->name }}</strong>
-                                                    @php
-                                                        $roles = explode(',', $detail->users->type);
-                                                    @endphp
-                                                    @if(in_array('itdleader', $roles) && $detail->status == 1)
-                                                        <form action="{{ route('itdLeader.assets-requests.submit', ['detail_id' => $detail->id]) }}" method="POST">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-success">Tesdiq et</button>
-                                                        </form>
-                                                    @endif
+                                                    <strong>
+                                                        {{ $detail->users->name }}
+                                                    </strong>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -238,7 +229,7 @@
                     showLoaderOnConfirm: true,
                     preConfirm: async (assets_content) => {
                         $.ajax({
-                            url:"{{route('warehouseman.assets-requests.store')}}",
+                            url:"{{route('employee.assets-requests.store')}}",
                             method:"POST",
                             data:{
                                 "_token":"{{csrf_token()}}",
@@ -262,14 +253,6 @@
                     allowOutsideClick: () => !Swal.isLoading()
                 })
             });
-        });
-    </script>
-
-    <script>
-        $('document').ready(function () {
-            @if(session('success'))
-                Swal.fire("Sorğu uğurla təsdiq edildi");
-            @endif
         });
     </script>
 @endsection
