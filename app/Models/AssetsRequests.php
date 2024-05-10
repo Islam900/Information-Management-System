@@ -14,7 +14,7 @@ class AssetsRequests extends Model
     protected $table = 'assets_requests';
     protected $fillable = ['user_id', 'content'];
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

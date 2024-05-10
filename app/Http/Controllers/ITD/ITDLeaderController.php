@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Warehouseman;
+namespace App\Http\Controllers\ITD;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\AssetsRequests;
-use App\Models\AssetsRequestsDetails;
 
-class WHMAssetsController extends Controller
+class ITDLeaderController extends Controller
 {
     public function index() {
         $assets= AssetsRequests::with('user')->get();

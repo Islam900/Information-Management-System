@@ -200,8 +200,8 @@
                                                     @php
                                                         $roles = explode(',', $detail->users->type);
                                                     @endphp
-                                                    @if(in_array('warehouseman', $roles) && $detail->status == 1)
-                                                        <form action="{{ route('warehouseman.assets-requests.submit', ['detail_id' => $detail->id]) }}" method="POST">
+                                                    @if(in_array('itdleader', $roles) && $detail->status == 1)
+                                                        <form action="{{ route('itdLeader.assets-requests.submit', ['detail_id' => $detail->id]) }}" method="POST">
                                                             @csrf
                                                             <button type="submit" class="btn btn-success">Tesdiq et</button>
                                                         </form>

@@ -133,6 +133,31 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
 });
 
 
+// ITDLEADER ROUTES
+Route::prefix('itdleader')->name('itdleader.')->middleware(['auth', 'check_role:itdleader'])->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+    Route::get('profile', [\App\Http\Controllers\HomeController::class, 'profile'])->name('profile');
+    Route::put('update-profile/{id}', [\App\Http\Controllers\HomeController::class, 'update_profile'])->name('update-profile');
+    Route::resource('departments', DepartmentsController::class);
+    Route::resource('branches', BranchesController::class);
+    Route::resource('positions', PositionsController::class);
+    Route::resource('rooms', RoomsController::class);
+    Route::resource('vendors', VendorsController::class);
+    Route::resource('categories', CategoriesController::class);
+    Route::resource('products', ProductsController::class);
+    Route::resource('invoices', InvoicesController::class);
+    Route::resource('hand-registers', HandRegistersController::class);
+    Route::resource('appointments', AppointmentsController::class);
+    Route::resource('tickets', TicketsController::class);
+    Route::resource('reports', ReportsController::class);
+    Route::get('appointments/{id}/refund', [AppointmentsController::class, 'refund'])->name('appointments.refund');
+    Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
+    Route::resource('users', UsersController::class);
+    Route::resource('local-numbers', LocalNumbersController::class);
+    Route::resource('warehouses', WarehousesController::class);
+});
+
+
 // WAREHOUSEMAN ROUTES
 Route::prefix('warehouseman')->name('warehouseman.')->middleware(['auth', 'check_role:warehouseman'])->group(function () {
     Route::get('/warehouseman', [WarehousemanController::class, 'index'])->name('warehouseman');
@@ -149,8 +174,10 @@ Route::prefix('warehouseman')->name('warehouseman.')->middleware(['auth', 'check
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
     Route::resource('assets-requests', WHMAssetsController::class);
-
+    Route::post('assets-requests/{detail_id}/submit', [WHMAssetsController::class, 'submit'])->name('assets-requests.submit');
 });
+
+
 
 
 // EMPLOYEE ROUTES
