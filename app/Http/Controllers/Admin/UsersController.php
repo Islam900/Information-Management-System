@@ -17,7 +17,20 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::with([
+            'departments' => function ($query) {
+                $query->withTrashed();
+            },
+            'branches' => function ($query) {
+                $query->withTrashed();
+            },
+            'positions' => function ($query) {
+                $query->withTrashed();
+            },
+            'rooms' => function ($query) {
+                $query->withTrashed();
+            }
+        ])->get();
         return view('admin.users.index', compact('users'));
     }
 
@@ -81,9 +94,7 @@ class UsersController extends Controller
         $data = $request->all();
         if (!is_null($data['password'])) {
             $data['password'] = bcrypt($request->password);
-        }
-        else
-        {
+        } else {
             $data['password'] = $user->password;
         }
         $user->update($data);
@@ -113,7 +124,7 @@ class UsersController extends Controller
         $user_receiver = User::find($data['report_receiver_id']);
 
         return response()->json([
-            'message' => $user->positions->name.' vəzifəsində çalışan '.$user->name .' üçün hesabatları qəbul edən '. $user_receiver->positions->name .' vəzifəsində çalışan '. $user_receiver->name .' təyin edildi',
+            'message' => $user->positions->name . ' vəzifəsində çalışan ' . $user->name . ' üçün hesabatları qəbul edən ' . $user_receiver->positions->name . ' vəzifəsində çalışan ' . $user_receiver->name . ' təyin edildi',
             'icon' => 'success',
             'status' => 200
         ]);

@@ -34,7 +34,13 @@
                            @foreach($branches as $item)
                                <tr>
                                    <td>{{ $item->id }}</td>
-                                   <td>{{$item->departments->name}}</td>
+                                   <td>
+                                    @isset($item->departments)
+                                        <span style="color: {{$item->departments->trashed() ? 'red' : 'black'}};">
+                                            {{$item->departments->name}}
+                                        </span>
+                                    @endif
+                                   </td>
                                    <td>{{$item->name}}</td>
                                    <td>
                                        <button class="btn btn-sm btn-{{$item->status == 1 ? 'success' : 'danger'}}">

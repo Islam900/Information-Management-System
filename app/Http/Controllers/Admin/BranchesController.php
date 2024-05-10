@@ -14,7 +14,11 @@ class BranchesController extends Controller
      */
     public function index()
     {
-        $branches = Branches::all();
+        $branches = Branches::with([
+            'departments' => function ($query) {
+                $query->withTrashed();
+            }
+        ])->get();
         return view('admin.branches.index', compact('branches'));
     }
 

@@ -36,9 +36,25 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{$item->name}}</td>
-                                    <td>{{ !is_null($item->departments) ? $item->departments->name : 'İdarə heyəti' }}</td>
-                                    <td>{{ !is_null($item->branches) ? $item->branches->name : '' }}</td>
-                                    <td>{{ !is_null($item->rooms) ? $item->rooms->name : '' }}</td>
+                                    <td>
+                                        @isset($item->departments)
+                                        <span style="color: {{$item->departments->trashed() ? 'red' : 'black'}};">
+                                            {{$item->departments->name}}
+                                        </span>
+                                        @else 
+                                        <p>İdarə heyəti</p>
+                                    @endif    
+                                    </td>
+                                    <td>@isset($item->branches)
+                                        <span style="color: {{$item->branches->trashed() ? 'red' : 'black'}};">
+                                            {{$item->branches->name}}
+                                        </span>
+                                        @endif </td>
+                                    <td>@isset($item->positions)
+                                        <span style="color: {{$item->positions->trashed() ? 'red' : 'black'}};">
+                                            {{$item->positions->name}}
+                                        </span>
+                                        @endif </td>
                                     <td>{{$item->email}}</td>
                                     <td>
                                         <a href="{{ route('admin.users.edit', $item->id ) }}"

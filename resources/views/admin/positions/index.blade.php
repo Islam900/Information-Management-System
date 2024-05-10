@@ -38,8 +38,22 @@
                             @foreach($positions as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{!is_null($item->departments) ? $item->departments->name : 'İdarə heyəti'}}</td>
-                                    <td>{{!is_null($item->branches) ? $item->branches->name : 'Şöbə yoxdur'}}</td>
+                                    <td>
+                                        @isset($item->departments)
+                                            <span style="color: {{$item->departments->trashed() ? 'red' : 'black'}};">
+                                                {{$item->departments->name}}
+                                            </span>
+                                            @else 
+                                            <p>İdarə heyəti</p>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @isset($item->branches)
+                                            <span style="color: {{$item->branches->trashed() ? 'red' : 'black'}};">
+                                                {{$item->branches->name}}
+                                            </span>
+                                        @endif
+                                    </td>
                                     <td>{{$item->name}}</td>
                                     <td>
                                         <strong class="{{ $item->report_receiver == 1 ? 'text-success' : 'text-danger' }}">

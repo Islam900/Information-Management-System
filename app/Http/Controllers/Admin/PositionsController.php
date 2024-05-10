@@ -16,7 +16,14 @@ class PositionsController extends Controller
      */
     public function index()
     {
-        $positions = Positions::all();
+        $positions = Positions::with([
+            'departments' => function ($query) {
+                $query->withTrashed();
+            },
+            'branches' => function ($query) {
+                $query->withTrashed();
+            }
+        ])->get();
         return view('admin.positions.index', compact('positions'));
     }
 
