@@ -5,36 +5,43 @@
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Mal-material sorğusu</h3>
+                <button class="btn btn-success new-assets-requests-button">
+                            <span>
+                                <i class="nav-icon i-Add-File"></i>
+                            </span>
+                    Yeni mal-material sorğusu
+                </button>
             </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table id="inventories-table" class="display table table-striped" style="width:100%">
-                    <thead>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="inventories-table" class="display table table-striped" style="width:100%">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Mətn</th>
+                    <th>Status</th>
+                    <th>Tarix</th>
+                    <th>Əməliyyatlar</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($user_assets_requests as $asset)
                     <tr>
-                        <th>№</th>
-                        <th>Mətn</th>
-                        <th>Status</th>
-                        <th>Tarix</th>
-                        <th>Əməliyyatlar</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($user_assets_requests as $asset)
-                        <tr>
-                            <td>{{ $asset->id }}</td>
-                            <td>{{ $asset->content }}</td>
-                            <td>Gözləyir</td>
-                            <td>{{ $asset->created_at }}</td>
-                            <td>
+                        <td>{{ $asset->id }}</td>
+                        <td>{{ $asset->content }}</td>
+                        <td>Gözləyir</td>
+                        <td>{{ $asset->created_at }}</td>
+                        <td>
 
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
         </div>
+    </div>
     </div>
 
 @endsection
@@ -55,20 +62,18 @@
                     showLoaderOnConfirm: true,
                     preConfirm: async (assets_content) => {
                         $.ajax({
-                            url:"{{route('employee.assets-requests.store')}}",
-                            method:"POST",
-                            data:{
-                                "_token":"{{csrf_token()}}",
+                            url: "{{route('employee.assets-requests.store')}}",
+                            method: "POST",
+                            data: {
+                                "_token": "{{csrf_token()}}",
                                 "assets_content": assets_content
                             },
-                            success:function (response) {
-                                if(response.status == 200)
-                                {
+                            success: function (response) {
+                                if (response.status == 200) {
                                     Swal.fire({
                                         title: response.message,
                                     }).then((e) => {
-                                        if(e.isConfirmed)
-                                        {
+                                        if (e.isConfirmed) {
                                             location.href = response.route;
                                         }
                                     });
