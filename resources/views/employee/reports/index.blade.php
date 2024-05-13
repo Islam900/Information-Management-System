@@ -168,13 +168,6 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h3>Hesabat tərkibi</h3>
                         <strong>Hesabatı qəbul edən: {{ $receiver->name }}</strong>
-                        @if(\Illuminate\Support\Facades\Auth::user()->report_sender->count() > 0)
-                            <a href="{{ route('employee.report-list') }}">
-                                <button class="btn btn-warning">
-                                    Sizə göndərilən hesabatlar
-                                </button>
-                            </a>
-                        @endif
                     </div>
 
                 </div>

@@ -33,7 +33,8 @@ use App\Http\Controllers\ITD\{
     ITDRoomsController,
     ITDStructureController,
     ITDTicketsController,
-    UsersController
+    ITDUsersController,
+    ITDAssetsRequestsController
 };
 
 use App\Http\Controllers\LogController;
@@ -152,6 +153,7 @@ Route::prefix('itd-leader')->name('itd-leader.')->middleware(['auth', 'check_rol
     Route::get('/dashboard', [ITDLeaderController::class, 'index'])->name('home');
     Route::get('profile', [ITDLeaderController::class, 'profile'])->name('profile');
     Route::put('update-profile/{id}', [ITDLeaderController::class, 'update_profile'])->name('update-profile');
+    Route::resource('assets-requests', ITDAssetsRequestsController::class);
     Route::resource('departments', ITDDepartmentsController::class);
     Route::resource('branches', ITDBranchesController::class);
     Route::resource('positions', ITDPositionsController::class);

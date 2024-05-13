@@ -22,7 +22,6 @@
                                 <th>Otaq</th>
                                 <th>İşçi</th>
                                 <th>Tarix</th>
-                                <th>Əməliyyatlar</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -42,18 +41,7 @@
                                     </td>
                                     <td>{{ !is_null($item->user) ? $item->user->name : '' }}</td>
                                     <td>{{\Illuminate\Support\Carbon::parse($item->created_at)->format('d.m.Y')}}</td>
-                                    <td>
-                                        <a href="{{ route('itd-leader.appointments.edit', $item ) }}"
-                                           class="text-success mr-2">
-                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
-                                        </a>
-                                        @if($item->users)
-                                            <a href="{{ route('itd-leader.appointments.refund', $item->id ) }}"
-                                               class="text-danger mr-2">
-                                                <i class="nav-icon i-Refresh font-weight-bold"></i>
-                                            </a>
-                                        @endif
-                                    </td>
+
                                 </tr>
                             @endforeach
                             </tbody>

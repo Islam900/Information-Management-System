@@ -18,6 +18,6 @@ class WHMAssetsController extends Controller
         $detail = AssetsRequestsDetails::findOrFail($detail_id);
         $detail->status = 2;
         $detail->save();
-        return redirect()->back()->with('success', 'Asset request detail submitted successfully.');
+        return redirect()->back()->with('success', 'Mal-material sorğusu təsdiq edildi.');
     }
 }

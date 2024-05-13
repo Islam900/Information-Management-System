@@ -28,7 +28,6 @@
                                 <th>Şöbə</th>
                                 <th>Otaq</th>
                                 <th>Email</th>
-                                <th>Əməliyyatlar</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -56,20 +55,7 @@
                                         </span>
                                         @endif </td>
                                     <td>{{$item->email}}</td>
-                                    <td>
-                                        <a href="{{ route('itd-leader.users.edit', $item->id ) }}"
-                                           class="text-success mr-2">
-                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
-                                        </a>
-                                        <a href="{{ route('itd-leader.users.show', $item->id ) }}"
-                                           class="text-info mr-2">
-                                            <i class="nav-icon i-Eye font-weight-bold"></i>
-                                        </a>
-                                        <a href="#"
-                                           class="text-danger mr-2 delete-item" data-id="{{$item->id}}">
-                                            <i class="nav-icon i-Close-Window font-weight-bold"></i>
-                                        </a>
-                                    </td>
+
                                 </tr>
                             @endforeach
                             </tbody>
@@ -80,70 +66,4 @@
 
         </div>
     </div>
-@endsection
-
-@section('js')
-    <script>
-        $(document).ready(function () {
-            $('#users-table').DataTable({ "paging": false });
-        })
-
-        @if (session('success'))
-        const storeSuccess = "{{ session('success') }}";
-        const SuccessAlert = Swal.fire({
-            title: "Uğurlu!",
-            text: storeSuccess,
-            icon: "success"
-        })
-        SuccessAlert.fire();
-
-        @php session()->forget('success') @endphp
-        @endif
-
-
-        @if (session('error'))
-        const storeError = "{{ session('error') }}";
-        const ErrorAlert = Swal.fire({
-            title: "Xəta!",
-            text: storeError,
-            icon: "error"
-        })
-        ErrorAlert.fire();
-
-        @php session()->forget('error') @endphp
-        @endif
-        $(document).ready(function(){
-
-            $('.delete-item').on("click", function () {
-                const item_id = $(this).data('id');
-                Swal.fire({
-                    title: "Silmək istədiyinizdən əminsiniz ?",
-                    text: "Qeyd edək ki, silmək istədiyiniz elemendə bağlı olan bütün məlumatlar silinəcək!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Sil!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "/itd-leader/users/"+item_id,
-                            type: "DELETE",
-                            data: {
-                                "_token":"{{csrf_token()}}"
-                            },
-                            success:function (response) {
-                                Swal.fire(response.message).then((result) => {
-                                    if(result.isConfirmed){
-                                        location.href = response.route;
-                                    }
-                                });
-                            },
-                        })
-                    }
-                })
-            })
-        })
-
-    </script>
 @endsection

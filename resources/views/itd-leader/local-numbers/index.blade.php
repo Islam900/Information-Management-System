@@ -7,15 +7,6 @@
                <div class="card-header">
                    <div class="d-flex justify-content-between align-items-center">
                        <h3>Daxili nömrələr</h3>
-
-                       <a href="{{route('itd-leader.local-numbers.create')}}">
-                           <button class="btn btn-success">
-                                <span class="me-2">
-                                    <i class="nav-icon i-Add-File"></i>
-                                </span>
-                               Yeni daxili nömrə
-                           </button>
-                       </a>
                    </div>
                </div>
                <div class="card-body">
@@ -31,7 +22,6 @@
                                <th>Vəzifə</th>
                                <th>İşçi</th>
                                <th>Status</th>
-                               <th>Əməliyyatlar</th>
                            </tr>
                            </thead>
                            <tbody>
@@ -56,12 +46,7 @@
                                            {{$item->status == 1 ? 'Aktiv' : 'Deaktiv'}}
                                        </button>
                                    </td>
-                                   <td>
-                                       <a href="{{ route('itd-leader.local-numbers.edit', $item->id ) }}"
-                                          class="text-success mr-2">
-                                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
-                                       </a>
-                                   </td>
+
                                </tr>
                            @endforeach
                            </tbody>

@@ -41,36 +41,3 @@
         </div>
     </div>
 @endsection
-
-@section('js')
-    <script>
-        $(document).ready(function () {
-            $('#departments-table').DataTable();
-        })
-
-        @if (session('success'))
-        const storeSuccess = "{{ session('success') }}";
-        const SuccessAlert = Swal.fire({
-            title: "Uğurlu!",
-            text: storeSuccess,
-            icon: "success"
-        })
-        SuccessAlert.fire();
-
-        @php session()->forget('success') @endphp
-        @endif
-
-
-        @if (session('error'))
-        const storeError = "{{ session('error') }}";
-        const ErrorAlert = Swal.fire({
-            title: "Xəta!",
-            text: storeError,
-            icon: "error"
-        })
-        ErrorAlert.fire();
-
-        @php session()->forget('error') @endphp
-        @endif
-    </script>
-@endsection

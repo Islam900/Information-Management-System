@@ -157,12 +157,6 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h3>Mal-material sorğusu</h3>
-                        <button class="btn btn-success new-assets-requests-button">
-                            <span>
-                                <i class="nav-icon i-Add-File"></i>
-                            </span>
-                            Yeni mal-material sorğusu
-                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -177,7 +171,7 @@
                                     <div class="p-4">
                                         <h4>{{ $assets_requests->user->name}}: {{ $assets_requests->content }}</h4>
                                         <br>
-                                        <h5>Sorğunun yaradılma tarixi: {{ $assets_requests->created_at->format('H:i d.m.Y') }}</h5>
+                                        <h5>Sorğunun yaradılma tarixi: {{ $assets_requests->created_at }}</h5>
                                     </div>
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: {{20+$assets_requests->assets_requests_details()->where('status', 2)->count()*20}}%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
@@ -196,16 +190,19 @@
                                             <div class="step step-completed">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <img src="{{ asset('assets/images/').'/'.$detail->status.'.png' }}" height="150px;"  width="150px;" alt="">
-                                                    <strong>{{ $detail->users->name }}</strong>
-                                                    @php
-                                                        $roles = explode(',', $detail->users->type);
-                                                    @endphp
-                                                    @if(in_array('warehouseman', $roles) && $detail->status == 1)
-                                                        <form action="{{ route('warehouseman.assets-requests.submit', ['detail_id' => $detail->id]) }}" method="POST">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-success">Tesdiq et</button>
-                                                        </form>
-                                                    @endif
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <h3>{{ $detail->users->name }}</h3>
+                                                            @if(\Illuminate\Support\Facades\Auth::user()->id == $detail->users_id)
+                                                                <button class="btn btn-outline-success w-100 confirm-request" data-detail-id="{{ $detail->id }}" data-status="2">
+                                                                    Təsdiq edin
+                                                                </button>
+                                                                <button class="btn btn-outline-danger mt-2 w-100 reject-request" data-detail-id="{{ $detail->id }}" data-status="0">
+                                                                    Ləğv edin
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         @endforeach

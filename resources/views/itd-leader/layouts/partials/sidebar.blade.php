@@ -1,5 +1,3 @@
-
-
 <div class="sidebar-left open rtl-ps-none" data-perfect-scrollbar data-suppress-scroll-x="true">
     <ul class="navigation-left">
         <li class="nav-item " data-item="">
@@ -26,20 +24,37 @@
             </a>
             <div class="triangle"></div>
         </li>
-        <li class="nav-item ">
-            <a class="nav-item-hold" href="{{ route('itd-leader.tickets.index') }}">
-                <i class="nav-icon i-Ticket"></i>
-                <span class="nav-text">Texniki dəstək biletləri</span>
-            </a>
-            <div class="triangle"></div>
-        </li>
-        <li class="nav-item ">
-            <a class="nav-item-hold" href="{{ route('itd-leader.reports.index') }}">
-                <i class="nav-icon i-Calendar"></i>
-                <span class="nav-text">Həftəlik hesabatlar</span>
-            </a>
-            <div class="triangle"></div>
-        </li>
+        @if($general_settings->ticket_module)
+            <li class="nav-item ">
+                <a class="nav-item-hold" href="{{ route('itd-leader.tickets.index') }}">
+                    <i class="nav-icon i-Ticket"></i>
+                    <span class="nav-text">Texniki dəstək biletləri</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+        @endif
+
+        @if($general_settings->weekly_report_module)
+            @if(\Illuminate\Support\Facades\Auth::user()->report_sender->count() > 0)
+                <li class="nav-item ">
+                    <a class="nav-item-hold" href="{{ route('itd-leader.reports.index') }}">
+                        <i class="nav-icon i-Calendar"></i>
+                        <span class="nav-text">Həftəlik hesabatlar</span>
+                    </a>
+                    <div class="triangle"></div>
+                </li>
+            @endif
+        @endif
+
+        @if($general_settings->assets_requests)
+            <li class="nav-item ">
+                <a class="nav-item-hold" href="{{ route('itd-leader.assets-requests.index') }}">
+                    <i class="nav-icon i-Bag-Items"></i>
+                    <span class="nav-text">Mal-material sorğusu</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+        @endif
 
     </ul>
 </div>
