@@ -19,7 +19,9 @@
           integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet"> 
+
+
 
 
     <style>
@@ -93,11 +95,13 @@
 <script src="{{ asset('assets/js/smart.wizard.script.js')}}"></script>
 
 
+
 <script>
     $(document).ready(function() {
         $('#notificationModal').modal('show');
     });
 </script>
+
 <!-- Initialize Quill editor -->
 @yield('js')
 </body>

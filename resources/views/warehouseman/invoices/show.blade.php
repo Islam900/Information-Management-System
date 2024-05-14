@@ -136,21 +136,26 @@
                                             <th>Kateqoriya</th>
                                             <th>Material tipi</th>
                                             <th>Ölçü</th>
+                                            <th>Qiymət</th>
                                             <th>Aktivlik statusu</th>
                                             <th>Alış statusu</th>
                                             <th>Təhvil tarixi</th>
+                                            <th>Əməliyyatlar</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         @forelse($invoice->products as $item)
                                             <tr>
                                                 <td>{{ $item->id }}</td>
-                                                <td>{{ $item->serial_number }}</td>
-                                                <td>{{ $item->avr_code }}</td>
+                                                <td><a href="#" class="editable" data-type="text" data-name="serial_number" data-pk="{{ $item->id }}">{{ $item->serial_number }}</a></td>
+                                                <td><a href="#" class="editable" data-type="text" data-name="avr_code" data-pk="{{ $item->id }}">{{ $item->avr_code }}</a></td>
+                                                <!-- Add similar data-editable attributes to other fields -->
+
                                                 <td>{{ $item->product_name }}</td>
                                                 <td>{{ $item->categories->name }}</td>
                                                 <td>{{ $item->material_type }}</td>
                                                 <td>{{ $item->size }}</td>
+                                                <td>{{ $item->price}}</td>
                                                 <td>
                                                     <button
                                                         class="btn btn-{{$item->activity_status == 1 ? 'success' : 'danger'}}">
@@ -163,6 +168,14 @@
                                                     </button>
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') }}</td>
+                                                <td>
+                                                <a href="{{ route('warehouseman.products.edit',$item->id) }}" class="btn btn-primary">
+                                                    Düzəliş
+                                                </a>
+                                                    <button class="btn btn-danger">
+                                                        Silmək
+                                                    </button>
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -186,10 +199,29 @@
     </div>
 @endsection
 
+
 @section('js')
+
+    
+
     <script>
         $(document).ready(function () {
             $('#user-appointments-table').DataTable();
-        })
+
+            $('.editable').editable({
+                url: '/post', // Dummy URL, replace with your endpoint for updating data
+                ajaxOptions: {
+                    type: 'PUT', // Use PUT method for updating data
+                    dataType: 'json', // Use JSON format for sending and receiving data
+                    contentType: 'application/json', // Specify content type as JSON
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in request headers
+                    }
+                },
+                success: function(response, newValue) {
+                    // Handle successful update
+                }
+            });
+        });
     </script>
 @endsection

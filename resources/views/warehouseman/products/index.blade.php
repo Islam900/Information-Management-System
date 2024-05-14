@@ -30,11 +30,11 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{$item->product_name}}</td>
-                                    <td>{{$item->categories->name}}</td>
-                                    <td>{{$item->invoices->vendors->name}}</td>
+                                    <td>{{$item->category_name}}</td>
+                                    <td>{{$item->vendor_name}}</td>
                                     <td>{{$item->purchase_count}} {{ $item->size }}</td>
-                                    <td>{{$item->purchase_count - $item->stock}} {{ $item->size }}</td>
-                                    <td>{{$item->stock}} {{ $item->size }}</td>
+                                    <td>{{$item->purchase_count - $item->stock_count}} {{ $item->size }}</td>
+                                    <td>{{$item->stock_count}} {{ $item->size }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-{{$item->activity_status == 1 ? 'success' : 'danger'}}">
                                             {{$item->activity_status == 1 ? 'Aktiv' : 'Deaktiv'}}

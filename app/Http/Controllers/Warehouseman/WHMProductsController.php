@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Warehouseman;
 
 use App\Http\Controllers\Controller;
 use App\Models\Products;
+use App\Models\Categories;
 use App\Models\Stocks;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class WHMProductsController extends Controller
      */
     public function index()
     {
-        $stocks = DB::table('stocks as s')
+        $products = DB::table('stocks as s')
             ->leftJoin('products as p', 's.product_unical_code', '=', 'p.unical_code')
             ->leftJoin('categories as c', 'p.categories_id', '=', 'c.id')
             ->leftJoin('invoices as inv', 'p.invoices_id', '=', 'inv.id')
@@ -26,10 +27,10 @@ class WHMProductsController extends Controller
                     ->orOn('hr.vendors_id', '=', 'v.id');
             })
             ->select('p.product_name', 'p.size', 'p.material_type', 'p.status','p.activity_status' ,'inv.e_invoice_number', 'inv.e_invoice_serial_number', 'inv.e_invoice_date' ,'hr.register_number', 'c.name as category_name', 's.*', 'v.name as vendor_name')
-            ->groupBy('p.product_name', 'p.material_type', 'p.size', 'p.status','p.activity_status' ,'inv.e_invoice_number', 'inv.e_invoice_date','inv.e_invoice_serial_number', 'hr.register_number' , 'category_name', 's.id', 's.warehouses_id', 's.product_unical_code', 's.purchase_count', 's.stock_count', 's.created_at', 's.updated_at', 'v.name')
+            ->groupBy('ims.s.deleted_at','p.product_name', 'p.material_type', 'p.size', 'p.status','p.activity_status' ,'inv.e_invoice_number', 'inv.e_invoice_date','inv.e_invoice_serial_number', 'hr.register_number' , 'category_name', 's.id', 's.warehouses_id', 's.product_unical_code', 's.purchase_count', 's.stock_count', 's.created_at', 's.updated_at', 'v.name')
             ->get();
-
-        return view('warehouseman.products.index', compact('stocks'));
+        
+        return view('warehouseman.products.index', compact('products'));
     }
 
     /**
@@ -70,9 +71,11 @@ class WHMProductsController extends Controller
      */
     public function edit(string $id)
     {
-        $products = Products::findOrFail($id);
-        return view('warehouseman.products.edit', compact('products'));
+        $product = Products::findOrFail($id);
+        $categories = Categories::all();
+        return view('warehouseman.products.edit', compact('product', 'categories'));
     }
+
 
     /**
      * Update the specified resource in storage.

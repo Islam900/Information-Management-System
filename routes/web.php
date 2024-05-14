@@ -17,7 +17,8 @@ use App\Http\Controllers\Admin\{
     StructureController,
     TicketsController,
     VendorsController,
-    WarehousesController
+    WarehousesController,
+    UsersController
 };
 
 use App\Http\Controllers\Auth\LoginController;
@@ -184,6 +185,7 @@ Route::prefix('warehouseman')->name('warehouseman.')->middleware(['auth', 'check
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
     Route::resource('assets-requests', WHMAssetsController::class);
     Route::post('assets-requests/{detail_id}/submit', [WHMAssetsController::class, 'submit'])->name('assets-requests.submit');
+
 });
 
 
