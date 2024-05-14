@@ -17,7 +17,7 @@ class LocalNumbersController extends Controller
      */
     public function index()
     {
-        $numbers = LocalNumbers::all();
+        $numbers = LocalNumbers::with('departments')->get();
         return view('admin.local-numbers.index', compact('numbers'));
     }
 
@@ -64,7 +64,15 @@ class LocalNumbersController extends Controller
             $data['branch_id'] = $user->branches_id ?? NULL;
             $data['room_id'] = $user->rooms_id ?? NULL;
         }
-        LocalNumbers::create($data);
+        LocalNumbers::create([
+            'departments_id' => $data['department_id'],
+            'branches_id' => $data['branch_id'],
+            'rooms_id' => $data['room_id'],
+            'users_id' => $data['user_id'],
+            'departments_id' => $data['department_id'],
+            'number' => $data['number'],
+            'status' => $data['status'],
+        ]);
         return redirect()->route('admin.local-numbers.index')->with('success', 'Məlumatlar əlavə edildi');
     }
 
@@ -121,10 +129,10 @@ class LocalNumbersController extends Controller
             $data['room_id'] = $user->rooms_id ?? NULL;
         }
         $number = LocalNumbers::findOrFail($id);
-        $number->department_id = $data['department_id'];
-        $number->branch_id = $data['branch_id'];
-        $number->room_id = $data['room_id'];
-        $number->user_id = $data['user_id'];
+        $number->departments_id = $data['department_id'];
+        $number->branches_id = $data['branch_id'];
+        $number->rooms_id = $data['room_id'];
+        $number->users_id = $data['user_id'];
         $number->number = $data['number'];
         $number->status = $data['status'];
         $number->save();
