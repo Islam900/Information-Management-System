@@ -32,17 +32,17 @@ class DatabaseSeeder extends Seeder
         $this->call(VendorsSeeder::class);
         $this->call(GeneralSettingsSeeder::class);
 
-//        User::create([
-//            'departments_id' => NULL,
-//            'branches_id' => NULL,
-//            'positions_id' => NULL,
-//            'rooms_id' => 1,
-//            'name' => 'Röya Quliyeva',
-//            'email' => 'admin@icta.az',
-//            'password' => bcrypt('icta123'),
-//            'type' => 'administrator',
-//            'b_day' => Carbon::now()->format('Y-m-d')
-//        ]);
+        User::create([
+            'departments_id' => NULL,
+            'branches_id' => NULL,
+            'positions_id' => NULL,
+            'rooms_id' => 1,
+            'name' => 'Röya Quliyeva',
+            'email' => 'admin@icta.az',
+            'password' => bcrypt('icta123'),
+            'type' => 'administrator,employee,warehouseman,hr,finance,support',
+            'b_day' => Carbon::now()->format('Y-m-d')
+        ]);
 //
 //        User::create([
 //            'departments_id' => NULL,

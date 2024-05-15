@@ -46,11 +46,11 @@
                                            <strong>{{$item->number}}</strong>
                                        </button>
                                    </td>
-                                   <td>{{!is_null($item->department) ? $item->department->name : '------'}}</td>
-                                   <td>{{!is_null($item->branch) ? $item->branch->name : '------'}}</td>
-                                   <td>{{!is_null($item->room) ? $item->room->name : '------'}}</td>
-                                   <td>{{!is_null($item->user) ? $item->user->positions->name : '------'}}</td>
-                                   <td>{{!is_null($item->user) ? $item->user->name : '------'}}</td>
+                                   <td>{{!is_null($item->departments) ? $item->departments->name : '------'}}</td>
+                                   <td>{{!is_null($item->branches) ? $item->branches->name : '------'}}</td>
+                                   <td>{{!is_null($item->rooms) ? $item->rooms->name : '------'}}</td>
+                                   <td>{{!is_null($item->users) ? $item->users->positions->name : '------'}}</td>
+                                   <td>{{!is_null($item->users) ? $item->users->name : '------'}}</td>
                                    <td>
                                        <button class="btn btn-sm btn-{{$item->status == 1 ? 'success' : 'danger'}}">
                                            {{$item->status == 1 ? 'Aktiv' : 'Deaktiv'}}

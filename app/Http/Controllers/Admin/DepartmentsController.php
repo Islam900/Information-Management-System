@@ -41,7 +41,8 @@ class DepartmentsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $department = Departments::with('branches', 'users', 'local_numbers')->find($id);
+        return view('admin.departments.show', compact('department'));
     }
 
     /**

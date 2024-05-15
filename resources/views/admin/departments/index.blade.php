@@ -43,12 +43,17 @@
                                     <td>
                                         <a href="{{ route('admin.departments.edit', $item->id ) }}"
                                            class="text-success mr-2">
-                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i> Düzəliş et
+                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                        </a>
+
+                                        <a href="{{ route('admin.departments.show', $item->id ) }}"
+                                           class="text-info mr-2">
+                                            <i class="nav-icon i-Eye font-weight-bold"></i>
                                         </a>
 
                                         <a href="#"
                                            class="text-danger mr-2 delete-item" data-id="{{$item->id}}">
-                                            <i class="nav-icon i-Close-Window font-weight-bold"></i> Sil
+                                            <i class="nav-icon i-Close-Window font-weight-bold"></i>
                                         </a>
                                     </td>
                                 </tr>
