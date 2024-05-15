@@ -157,9 +157,14 @@ class InvoicesController extends Controller
      */
     public function edit(string $id)
     {
-        $product = Products::findOrFail($id);
-        $categories = Categories::all();
-        return view('admin.products.edit', compact('product', 'categories'));
+
+        $whs = Warehouses::where('status', 1)->get();
+        $categories = Categories::whereNull('parent_id')->where('status', 1)->get();
+        $vendors = Vendors::where('status', 1)->get();
+        $registers = HandRegisters::whereNull('invoices_id')->get();
+        $invoice = Invoices::with('products')->find($id);
+
+        return view('admin.invoices.edit', compact('invoice', 'whs', 'categories', 'vendors', 'registers'));
     }
 
 

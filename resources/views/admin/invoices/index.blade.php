@@ -43,6 +43,10 @@
                                     <td>{{$item->total_amount}} AZN</td>
                                     <td>{{$item->edv_total_amount}} AZN</td>
                                     <td>
+                                        <a href="{{ route('admin.invoices.edit', $item->id ) }}"
+                                           class="text-success mr-2">
+                                            <i class="nav-icon i-Pen-3 font-weight-bold"></i>
+                                        </a>
                                         <a href="{{ route('admin.invoices.show', $item->id ) }}"
                                            class="text-success mr-2">
                                             <i class="nav-icon i-Eye font-weight-bold"></i>

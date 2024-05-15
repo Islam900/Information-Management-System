@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categories;
+use App\Models\Invoices;
 use App\Models\Products;
 use App\Models\Stocks;
 use App\Models\User;
@@ -16,7 +18,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $stocks = DB::table('stocks as s')
+        $products = DB::table('stocks as s')
             ->leftJoin('products as p', 's.product_unical_code', '=', 'p.unical_code')
             ->leftJoin('categories as c', 'p.categories_id', '=', 'c.id')
             ->leftJoin('invoices as inv', 'p.invoices_id', '=', 'inv.id')
@@ -26,10 +28,10 @@ class ProductsController extends Controller
                     ->orOn('hr.vendors_id', '=', 'v.id');
             })
             ->select('p.product_name', 'p.size', 'p.material_type', 'p.status','p.activity_status' ,'inv.e_invoice_number', 'inv.e_invoice_serial_number', 'inv.e_invoice_date' ,'hr.register_number', 'c.name as category_name', 's.*', 'v.name as vendor_name')
-            ->groupBy('p.product_name', 'p.material_type', 'p.size', 'p.status','p.activity_status' ,'inv.e_invoice_number', 'inv.e_invoice_date','inv.e_invoice_serial_number', 'hr.register_number' , 'category_name', 's.id', 's.warehouses_id', 's.product_unical_code', 's.purchase_count', 's.stock_count', 's.created_at', 's.updated_at', 'v.name')
+            ->groupBy('ims.s.deleted_at','p.product_name', 'p.material_type', 'p.size', 'p.status','p.activity_status' ,'inv.e_invoice_number', 'inv.e_invoice_date','inv.e_invoice_serial_number', 'hr.register_number' , 'category_name', 's.id', 's.warehouses_id', 's.product_unical_code', 's.purchase_count', 's.stock_count', 's.created_at', 's.updated_at', 'v.name')
             ->get();
 
-        return view('admin.products.index', compact('stocks'));
+        return view('admin.products.index', compact('products'));
     }
 
     /**
@@ -70,8 +72,9 @@ class ProductsController extends Controller
      */
     public function edit(string $id)
     {
-        $products = Products::findOrFail($id);
-        return view('admin.products.edit', compact('products'));
+        $product = Products::findOrFail($id);
+        $categories = Categories::all();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -83,7 +86,7 @@ class ProductsController extends Controller
         $products = Products::findOrFail($id);
         $products->update($data);
 
-        return redirect()->route('admin.products.index')->with('success', 'Məlumatlar dəyişdirildi');
+        return redirect()->route('admin.invoices.show', $products->invoices_id)->with('success', 'Məlumatlar dəyişdirildi');
     }
 
     /**
@@ -91,8 +94,24 @@ class ProductsController extends Controller
      */
     public function destroy(string $id)
     {
-        $products = Products::findOrFail($id);
-        $products->delete();
-        return redirect()->route('admin.admin.products.index')->with('success', 'Məlumatlar silindi');
+        $product = Products::findOrFail($id);
+        $invoice_id = $product->invoices_id;
+
+        $product->delete();
+
+        $products = Products::where('invoices_id', $invoice_id)->get();
+        $totalAmount = $products->sum('price');
+
+        $invoice = Invoices::findOrFail($invoice_id);
+
+        $invoice->update([
+            'total_amount' => $totalAmount,
+            'edv_total_amount' => $totalAmount * 1.18
+        ]);
+
+        return response()->json([
+            'message' => 'Məlumatlar silindi',
+            'route' => route('admin.invoices.show', $invoice_id)
+        ]);
     }
 }
