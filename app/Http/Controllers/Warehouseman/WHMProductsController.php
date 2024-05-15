@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warehouseman;
 use App\Http\Controllers\Controller;
 use App\Models\Products;
 use App\Models\Categories;
+use App\Models\Invoices;
 use App\Models\Stocks;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -81,12 +82,42 @@ class WHMProductsController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $data = $request->all();
-        $products = Products::findOrFail($id);
-        $products->update($data);
+    {    
+        $product = Products::findOrFail($id);
 
-        return redirect()->route('warehouseman.products.index')->with('success', 'Məlumatlar dəyişdirildi');
+        $oldPrice=$product->price;
+
+        // Update the product with the form data
+        $product->update([
+            'categories_id' => $request->category_id,
+            'material_type' => $request->material_type,
+            'avr_code' => $request->avr_code,
+            'serial_number' => $request->serial_number,
+            'product_name' => $request->product_name,
+            'price' => $request->price,
+            'inventory_cost' => $request->inventory_cost,
+            'size' => $request->size,
+            'activity_status' => $request->activity_status,
+            'status' => $request->status,
+        ]);
+        
+        if($request->price !== $oldPrice)
+        {
+            $products = Products::where('invoices_id', $product->invoices_id)->get();
+            
+
+            // Calculate the total amount
+            $totalAmount = $products->sum('price');
+            // Find the invoice related to the edited product
+            $invoice = Invoices::findOrFail($product->invoices_id);
+
+            // Update the total_amount of the invoice
+            $invoice->update(['total_amount' => $totalAmount]);
+            $invoice->update(['edv_total_amount' => $totalAmount *1.18]);
+        }
+
+        // Redirect back to the index page with a success message
+        return redirect()->route('warehouseman.invoices.show',$product->invoices_id)->with('success', 'Məlumatlar dəyişdirildi');
     }
 
     /**
@@ -94,8 +125,32 @@ class WHMProductsController extends Controller
      */
     public function destroy(string $id)
     {
-        $products = Products::findOrFail($id);
-        $products->delete();
-        return redirect()->route('warehouseman.warehouseman.products.index')->with('success', 'Məlumatlar silindi');
+        // Retrieve the product and its associated invoice ID
+        $product = Products::findOrFail($id);
+        $invoice_id = $product->invoices_id;
+
+        // Delete the product
+        $product->delete();
+
+        // Recalculate the total amount for the invoice
+        $products = Products::where('invoices_id', $invoice_id)->get();
+        $totalAmount = $products->sum('price');
+
+        // Find the invoice related to the deleted product
+        $invoice = Invoices::findOrFail($invoice_id);
+
+        // Update the total_amount and edv_total_amount of the invoice
+        $invoice->update([
+            'total_amount' => $totalAmount,
+            'edv_total_amount' => $totalAmount * 1.18
+        ]);
+
+        // Return a JSON response with a success message and redirect route
+        return response()->json([
+            'message' => 'Məlumatlar silindi',
+            'route' => route('warehouseman.invoices.show', $invoice_id)
+        ]);
     }
+
+
 }

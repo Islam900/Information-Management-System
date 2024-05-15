@@ -170,11 +170,13 @@
                                                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') }}</td>
                                                 <td>
                                                 <a href="{{ route('warehouseman.products.edit',$item->id) }}" class="btn btn-primary">
+                                                <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                                                     Düzəliş
                                                 </a>
-                                                    <button class="btn btn-danger">
-                                                        Silmək
-                                                    </button>
+                                                <a href="#"
+                                                    class="btn btn-danger delete-item" data-id="{{$item->id}}">
+                                                        <i class="nav-icon i-Close-Window font-weight-bold"></i> Sil
+                                                </a>
                                                 </td>
                                             </tr>
                                         @empty
@@ -207,21 +209,36 @@
     <script>
         $(document).ready(function () {
             $('#user-appointments-table').DataTable();
-
-            $('.editable').editable({
-                url: '/post', // Dummy URL, replace with your endpoint for updating data
-                ajaxOptions: {
-                    type: 'PUT', // Use PUT method for updating data
-                    dataType: 'json', // Use JSON format for sending and receiving data
-                    contentType: 'application/json', // Specify content type as JSON
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in request headers
+            
+            $('.delete-item').on("click", function () {
+                const item_id = $(this).data('id');
+                Swal.fire({
+                    title: "Silmək istədiyinizdən əminsiniz ?",
+                    text: "Qeyd edək ki, silmək istədiyiniz elemendə bağlı olan bütün məlumatlar silinəcək!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sil!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/warehouseman/products/"+item_id,
+                            type: "DELETE",
+                            data: {
+                              "_token":"{{csrf_token()}}"
+                            },
+                            success:function (response) {
+                                Swal.fire(response.message).then((result) => {
+                                    if(result.isConfirmed){
+                                        location.href = response.route;
+                                    }
+                                });
+                            },
+                        })
                     }
-                },
-                success: function(response, newValue) {
-                    // Handle successful update
-                }
-            });
+                })
+            })            
         });
     </script>
 @endsection

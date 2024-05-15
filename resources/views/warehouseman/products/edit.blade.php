@@ -26,7 +26,7 @@
 
                     <div class="form-group mb-3">
                         <div class="select_label ui sub header">Material tipi</div>
-                        <select frequency="true" id="material_type" name="material_type[]" class="form-control ui fluid search dropdown create_form_dropdown material_type_select_cl">
+                        <select frequency="true" id="material_type" name="material_type" class="form-control ui fluid search dropdown create_form_dropdown material_type_select_cl">
                             <option disabled selected>Material tipini seçin</option>
                             <option value="Azqiymətli/Tezköhnələn" {{ $product->material_type == 'Azqiymətli/Tezköhnələn' ? 'selected' : '' }}>Azqiymətli/Tezköhnələn</option>
                             <option value="Əsas inventar" {{ $product->material_type == 'Əsas inventar' ? 'selected' : '' }}>Əsas inventar</option>
@@ -52,22 +52,22 @@
 
                     <div class="mb-3">
                         <label for="product_name" class="form-label">Qiyməti</label>
-                        <input type="number" required class="form-control" id="product_name" name="product_name" value="{{ $product->price }}">
+                        <input type="number" required class="form-control" id="product_name" name="price" value="{{ $product->price }}">
                     </div>
 
                     <div class="mb-3">
                         <label for="product_name" class="form-label">Inventar dəyəri</label>
-                        <input type="number" required class="form-control" id="product_name" name="product_name" value="{{ $product->inventory_cost }}">
+                        <input type="number" required class="form-control" id="product_name" name="inventory_cost" value="{{ $product->inventory_cost}}">
                     </div>
 
                     <div class="mb-3">
                         <label for="product_name" class="form-label">Ölçü</label>
-                        <input type="text" required class="form-control" id="product_name" name="product_name" value="{{ $product->product_name }}">
+                        <input type="text" required class="form-control" id="product_name" name="size" value="{{ $product->size }}">
                     </div>
 
                     <div class="form-group mb-3">
                         <div class="select_label ui sub header">Aktivlik statusu</div>
-                        <select frequency="true" id="activity_status" name="activity_status[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                        <select frequency="true" id="activity_status" name="activity_status" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                             <option disabled selected>Aktivlik statusu seçin</option>
                             <option value="1" {{ $product->activity_status == 1 ? 'selected' : '' }}>Aktiv</option>
                             <option value="0" {{ $product->activity_status == 0 ? 'selected' : '' }}>Deaktiv</option>
@@ -77,7 +77,7 @@
 
                     <div class="form-group mb-3">
                         <div class="select_label ui sub header">Statusu</div>
-                        <select frequency="true" id="status" name="status[]" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                        <select frequency="true" id="status" name="status" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                             <option disabled selected>Statusu seçin</option>
                             <option value="Yeni" {{ $product->status == 'Yeni' ? 'selected' : '' }}>Yeni</option>
                             <option value="İşlənmiş" {{ $product->status == 'İşlənmiş' ? 'selected' : '' }}>İşlənmiş</option>
