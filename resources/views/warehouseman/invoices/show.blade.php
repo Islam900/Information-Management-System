@@ -81,9 +81,11 @@
                                                 <th>Kateqoriya</th>
                                                 <th>Material tipi</th>
                                                 <th>Ölçü</th>
+                                                <th>Qiymət</th>
                                                 <th>Aktivlik statusu</th>
                                                 <th>Alış statusu</th>
                                                 <th>Təhvil tarixi</th>
+                                                <th>Əməliyyatlar</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -95,6 +97,7 @@
                                                     <td>{{ $item->categories->name }}</td>
                                                     <td>{{ $item->material_type }}</td>
                                                     <td>{{ $item->size }}</td>
+                                                    <td>{{ $item->price}} AZN</td>
                                                     <td>
                                                         <button
                                                             class="btn btn-{{$item->activity_status == 1 ? 'success' : 'danger'}}">
@@ -107,11 +110,21 @@
                                                         </button>
                                                     </td>
                                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') }}</td>
+                                                    <td>
+                                                        <a href="{{ route('warehouseman.products.edit',$item->id) }}" class="btn btn-primary">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                            Düzəliş
+                                                        </a>
+                                                        <a href="#"
+                                                           class="btn btn-danger delete-item" data-id="{{$item->id}}">
+                                                            <i class="nav-icon i-Close-Window font-weight-bold"></i> Sil
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr>
                                                     <td colspan="10" class="text-center">
-                                                        İnventar təhkim olunmayıb
+                                                        Inventar yoxdur
                                                     </td>
                                                 </tr>
                                             @endforelse
@@ -155,7 +168,7 @@
                                                 <td>{{ $item->categories->name }}</td>
                                                 <td>{{ $item->material_type }}</td>
                                                 <td>{{ $item->size }}</td>
-                                                <td>{{ $item->price}}</td>
+                                                <td>{{ $item->price}} AZN</td>
                                                 <td>
                                                     <button
                                                         class="btn btn-{{$item->activity_status == 1 ? 'success' : 'danger'}}">
@@ -182,7 +195,7 @@
                                         @empty
                                             <tr>
                                                 <td colspan="10" class="text-center">
-                                                    İnventar təhkim olunmayıb
+                                                    İnventar yoxdur
                                                 </td>
                                             </tr>
                                         @endforelse
@@ -204,12 +217,12 @@
 
 @section('js')
 
-    
+
 
     <script>
         $(document).ready(function () {
             $('#user-appointments-table').DataTable();
-            
+
             $('.delete-item').on("click", function () {
                 const item_id = $(this).data('id');
                 Swal.fire({
@@ -238,7 +251,7 @@
                         })
                     }
                 })
-            })            
+            })
         });
     </script>
 @endsection

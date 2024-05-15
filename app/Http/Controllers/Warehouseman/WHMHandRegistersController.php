@@ -40,10 +40,10 @@ class WHMHandRegistersController extends Controller
         $products = [];
         foreach ($request->product_name as $product_key => $item) {
             $unical_code = Str::random(10);
-            if($request->material_type[$product_key] != 'Mal-material') {
+            if ($request->material_type[$product_key] != 'Mal-material') {
                 for ($i = 0; $i < $request->purchase_count[$product_key]; $i++) {
                     $rowName = $request->unique_row_name[$product_key];
-                    $clean_code = $request->$rowName[$i];
+                    $clean_code = $request->$rowName;
                     $products[] = [
                         'warehouses_id' => $request->warehouses_id,
                         'invoices_id' => NULL,
@@ -51,8 +51,8 @@ class WHMHandRegistersController extends Controller
                         'categories_id' => $request->subcategories_id[$product_key],
                         'unical_code' => $unical_code,
                         'material_type' => $request->material_type[$product_key],
-                        'avr_code' => $request->material_type[$product_key] == 'Əsas inventar' ? NULL : $clean_code,
-                        'serial_number' => $request->material_type[$product_key] != 'Əsas inventar' ? NULL : $clean_code,
+                        'avr_code' => $request->material_type[$product_key] == 'Əsas inventar' ? NULL : $clean_code[$i],
+                        'serial_number' => $request->material_type[$product_key] != 'Əsas inventar' ? NULL : $clean_code[$i],
                         'product_name' => $item,
                         'price' => $request->price[$product_key],
                         'size' => $request->size[$product_key],
@@ -62,23 +62,26 @@ class WHMHandRegistersController extends Controller
                     ];
                     $total_product_price += $request->price[$product_key];
                 }
-            }else {
-                $products[] = [
-                    'warehouses_id' => $request->warehouses_id,
-                    'invoices_id' => NULL,
-                    'hand_registers_id' => NULL,
-                    'categories_id' => $request->subcategories_id[$product_key],
-                    'unical_code' => $unical_code,
-                    'material_type' => $request->material_type[$product_key],
-                    'avr_code' => NULL,
-                    'serial_number' => NULL,
-                    'product_name' => $item,
-                    'price' => $request->price[$product_key],
-                    'size' => $request->size[$product_key],
-                    'inventory_cost' => $request->inventory_cost[$product_key],
-                    'activity_status' => $request->activity_status[$product_key],
-                    'status' => $request->status[$product_key]
-                ];
+            } else {
+                for ($i = 0; $i < $request->purchase_count[$product_key]; $i++) {
+                    $products[] = [
+                        'warehouses_id' => $request->warehouses_id,
+                        'invoices_id' => NULL,
+                        'hand_registers_id' => NULL,
+                        'categories_id' => $request->subcategories_id[$product_key],
+                        'unical_code' => $unical_code,
+                        'material_type' => $request->material_type[$product_key],
+                        'avr_code' => NULL,
+                        'serial_number' => NULL,
+                        'product_name' => $item,
+                        'price' => $request->price[$product_key],
+                        'size' => $request->size[$product_key],
+                        'inventory_cost' => $request->inventory_cost[$product_key],
+                        'activity_status' => $request->activity_status[$product_key],
+                        'status' => $request->status[$product_key]
+                    ];
+                }
+                $total_product_price += $request->price[$product_key] * $request->purchase_count[$product_key];
             }
 
 
@@ -90,6 +93,7 @@ class WHMHandRegistersController extends Controller
             ];
 
             Stocks::create($stock_data);
+
         }
 
         $register = HandRegisters::create([

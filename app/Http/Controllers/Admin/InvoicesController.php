@@ -157,15 +157,47 @@ class InvoicesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Products::findOrFail($id);
+        $categories = Categories::all();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Products::findOrFail($id);
+
+        $oldPrice=$product->price;
+
+        $product->update([
+            'categories_id' => $request->category_id,
+            'material_type' => $request->material_type,
+            'avr_code' => $request->avr_code,
+            'serial_number' => $request->serial_number,
+            'product_name' => $request->product_name,
+            'price' => $request->price,
+            'inventory_cost' => $request->inventory_cost,
+            'size' => $request->size,
+            'activity_status' => $request->activity_status,
+            'status' => $request->status,
+        ]);
+
+        if($request->price !== $oldPrice)
+        {
+            $products = Products::where('invoices_id', $product->invoices_id)->get();
+
+
+            $totalAmount = $products->sum('price');
+            $invoice = Invoices::findOrFail($product->invoices_id);
+
+            $invoice->update(['total_amount' => $totalAmount]);
+            $invoice->update(['edv_total_amount' => $totalAmount *1.18]);
+        }
+
+        return redirect()->route('admin.invoices.show',$product->invoices_id)->with('success', 'Məlumatlar dəyişdirildi');
     }
 
     /**
@@ -173,6 +205,24 @@ class InvoicesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Products::findOrFail($id);
+        $invoice_id = $product->invoices_id;
+
+        $product->delete();
+
+        $products = Products::where('invoices_id', $invoice_id)->get();
+        $totalAmount = $products->sum('price');
+
+        $invoice = Invoices::findOrFail($invoice_id);
+
+        $invoice->update([
+            'total_amount' => $totalAmount,
+            'edv_total_amount' => $totalAmount * 1.18
+        ]);
+
+        return response()->json([
+            'message' => 'Məlumatlar silindi',
+            'route' => route('admin.invoices.show', $invoice_id)
+        ]);
     }
 }

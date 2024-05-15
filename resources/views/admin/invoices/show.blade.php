@@ -76,25 +76,30 @@
                                             <thead>
                                             <tr>
                                                 <th>№</th>
+                                                <th>Seria nömrəsi</th>
                                                 <th>AVR kodu</th>
                                                 <th>İnventar adı</th>
                                                 <th>Kateqoriya</th>
                                                 <th>Material tipi</th>
                                                 <th>Ölçü</th>
+                                                <th>Qiymət</th>
                                                 <th>Aktivlik statusu</th>
                                                 <th>Alış statusu</th>
                                                 <th>Təhvil tarixi</th>
+                                                <th>Əməliyyatlar</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             @forelse($register->products as $item)
                                                 <tr>
                                                     <td>{{ $item->id }}</td>
+                                                    <td>{{ $item->serial_number }}</td>
                                                     <td>{{ $item->avr_code }}</td>
                                                     <td>{{ $item->product_name }}</td>
                                                     <td>{{ $item->categories->name }}</td>
                                                     <td>{{ $item->material_type }}</td>
                                                     <td>{{ $item->size }}</td>
+                                                    <td>{{ $item->price }}</td>
                                                     <td>
                                                         <button
                                                             class="btn btn-{{$item->activity_status == 1 ? 'success' : 'danger'}}">
@@ -107,11 +112,21 @@
                                                         </button>
                                                     </td>
                                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') }}</td>
+                                                    <td>
+                                                        <a href="{{ route('admin.products.edit',$item->id) }}" class="btn btn-primary">
+                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                            Düzəliş
+                                                        </a>
+                                                        <a href="#"
+                                                           class="btn btn-danger delete-item" data-id="{{$item->id}}">
+                                                            <i class="nav-icon i-Close-Window font-weight-bold"></i> Sil
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             @empty
                                                 <tr>
                                                     <td colspan="10" class="text-center">
-                                                        İnventar təhkim olunmayıb
+                                                        İnventar yoxdur
                                                     </td>
                                                 </tr>
                                             @endforelse
@@ -136,9 +151,11 @@
                                             <th>Kateqoriya</th>
                                             <th>Material tipi</th>
                                             <th>Ölçü</th>
+                                            <th>Qiymət</th>
                                             <th>Aktivlik statusu</th>
                                             <th>Alış statusu</th>
                                             <th>Təhvil tarixi</th>
+                                            <th>Əməliyyatlar</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -151,6 +168,7 @@
                                                 <td>{{ $item->categories->name }}</td>
                                                 <td>{{ $item->material_type }}</td>
                                                 <td>{{ $item->size }}</td>
+                                                <td>{{ $item->price }}</td>
                                                 <td>
                                                     <button
                                                         class="btn btn-{{$item->activity_status == 1 ? 'success' : 'danger'}}">
@@ -163,11 +181,21 @@
                                                     </button>
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d.m.Y') }}</td>
+                                                <td>
+                                                    <a href="{{ route('admin.products.edit',$item->id) }}" class="btn btn-primary">
+                                                        <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                                        Düzəliş
+                                                    </a>
+                                                    <a href="#"
+                                                       class="btn btn-danger delete-item" data-id="{{$item->id}}">
+                                                        <i class="nav-icon i-Close-Window font-weight-bold"></i> Sil
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
                                                 <td colspan="10" class="text-center">
-                                                    İnventar təhkim olunmayıb
+                                                    İnventar yoxdur
                                                 </td>
                                             </tr>
                                         @endforelse
@@ -190,6 +218,36 @@
     <script>
         $(document).ready(function () {
             $('#user-appointments-table').DataTable();
+
+            $('.delete-item').on("click", function () {
+                const item_id = $(this).data('id');
+                Swal.fire({
+                    title: "Silmək istədiyinizdən əminsiniz ?",
+                    text: "Qeyd edək ki, silmək istədiyiniz elemendə bağlı olan bütün məlumatlar silinəcək!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sil!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/admin/products/"+item_id,
+                            type: "DELETE",
+                            data: {
+                                "_token":"{{csrf_token()}}"
+                            },
+                            success:function (response) {
+                                Swal.fire(response.message).then((result) => {
+                                    if(result.isConfirmed){
+                                        location.href = response.route;
+                                    }
+                                });
+                            },
+                        })
+                    }
+                })
+            })
         })
     </script>
 @endsection

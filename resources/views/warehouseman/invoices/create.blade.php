@@ -218,7 +218,7 @@
                                     </div>
 
                                     <button type="button" id="main_inventory_number_btn" class="btn btn-primary d-none main_inventory_btn_cls" data-bs-toggle="modal" data-bs-target="">
-                                        Button
+                                        AVR kod / Seriya nömrəsi
                                     </button>
                                 </div>
 

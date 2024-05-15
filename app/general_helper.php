@@ -1,5 +1,5 @@
 <?php
-
+use App\Models\Stocks;
 function display_user_types()
 {
     $types_array = [
@@ -44,4 +44,11 @@ function display_user_types()
 
     return $compact_types;
 }
+
+//function calculate_product_count($unical_code)
+//{
+//    $purchase_count = Stocks::where('product_unical_code', $unical_code)->sum('purchase_count');
+//    return $purchase_count;
+//}
+
 
