@@ -1,4 +1,4 @@
-@extends('warehouseman.layouts.app')
+@extends('accountant.layouts.app')
 @section('content')
     <style>
         .steps {
@@ -228,7 +228,7 @@
                 var status = 0;
 
                 $.ajax({
-                    url: "{{ route('itd-leader.assets-requests.submit') }}",
+                    url: "{{ route('accountant.assets-requests.submit') }}",
                     method: "POST",
                     headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
@@ -286,7 +286,7 @@
                         if (result.isConfirmed) {
                             var reason = result.value;
                             $.ajax({
-                                url: "{{ route('itd-leader.assets-requests.submit') }}",
+                                url: "{{ route('accountant.assets-requests.submit') }}",
                                 method: "POST",
                                 headers: {
                                     "X-CSRF-TOKEN": "{{ csrf_token() }}"

@@ -27,8 +27,8 @@ class RedirectIfAuthenticated
                     return redirect()->route('warehouseman.warehouseman');
                 } elseif (Session::get('current_role') == 'employee') {
                     return redirect()->route('employee.home');
-                } elseif (Session::get('current_role') == 'finance') {
-                    return redirect()->route('finance.home');
+                } elseif (Session::get('current_role') == 'accountant') {
+                    return redirect()->route('accountant.home');
                 } elseif (Session::get('current_role') == 'hr') {
                     return redirect()->route('hr.home');
                 } elseif (Session::get('current_role') == 'support') {

@@ -33,6 +33,15 @@
             </a>
             <div class="triangle"></div>
         </li>
+        @if($general_settings->assets_requests == 1)
+            <li class="nav-item">
+                <a class="nav-item-hold" href="{{ route('admin.assets-requests.index') }}">
+                    <i class="nav-icon i-Bag-Items"></i>
+                    <span class="nav-text">Mal-material sorğusu</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+        @endif
         <li class="nav-item ">
             <a class="nav-item-hold" href="{{ route('admin.tickets.index') }}">
                 <i class="nav-icon i-Ticket"></i>

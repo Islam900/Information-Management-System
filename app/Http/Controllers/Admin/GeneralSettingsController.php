@@ -48,6 +48,8 @@ class GeneralSettingsController extends Controller
 
     public function update_general_settings(Request $request)
     {
+
+
         $report_data = [
             'departments' => [],
             'branches' => [],
@@ -70,7 +72,6 @@ class GeneralSettingsController extends Controller
                 $report_data['users'][] = $user_id;
             }
         }
-
 
 
         $general_settings = GeneralSettings::updateOrCreate(
