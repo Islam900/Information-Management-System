@@ -81,8 +81,25 @@ class EmployeeAssetsRequestsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $assetRequest = AssetsRequests::findOrFail($id);
+
+            $assetRequest->assets_requests_details()->delete();
+
+            $assetRequest->delete();
+
+            return response()->json([
+                'message' => 'Sorğu müvəffəqiyyətlə silindi',
+                'status' => 200
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'message' => 'Sorğunu silmək mümkün olmadı. Xəta: ' . $e->getMessage(),
+                'status' => 500
+            ]);
+        }
     }
 }

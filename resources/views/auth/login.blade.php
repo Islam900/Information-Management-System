@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const roles_array = [
                         { value: 'employee', label: 'İşçi' },
                         { value: 'warehouseman', label: 'Təhcizatçı' },
-                        { value: 'finance', label: 'Mühasib' },
+                        { value: 'accountant', label: 'Mühasib' },
                         { value: 'administrator', label: 'Administrator' },
                         { value: 'hr', label: 'İnsan resursları' },
                         { value: 'support', label: 'Texniki dəstək' },

@@ -157,16 +157,10 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h3>Mal-material sorğusu</h3>
-                        <button class="btn btn-success new-assets-requests-button">
-                            <span>
-                                <i class="nav-icon i-Add-File"></i>
-                            </span>
-                            Yeni mal-material sorğusu
-                        </button>
                     </div>
                 </div>
                 <div class="card-body">
-                    @foreach($user_assets_requests as $asset_key => $assets_requests)
+                    @foreach($assets as $asset_key => $assets_requests)
                         <div class="card mt-2">
                             <div class="p-5 mb-sm-4">
                                 <!-- Details-->
@@ -175,7 +169,9 @@
                                 <div class="steps">
                                     <div class="steps-header">
                                         <div class="p-4">
-                                            <h4>{{ $assets_requests->content }}</h4>
+                                            <h4>{{ $assets_requests->user->name}}: {{ $assets_requests->content }}</h4>
+                                            <br>
+                                            <h5>Sorğunun yaradılma tarixi: {{ $assets_requests->created_at }}</h5>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: {{20+$assets_requests->assets_requests_details()->where('status', 2)->count()*20}}%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
@@ -184,7 +180,7 @@
                                     <div class="steps-body">
                                         <div class="step step-completed">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <img src="{{ asset('assets/images/2.png') }}" height="150px;"  width="150px;" alt="">
+                                                <img src="{{ asset('assets/images/2.jpeg') }}" height="150px;"  width="150px;" alt="">
                                                 <strong>
                                                     Mal-material sorğusu yaradıldı
                                                 </strong>
@@ -193,10 +189,21 @@
                                         @foreach($assets_requests->assets_requests_details as $detail_key => $detail)
                                             <div class="step step-completed">
                                                 <div class="d-flex justify-content-between align-items-center">
-                                                    <img src="{{ asset('assets/images/').'/'.$detail->status.'.png' }}" height="150px;"  width="150px;" alt="">
-                                                    <strong>
-                                                        {{ $detail->users->name }}
-                                                    </strong>
+                                                    <img src="{{ asset('assets/images/').'/'.$detail->status.'.jpeg' }}" height="150px;"  width="150px;" alt="">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <h3>{{ $detail->users->name }}</h3>
+                                                            @if(\Illuminate\Support\Facades\Auth::user()->id == $detail->users_id && $check_available[$asset_key] && $detail->status == 1)
+                                                                <button class="btn btn-outline-success w-100 confirm-request" data-detail-id="{{ $detail->id }}" data-status="2">
+                                                                    Təsdiq edin
+                                                                </button>
+                                                                <button class="btn btn-outline-danger mt-2 w-100 reject-request" data-detail-id="{{ $detail->id }}" data-status="0">
+                                                                    Ləğv edin
+                                                                </button>
+                                                            @endif
+
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -216,43 +223,113 @@
 @section('js')
     <script>
         $('document').ready(function () {
-            $('.new-assets-requests-button').on('click', function (e) {
+            $('.confirm-request').on('click', function () {
+                var detailId = $(this).data('detail-id');
+                var status = 0;
 
-                Swal.fire({
-                    title: "Yeni mal-material sorğusu yaradın",
-                    input: "text",
-                    inputAttributes: {
-                        autocapitalize: "off"
+                $.ajax({
+                    url: "{{ route('admin.assets-requests.submit') }}",
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
-                    showCancelButton: true,
-                    confirmButtonText: "Göndərin",
-                    showLoaderOnConfirm: true,
-                    preConfirm: async (assets_content) => {
-                        $.ajax({
-                            url:"{{route('employee.assets-requests.store')}}",
-                            method:"POST",
-                            data:{
-                                "_token":"{{csrf_token()}}",
-                                "assets_content": assets_content
-                            },
-                            success:function (response) {
-                                if(response.status == 200)
-                                {
+                    data: {
+                        "status": status,
+                        "detailId": detailId
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Uğurlu!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                        Swal.fire({
+                            title: 'Xəta!',
+                            text: 'Xəta baş verdi.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+
+            $('document').ready(function () {
+                $('.reject-request').on('click', function () {
+                    var detailId = $(this).data('detail-id');
+                    Swal.fire({
+                        title: 'Geri çevirmə (qəbul etməmə)',
+                        html: '<label for="rejectReason">Zəhmət olmasa səbəbi daxil edin:</label>' +
+                            '<input id="rejectReason" class="swal2-input" required>',
+                        inputAttributes: {
+                            autocapitalize: 'off',
+                            autocorrect: 'off'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Göndər',
+                        cancelButtonText: 'Ləğv et',
+                        preConfirm: () => {
+                            const reason = document.getElementById('rejectReason').value;
+                            if (!reason) {
+                                Swal.showValidationMessage('Səbəbi daxil etməlisiniz');
+                            }
+                            return reason;
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var reason = result.value;
+                            $.ajax({
+                                url: "{{ route('admin.assets-requests.submit') }}",
+                                method: "POST",
+                                headers: {
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                },
+                                data: {
+                                    "status": 0,
+                                    "detailId": detailId,
+                                    "reason": reason
+                                },
+                                success: function (response) {
                                     Swal.fire({
-                                        title: response.message,
-                                    }).then((e) => {
-                                        if(e.isConfirmed)
-                                        {
-                                            location.href = response.route;
+                                        title: 'Uğurlu!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
                                         }
                                     });
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error(error);
+                                    Swal.fire({
+                                        title: 'Xəta!',
+                                        text: 'Xəta baş verdi',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
                                 }
-                            }
-                        })
-                    },
-                    allowOutsideClick: () => !Swal.isLoading()
-                })
+                            });
+                        }
+                    });
+                });
             });
+        });
+    </script>
+
+    <script>
+        $('document').ready(function () {
+            @if(session('success'))
+            Swal.fire("Sorğu uğurla təsdiq edildi");
+            @endif
         });
     </script>
 @endsection

@@ -17,6 +17,7 @@
                 <span class="nav-text">Departament</span>
             </a>
             <div class="triangle"></div>
+
         </li>
 
         <li class="nav-item " data-item="dashboard-inventory">

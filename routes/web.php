@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\Admin\{
     AppointmentsController,
     BranchesController,
@@ -18,7 +17,8 @@ use App\Http\Controllers\Admin\{
     TicketsController,
     VendorsController,
     WarehousesController,
-    UsersController
+    UsersController,
+    AdminAssetsRequestsController
 };
 
 use App\Http\Controllers\Auth\LoginController;
@@ -68,24 +68,20 @@ use App\Http\Controllers\Warehouseman\{
     WHMWarehousesController
 };
 
+use App\Http\Controllers\Accountant\{
+    AccountantController,
+    ACCAppointmentsController,
+    ACCAssetsController,
+    ACCCategoriesController,
+    ACCHandRegistersController,
+    ACCInvoicesController,
+    ACCProductsController,
+    ACCVendorsController,
+    ACCWarehousesController
+
+};
+
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-
-//if (env('APP_ENV') === 'production') {
-//    URL::forceScheme('https');
-//}
-
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -97,6 +93,11 @@ Auth::routes();
  * @return void
  */
 
+// ACCOUNTANT ROUTES
+Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
+
+
+});
 
 // ADMIN ROUTES
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administrator'])->group(function () {
@@ -119,8 +120,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
     Route::resource('users', UsersController::class);
     Route::resource('local-numbers', LocalNumbersController::class);
-
     Route::resource('warehouses', WarehousesController::class);
+    Route::post('assets-requests/submit', [AdminAssetsRequestsController::class, 'submit'])->name('assets-requests.submit');
+    Route::resource('assets-requests', AdminAssetsRequestsController::class);
+
 
     /* -------------------- GENERAL SETTINGS ---------------------- */
     Route::get('general-settings', [GeneralSettingsController::class, 'index'])->name('general-settings.index');
@@ -154,6 +157,7 @@ Route::prefix('itd-leader')->name('itd-leader.')->middleware(['auth', 'check_rol
     Route::get('/dashboard', [ITDLeaderController::class, 'index'])->name('home');
     Route::get('profile', [ITDLeaderController::class, 'profile'])->name('profile');
     Route::put('update-profile/{id}', [ITDLeaderController::class, 'update_profile'])->name('update-profile');
+    Route::post('assets-requests/submit', [ITDAssetsRequestsController::class, 'submit'])->name('assets-requests.submit');
     Route::resource('assets-requests', ITDAssetsRequestsController::class);
     Route::resource('departments', ITDDepartmentsController::class);
     Route::resource('branches', ITDBranchesController::class);
@@ -184,7 +188,8 @@ Route::prefix('warehouseman')->name('warehouseman.')->middleware(['auth', 'check
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
     Route::resource('assets-requests', WHMAssetsController::class);
-    Route::post('assets-requests/{detail_id}/submit', [WHMAssetsController::class, 'submit'])->name('assets-requests.submit');
+    Route::post('assets-requests/submit', [WHMAssetsController::class, 'submit'])->name('assets-requests.submit');
+
 
 });
 
@@ -224,6 +229,28 @@ Route::prefix('support')->name('support.')->middleware(['auth', 'check_role:supp
 
 
 //Togrul deysihiklik
+
 Route::post('/check-user-status', [LoginController::class, 'checkUserStatus'])->name('check.user.status');
 
-// FINANCE ROUTES
+// ACCOUNTANT ROUTES
+
+Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
+    Route::get('/accountant', [AccountantController::class, 'index'])->name('home');
+    Route::get('profile', [AccountantController::class, 'profile'])->name('profile');
+    Route::put('update-profile/{id}', [AccountantController::class, 'update_profile'])->name('update-profile');
+    Route::resource('vendors', ACCVendorsController::class);
+    Route::resource('categories', ACCCategoriesController::class);
+    Route::resource('products', ACCProductsController::class);
+    Route::resource('invoices', ACCInvoicesController::class);
+    Route::resource('hand-registers', ACCHandRegistersController::class);
+    Route::resource('appointments', ACCAppointmentsController::class);
+    Route::resource('warehouses', ACCWarehousesController::class);
+    Route::get('appointments/{id}/refund', [ACCAppointmentsController::class, 'refund'])->name('appointments.refund');
+    Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
+    Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
+    Route::resource('assets-requests', ACCAssetsController::class);
+    Route::post('assets-requests/submit', [ACCAssetsController::class, 'submit'])->name('assets-requests.submit');
+
+
+});
+

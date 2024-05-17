@@ -68,7 +68,7 @@ class LoginController extends Controller
             } else {
                 $user_type = $user->type;
             }
-            $user_all_types = ['employee', 'warehouseman', 'administrator', 'hr', 'finance'];
+            $user_all_types = ['employee', 'warehouseman', 'administrator', 'hr', 'accountant'];
 
             foreach($user_role_count as $role) {
                 $key = array_search($role, $user_all_types);
@@ -99,8 +99,8 @@ class LoginController extends Controller
                 return redirect()->route('support.home')->with('login_success', 'Sistemə daxil oldunuz');
             } elseif (Auth::check() && $user_type == 'hr') {
                 return redirect()->route('hr.home')->with('login_success', 'Sistemə daxil oldunuz');
-            } elseif (Auth::check() && $user_type == 'finance') {
-                return redirect()->route('finance.home')->with('login_success', 'Sistemə daxil oldunuz');
+            } elseif (Auth::check() && $user_type == 'accountant') {
+                return redirect()->route('accountant.home')->with('login_success', 'Sistemə daxil oldunuz');
             } elseif (Auth::check() && $user_type == 'itd-leader') {
                 return redirect()->route('itd-leader.home')->with('login_success', 'Sistemə daxil oldunuz');
             }

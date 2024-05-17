@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'rooms_id' => 1,
             'name' => 'Röya Quliyeva',
             'email' => 'admin@icta.az',
-            'password' => bcrypt('icta123'),
+            'password' => bcrypt('salamadmin'),
             'type' => 'administrator,employee,warehouseman,hr,finance,support',
             'b_day' => Carbon::now()->format('Y-m-d')
         ]);
