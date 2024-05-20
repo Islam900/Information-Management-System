@@ -46,7 +46,8 @@ class BranchesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $branch = Branches::with('users', 'positions')->find($id);
+        return view('admin.branches.show', compact('branch'));
     }
 
     /**
@@ -76,9 +77,12 @@ class BranchesController extends Controller
      */
     public function destroy(string $id)
     {
-        $branches = Branches::findOrFail($id);
-        $branches->delete();
-        return redirect()->route('admin.admin.branches.index')->with('success', 'Məlumatlar silindi');
+        $branch = Branches::find($id);
+        $branch->delete();
+        return response()->json([
+            'message' => 'Məlumatlar müvəffəqiyyətlə silindi',
+            'route' => route('admin.branches.index')
+        ]);
     }
 
     public function get_branches_by_department(Request $request)

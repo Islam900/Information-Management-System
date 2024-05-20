@@ -33,4 +33,9 @@ class Departments extends Model
     {
         return $this->hasMany(LocalNumbers::class);
     }
+
+    public function positions()
+    {
+        return $this->hasMany(Positions::class);
+    }
 }

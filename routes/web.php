@@ -83,6 +83,10 @@ use App\Http\Controllers\Accountant\{
 
 use Illuminate\Support\Facades\Route;
 
+// if (env('APP_ENV') === 'production') {
+//     URL::forceScheme('https');
+//  }
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -95,7 +99,7 @@ Auth::routes();
 
 // ACCOUNTANT ROUTES
 Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
-
+Route::get('home', [App\Http\Controllers\Accountant\AccountantController::class, 'index'])->name('home');
 
 });
 

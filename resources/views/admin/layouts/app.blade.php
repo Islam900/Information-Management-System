@@ -15,6 +15,9 @@
             @yield('content')
         </div>
 
+
+
+
         <!-- Footer Start -->
         <div class="flex-grow-1"></div>
         @include('layouts.partials.footer')

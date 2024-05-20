@@ -41,7 +41,7 @@ class DepartmentsController extends Controller
      */
     public function show(string $id)
     {
-        $department = Departments::with('branches', 'users', 'local_numbers')->find($id);
+        $department = Departments::with('branches', 'users', 'positions' ,'local_numbers')->find($id);
         return view('admin.departments.show', compact('department'));
     }
 
@@ -74,7 +74,7 @@ class DepartmentsController extends Controller
         $department = Departments::find($id);
         $department->delete();
         return response()->json([
-            'message' => 'Məlumatlar müvəffəqiyyətlə silind',
+            'message' => 'Məlumatlar müvəffəqiyyətlə silindi',
             'route' => route('admin.departments.index')
         ]);
     }

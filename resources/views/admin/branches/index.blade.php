@@ -52,6 +52,16 @@
                                           class="text-success mr-2">
                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                                        </a>
+
+                                       <a href="{{ route('admin.branches.show', $item->id ) }}"
+                                          class="text-info mr-2">
+                                           <i class="nav-icon i-Eye font-weight-bold"></i>
+                                       </a>
+
+                                       <a href="#"
+                                          class="text-danger mr-2 delete-item" data-id="{{$item->id}}">
+                                           <i class="nav-icon i-Close-Window font-weight-bold"></i>
+                                       </a>
                                    </td>
                                </tr>
                            @endforeach
@@ -96,5 +106,37 @@
 
         @php session()->forget('error') @endphp
         @endif
+
+        $(document).ready(function(){
+            $('.delete-item').on("click", function () {
+                const item_id = $(this).data('id');
+                Swal.fire({
+                    title: "Silmək istədiyinizdən əminsiniz ?",
+                    text: "Qeyd edək ki, silmək istədiyiniz elemendə bağlı olan bütün məlumatlar silinəcək!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sil!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/admin/branches/"+item_id,
+                            type: "DELETE",
+                            data: {
+                                "_token":"{{csrf_token()}}"
+                            },
+                            success:function (response) {
+                                Swal.fire(response.message).then((result) => {
+                                    if(result.isConfirmed){
+                                        location.href = response.route;
+                                    }
+                                });
+                            },
+                        })
+                    }
+                })
+            })
+        })
     </script>
 @endsection

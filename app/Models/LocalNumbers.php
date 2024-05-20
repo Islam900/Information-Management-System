@@ -17,7 +17,7 @@ class LocalNumbers extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function departments()
+    public function department()
     {
         return $this->belongsTo(Departments::class);
     }
