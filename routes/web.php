@@ -40,6 +40,7 @@ use App\Http\Controllers\ITD\{
 
 use App\Http\Controllers\LogController;
 
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Support\{
     SupportController,
     SupportTicketsController
@@ -99,7 +100,7 @@ Auth::routes();
 
 // ACCOUNTANT ROUTES
 Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
-Route::get('home', [App\Http\Controllers\Accountant\AccountantController::class, 'index'])->name('home');
+    Route::get('home', [App\Http\Controllers\Accountant\AccountantController::class, 'index'])->name('home');
 
 });
 
@@ -127,6 +128,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::resource('warehouses', WarehousesController::class);
     Route::post('assets-requests/submit', [AdminAssetsRequestsController::class, 'submit'])->name('assets-requests.submit');
     Route::resource('assets-requests', AdminAssetsRequestsController::class);
+
+    Route::get('/message', [MessageController::class, 'index'])->name('message.index');
+    Route::post('/messages', [MessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+    Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
 
 
     /* -------------------- GENERAL SETTINGS ---------------------- */
@@ -254,7 +259,6 @@ Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_rol
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
     Route::resource('assets-requests', ACCAssetsController::class);
     Route::post('assets-requests/submit', [ACCAssetsController::class, 'submit'])->name('assets-requests.submit');
-
-
 });
+
 
