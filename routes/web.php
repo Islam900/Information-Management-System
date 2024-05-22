@@ -104,6 +104,7 @@ Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_rol
 
 });
 
+
 // ADMIN ROUTES
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administrator'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
@@ -131,8 +132,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
 
     Route::get('/message', [MessageController::class, 'index'])->name('message.index');
     Route::post('/messages', [MessageController::class, 'sendMessage'])->name('sendMessageRouteName');
-    Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
-
+    Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get'); // Added name
 
     /* -------------------- GENERAL SETTINGS ---------------------- */
     Route::get('general-settings', [GeneralSettingsController::class, 'index'])->name('general-settings.index');
@@ -146,8 +146,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('add-permission-to-role', [GeneralSettingsController::class, 'add_permission_to_role'])->name('add-permission-to-role');
     Route::post('update-user-report-receiver-data', [UsersController::class, 'update_user_report_receiver_data'])->name('update-user-report-receiver-data');
 
-
-
     Route::get('logs', [LogController::class, 'logs'])->name('logs');
 
     Route::post('get-branches-by-department', [BranchesController::class, 'get_branches_by_department'])->name('get-branches-by-department');
@@ -157,8 +155,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('get-appointments-by-user', [TicketsController::class, 'get_inventories_by_user'])->name('get-appointments-by-user');
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
-
 });
+
 
 
 // ITDLEADER ROUTES
@@ -179,6 +177,10 @@ Route::prefix('itd-leader')->name('itd-leader.')->middleware(['auth', 'check_rol
     Route::resource('users', ITDUsersController::class);
     Route::resource('local-numbers', ITDLocalNumbersController::class);
 });
+//
+//Route::get('/message', [MessageController::class, 'index'])->name('message.index');
+//Route::post('/messages', [MessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+//Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get'); // Added name
 
 
 // WAREHOUSEMAN ROUTES

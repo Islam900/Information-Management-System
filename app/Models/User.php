@@ -123,4 +123,14 @@ class User extends Authenticatable
         return $this->hasMany(AssetsRequestsDetails::class);
     }
 
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'from_user_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'to_user_id');
+    }
+
 }
