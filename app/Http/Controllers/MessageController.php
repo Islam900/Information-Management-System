@@ -13,12 +13,7 @@ class MessageController extends Controller
     public function index()
     {
         // Mesajlaştığınız kullanıcıları listeleyin
-        $users = User::where('id', '!=', Auth::id())
-            ->where(function ($query) {
-                $query->whereHas('sentMessages')
-                    ->orWhereHas('receivedMessages');
-            })
-            ->get();
+        $users = User::take(5)->get();
 
         $messages = Message::where('to_user_id', Auth::id())
             ->orWhere('from_user_id', Auth::id())

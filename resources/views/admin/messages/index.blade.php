@@ -362,7 +362,35 @@
                 .then(response => {
                     if (response.ok) {
                         document.getElementById("messageInput").value = "";
-                        getMessages();
+                        const to_user_id = formData.get('to_user_id');
+                        fetch(`/admin/messages/${to_user_id}`)
+                            .then(response => response.json())
+                            .then(messages => {
+                                var messagesContainer = document.getElementById("chatMessages");
+
+                                messages.forEach((message, index) => {
+                                    var messageElement = document.createElement("li");
+                                    messageElement.classList.add("clearfix");
+                                    var authId = @json(Auth::id());
+
+                                    if(messages.length-1 == index)
+                                    {
+                                        messageElement.innerHTML = `
+                                            <div class="message-data ${message.from_user_id == authId ? 'text-right' : ''}">
+                                                <span class="message-data-time">${message.created_at}</span>
+                                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
+                                            </div>
+                                            <div class="message ${message.from_user_id == authId ? 'my-message float-right' : 'other-message'}">
+                                                ${message.message}
+                                            </div>
+                                        `;
+                                    }
+                                    messagesContainer.appendChild(messageElement);
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Bir hata oluştu:', error);
+                            });
                     } else {
                         console.error('Mesaj gönderilirken bir hata oluştu.');
                     }
@@ -372,52 +400,18 @@
                 });
         }
 
-        function getMessages() {
-            fetch("{{ route('admin.messages.get', ['userId' => Auth::id()]) }}")
-                .then(response => response.json())
-                .then(messages => {
-                    var messagesContainer = document.getElementById("chatMessages");
-                    messagesContainer.innerHTML = '';
-
-                    messages.forEach(message => {
-                        var messageElement = document.createElement("div");
-                        messageElement.classList.add("message");
-
-                        if (message.from_user_id == {{ Auth::id() }}) {
-                            messageElement.classList.add("sent");
-                            messageElement.innerText = message.message + " (Sizden " + message.to_user_name + " kişisine)";
-                        } else {
-                            messageElement.classList.add("received");
-                            messageElement.innerText = message.message + " (" + message.from_user_name + " kişisinden)";
-                        }
-
-                        messagesContainer.appendChild(messageElement);
-                    });
-                })
-                .catch(error => {
-                    console.error('Bir hata oluştu:', error);
-                });
-        }
-
         window.onload = function () {
-            // getMessages();
-            // setInterval(getMessages, 5000);
             document.getElementById("sendMessageForm").addEventListener("submit", sendMessage);
         };
 
-        // Kullanıcı listesinden bir kullanıcıya tıklandığında
         document.querySelectorAll('.chat-list li').forEach(item => {
-
             item.addEventListener('click', function () {
-
                 const userId = item.getAttribute('data-user-id');
                 var userName = this.querySelector('.name').innerText.trim();
 
-                // Kullanıcı adını ve kimliğini güncelle
                 document.getElementById("chatUserName").innerText = userName;
                 document.getElementById("to_user_id").value = userId;
 
-                // Bu kullanıcıyla olan geçmiş mesajları yükle
                 fetch(`/admin/messages/${userId}`, {
                     method: 'GET',
                     headers: {
@@ -438,8 +432,6 @@
                         messages.forEach(message => {
                             var messageElement = document.createElement("li");
                             messageElement.classList.add("clearfix");
-
-                            // Auth::id()'yi JSON olarak geçiyoruz
                             var authId = @json(Auth::id());
 
                             messageElement.innerHTML = `
