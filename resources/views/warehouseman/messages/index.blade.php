@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('warehouseman.layouts.app')
 
 @section('content')
 <div class="main-content">
@@ -78,7 +78,7 @@
 
         var formData = new FormData(document.getElementById("sendMessageForm"));
 
-        fetch("{{ route('admin.sendMessageRouteName') }}", {
+        fetch("{{ route('warehouseman.sendMessageRouteName') }}", {
             method: 'POST',
             body: formData,
             headers: {
@@ -141,7 +141,7 @@
     }
 
     function fetchMessages(userId) {
-        fetch(`/admin/messages/${userId}`)
+        fetch(`/warehouseman/messages/${userId}`)
             .then(response => response.json())
             .then(messages => {
                 var messagesContainer = document.getElementById("chatMessages");

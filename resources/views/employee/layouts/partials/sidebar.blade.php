@@ -18,6 +18,14 @@
             <div class="triangle"></div>
         </li>
 
+        <li class="nav-item">
+            <a class="nav-item-hold" href="{{ route('employee.message.index') }}">
+                <i class="nav-icon i-Bar-Chart"></i>
+                <span class="nav-text">Mesajlar</span>
+            </a>
+            <div class="triangle"></div>
+        </li>
+
         @if($general_settings->weekly_report_module == 1 && in_array(\Illuminate\Support\Facades\Auth::user()->id, $report_users))
             <li class="nav-item">
                 <a class="nav-item-hold" href="{{ route('employee.reports.index') }}">

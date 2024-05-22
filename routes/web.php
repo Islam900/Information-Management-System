@@ -18,7 +18,8 @@ use App\Http\Controllers\Admin\{
     VendorsController,
     WarehousesController,
     UsersController,
-    AdminAssetsRequestsController
+    AdminAssetsRequestsController,
+    MessageController
 };
 
 use App\Http\Controllers\Auth\LoginController;
@@ -35,15 +36,16 @@ use App\Http\Controllers\ITD\{
     ITDStructureController,
     ITDTicketsController,
     ITDUsersController,
-    ITDAssetsRequestsController
+    ITDAssetsRequestsController,
+    ITDMessageController
 };
 
 use App\Http\Controllers\LogController;
 
-use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Support\{
     SupportController,
-    SupportTicketsController
+    SupportTicketsController,
+    SupportMessageController
 };
 
 use App\Http\Controllers\User\{
@@ -52,7 +54,8 @@ use App\Http\Controllers\User\{
     EmployeeReportsController,
     EmployeeReportsSubjectsController,
     EmployeeTicketController,
-    EmployeInventoriesController
+    EmployeInventoriesController,
+    EmployeeMessageController
 };
 
 use App\Http\Controllers\User\TicketController;
@@ -66,7 +69,8 @@ use App\Http\Controllers\Warehouseman\{
     WHMInvoicesController,
     WHMProductsController,
     WHMVendorsController,
-    WHMWarehousesController
+    WHMWarehousesController,
+    WHMMessageController
 };
 
 use App\Http\Controllers\Accountant\{
@@ -78,7 +82,8 @@ use App\Http\Controllers\Accountant\{
     ACCInvoicesController,
     ACCProductsController,
     ACCVendorsController,
-    ACCWarehousesController
+    ACCWarehousesController,
+    ACCMessageController
 
 };
 
@@ -101,6 +106,10 @@ Auth::routes();
 // ACCOUNTANT ROUTES
 Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
     Route::get('home', [App\Http\Controllers\Accountant\AccountantController::class, 'index'])->name('home');
+
+    Route::get('/message', [ACCMessageController::class, 'index'])->name('message.index');
+    Route::post('/messages', [ACCMessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+    Route::get('/messages/{userId}', [ACCMessageController::class, 'getMessages'])->name('messages.get');
 
 });
 
@@ -132,7 +141,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
 
     Route::get('/message', [MessageController::class, 'index'])->name('message.index');
     Route::post('/messages', [MessageController::class, 'sendMessage'])->name('sendMessageRouteName');
-    Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get'); // Added name
+    Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get');
 
     /* -------------------- GENERAL SETTINGS ---------------------- */
     Route::get('general-settings', [GeneralSettingsController::class, 'index'])->name('general-settings.index');
@@ -176,11 +185,11 @@ Route::prefix('itd-leader')->name('itd-leader.')->middleware(['auth', 'check_rol
     Route::get('structure', [ITDStructureController::class, 'index'])->name('structures.index');
     Route::resource('users', ITDUsersController::class);
     Route::resource('local-numbers', ITDLocalNumbersController::class);
+
+    Route::get('/message', [ITDMessageController::class, 'index'])->name('message.index');
+    Route::post('/messages', [ITDMessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+    Route::get('/messages/{userId}', [ITDMessageController::class, 'getMessages'])->name('messages.get');
 });
-//
-//Route::get('/message', [MessageController::class, 'index'])->name('message.index');
-//Route::post('/messages', [MessageController::class, 'sendMessage'])->name('sendMessageRouteName');
-//Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get'); // Added name
 
 
 // WAREHOUSEMAN ROUTES
@@ -201,6 +210,9 @@ Route::prefix('warehouseman')->name('warehouseman.')->middleware(['auth', 'check
     Route::resource('assets-requests', WHMAssetsController::class);
     Route::post('assets-requests/submit', [WHMAssetsController::class, 'submit'])->name('assets-requests.submit');
 
+    Route::get('/message', [WHMMessageController::class, 'index'])->name('message.index');
+    Route::post('/messages', [WHMMessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+    Route::get('/messages/{userId}', [WHMMessageController::class, 'getMessages'])->name('messages.get');
 
 });
 
@@ -224,6 +236,10 @@ Route::prefix('employee')->name('employee.')->middleware(['auth', 'check_role:em
     Route::post('confirm-reports', [EmployeeReportsController::class, 'confirm_reports'])->name('confirm-reports');
     Route::get('report-list', [EmployeeReportsController::class, 'report_list'])->name('report-list');
     Route::post('update-report-status', [EmployeeReportsController::class, 'update_report_status'])->name('update-report-status');
+
+    Route::get('/message', [EmployeeMessageController::class, 'index'])->name('message.index');
+    Route::post('/messages', [EmployeeMessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+    Route::get('/messages/{userId}', [EmployeeMessageController::class, 'getMessages'])->name('messages.get');
 });
 
 
@@ -236,6 +252,10 @@ Route::prefix('support')->name('support.')->middleware(['auth', 'check_role:supp
     Route::get('my-tickets', [SupportTicketsController::class, 'my_tickets'])->name('my-tickets');
     Route::post('accept-ticket', [SupportTicketsController::class, 'accept_ticket'])->name('accept-ticket');
     Route::post('update-ticket', [SupportTicketsController::class, 'update_ticket'])->name('update-ticket');
+
+    Route::get('/message', [SupportMessageController::class, 'index'])->name('message.index');
+    Route::post('/messages', [SupportMessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+    Route::get('/messages/{userId}', [SupportMessageController::class, 'getMessages'])->name('messages.get');
 });
 
 
@@ -246,7 +266,7 @@ Route::post('/check-user-status', [LoginController::class, 'checkUserStatus'])->
 // ACCOUNTANT ROUTES
 
 Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
-    Route::get('/accountant', [AccountantController::class, 'index'])->name('home');
+    Route::get('/home', [AccountantController::class, 'index'])->name('home');
     Route::get('profile', [AccountantController::class, 'profile'])->name('profile');
     Route::put('update-profile/{id}', [AccountantController::class, 'update_profile'])->name('update-profile');
     Route::resource('vendors', ACCVendorsController::class);
@@ -261,6 +281,10 @@ Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_rol
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
     Route::resource('assets-requests', ACCAssetsController::class);
     Route::post('assets-requests/submit', [ACCAssetsController::class, 'submit'])->name('assets-requests.submit');
+
+    Route::get('/message', [ACCMessageController::class, 'index'])->name('message.index');
+    Route::post('/messages', [ACCMessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+    Route::get('/messages/{userId}', [ACCMessageController::class, 'getMessages'])->name('messages.get');
 });
 
 

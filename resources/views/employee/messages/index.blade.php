@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('employee.layouts.app')
 
 @section('content')
 <div class="main-content">
@@ -73,12 +73,16 @@
 </div>
 
 <script>
+    const userId = {{ auth()->id() }};
+</script>
+
+<script>
     function sendMessage(event) {
         event.preventDefault();
 
         var formData = new FormData(document.getElementById("sendMessageForm"));
 
-        fetch("{{ route('admin.sendMessageRouteName') }}", {
+        fetch("{{ route('employee.sendMessageRouteName') }}", {
             method: 'POST',
             body: formData,
             headers: {
@@ -103,6 +107,15 @@
             console.error('Bir hata oluştu:', error);
         });
     }
+
+    window.onload = function () {
+    document.getElementById("sendMessageForm").addEventListener("submit", sendMessage);
+
+    window.Echo.private(`messages.${userId}`)
+        .listen('MessageSent', (e) => {
+            addMessageToChat(e.message, false);
+        });
+};
 
     function addMessageToChat(message, isMyMessage) {
         var messagesContainer = document.getElementById("chatMessages");
@@ -141,7 +154,7 @@
     }
 
     function fetchMessages(userId) {
-        fetch(`/admin/messages/${userId}`)
+        fetch(`/employee/messages/${userId}`)
             .then(response => response.json())
             .then(messages => {
                 var messagesContainer = document.getElementById("chatMessages");

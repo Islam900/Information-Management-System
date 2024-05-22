@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Warehouseman;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class MessageController extends Controller
+class WHMMessageController extends Controller
 {
 
     public function index()
@@ -19,7 +21,7 @@ class MessageController extends Controller
             ->orWhere('from_user_id', Auth::id())
             ->get();
 
-        return view('admin.messages.index', compact('users', 'messages'));
+        return view('warehouseman.messages.index', compact('users', 'messages'));
     }
 
     public function sendMessage(Request $request)
@@ -38,7 +40,7 @@ class MessageController extends Controller
         // Olayı tetikle (WebSocket veya diğer dinleyiciler için)
         event(new \App\Events\MessageSent($message));
 
-        return response()->json(['message' => 'Message sent successfully']);
+        return response()->json(['message' => 'Message sent successfully', 'success' => true]);
     }
 
     public function getMessages($userId)

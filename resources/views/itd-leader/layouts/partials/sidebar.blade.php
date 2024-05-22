@@ -24,6 +24,15 @@
             </a>
             <div class="triangle"></div>
         </li>
+
+        <li class="nav-item ">
+            <a class="nav-item-hold" href="{{ route('itd-leader.message.index') }}">
+                <i class="nav-icon i-traffic-Light"></i>
+                <span class="nav-text">Mesajlar</span>
+            </a>
+            <div class="triangle"></div>
+        </li>
+
         @if($general_settings->ticket_module)
             <li class="nav-item ">
                 <a class="nav-item-hold" href="{{ route('itd-leader.tickets.index') }}">
