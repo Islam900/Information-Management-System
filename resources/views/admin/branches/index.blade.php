@@ -79,7 +79,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#branches-table').DataTable();
+            $('#branches-table').DataTable({ "paging": false });
         })
 
         @if (session('success'))

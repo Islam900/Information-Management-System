@@ -38,49 +38,27 @@
                 <div class="card-body">
 
                     <!-- right control icon -->
-                    <div class="accordion" id="accordionRightIcon">
 
-                        @foreach($reports as $report)
-                            <div class="card p-8">
-                                <div class="card-header header-elements-inline">
-                                    <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0 data_head_container">
-                                        <div class="profile_container">
-                                            <div class="profile_img">
-                                                @if(!is_null($report->user->avatar))
-                                                    <img src="{{ asset('assets/images/avatars').'/'.$report->user->avatar }}" height="26px" alt="">
-                                                @else
-                                                    <i class="nav-icon i-Checked-User" style="font-size: 26px;"></i>
-                                                @endif
+                    <div class="row">
+                        @foreach($dates as $date_key => $date)
+                            <div class="col-md-3">
+                                <a href="{{ route('admin.report-details', ['date' => $date->report_date]) }}">
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <h6 class="mb-3">{{ $date->report_date }} üçün göndərilən hesabatlar</h6>
+                                            <p class="mb-1 text-22 font-weight-light">{{ $persentages[$date_key] }}%</p>
+                                            <div class="progress mb-1" style="height: 4px">
+                                                <div class="progress-bar bg-success" style="width: {{ $persentages[$date_key] }}%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
                                             </div>
-                                            <div class="profile_owner">{{ $report->user->name }}</div>
+                                            <small class="text-muted">{{ $date->report_count }} hesabat daxil olub</small>
                                         </div>
-
-                                        <a data-toggle="collapse" class="text-default collapsed"
-                                           href="#accordion-item-icons-{{ $report->id }}" aria-expanded="false">
-                                            <span><i class="i-Data-Settings ul-accordion__font"> </i></span>
-                                            {{ \Carbon\Carbon::parse($report->report_date)->format('d.m.Y') }} tarixi üçün həftəlik hesabat</a>
-                                    </h6>
-
-                                </div>
-
-
-                                <div id="accordion-item-icons-{{ $report->id }}" class="collapse" data-parent="#accordionRightIcon"
-                                     style="">
-                                    <div class="card-body">
-                                        <ul class="list-group">
-                                            @foreach($report->reports_subjects as $subject_key => $subject)
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    <p class="text-primary">{{ $subject_key+1 }}. {{ $subject->subject }}</p>
-                                                    <strong>{{ $subject->project_name }}</strong>
-                                                </li>
-                                            @endforeach
-                                        </ul>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         @endforeach
-
                     </div>
+
                     <!-- /right control icon -->
 
                 </div>

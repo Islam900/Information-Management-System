@@ -39,7 +39,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($tickets as $item)
+                            @forelse($tickets as $item)
                                 @php
                                     if($item->status == 0)
                                     {
@@ -104,7 +104,13 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @endforeach
+                                @empty
+                                <tr>
+                                    <td class="text-center" colspan="12">
+                                        <h3 class="text-primary">Texniki dəstək bileti yaradılmayıb</h3>
+                                    </td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

@@ -36,7 +36,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($appointments as $item)
+                            @forelse($appointments as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{$item->products->product_name}}</td>
@@ -65,7 +65,14 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td class="text-center" colspan="9">
+                                        <h3 class="text-primary">İnventar təhkim olunmayıb</h3>
+                                    </td>
+                                </tr>
+                            @endforelse
+
                             </tbody>
                         </table>
                     </div>

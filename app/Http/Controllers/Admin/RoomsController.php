@@ -40,7 +40,8 @@ class RoomsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $room = Rooms::with('users')->find($id);
+        return view('admin.rooms.show', compact('room'));
     }
 
     /**
@@ -69,8 +70,11 @@ class RoomsController extends Controller
      */
     public function destroy(string $id)
     {
-        $rooms = Rooms::findOrFail($id);
+        $rooms = Rooms::find($id);
         $rooms->delete();
-        return redirect()->route('admin.admin.rooms.index')->with('success', 'Məlumatlar silindi');
+        return response()->json([
+            'message' => 'Məlumatlar müvəffəqiyyətlə silindi',
+            'route' => route('admin.rooms.index')
+        ]);
     }
 }

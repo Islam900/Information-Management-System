@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Reports;
 use Illuminate\Http\Request;
+use DB;
 
 class ReportsController extends Controller
 {
@@ -13,14 +14,29 @@ class ReportsController extends Controller
      */
     public function index()
     {
-        $reports = Reports::with('reports_subjects')->get();
-        $dates = Reports::select('report_date')->distinct()->get();
-        return view('admin.reports.index', compact('reports', 'dates'));
+        $dates = Reports::select('report_date', DB::raw('count(*) as report_count'))
+            ->groupBy('report_date')
+            ->where('status', '!=', 0)
+            ->get();
+        $report_users_count = User::whereNotNull('report_receiver_id')->count();
+
+        $persentages = [];
+        foreach ($dates as $key => $value) {
+            $persentages[$key] = round($value->report_count*100/$report_users_count);
+        }
+        return view('admin.reports.index', compact('dates', 'persentages'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
+
+    public function details($date)
+    {
+        $reports = Reports::with('reports_subjects')->where('report_date', $date)->get();
+        return view('admin.reports.details', compact('reports'));
+    }
+
     public function create()
     {
         //
@@ -39,7 +55,7 @@ class ReportsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('admin.reports.show', $reports);
     }
 
     /**

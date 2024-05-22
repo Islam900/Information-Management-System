@@ -17,7 +17,7 @@ class LocalNumbersController extends Controller
      */
     public function index()
     {
-        $numbers = LocalNumbers::with('departments')->get();
+        $numbers = LocalNumbers::with('department')->get();
         return view('admin.local-numbers.index', compact('numbers'));
     }
 
