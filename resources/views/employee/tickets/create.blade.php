@@ -26,7 +26,7 @@
                                     <div class="select_label ui sub header ">İnventar</div>
                                     <select frequency="true" id="inventories_select" name="inventories_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">İnventar seçin</option>
-                                        @forelse($inventories as $item)
+                                        @forelse($appointments as $item)
                                             <option value="{{$item->id}}" {{ old('inventories_id')==$item->id ? 'selected' : '' }}>{{$item->products->product_name}}</option>
                                         @empty
                                             <option disabled selected>Məlumat yoxdur</option>
@@ -59,7 +59,7 @@
 
                             </div>
                         </div>
-                        <button class="btn btn-primary btn-lg" type="submit">Yeni bilet yaradın</button>    
+                        <button class="btn btn-primary btn-lg" type="submit">Yeni bilet yaradın</button>
                     </form>
                 </div>
             </div>

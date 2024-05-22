@@ -18,7 +18,7 @@ class AdminAssetsRequestsController extends Controller
             ->where('assets_requests_id', '<', Auth::user()->assets_requests_id)
             ->pluck('id')->toArray();
 
-
+        $check_available = false;
         foreach ($assets as $res_key => $assets_requests) {
             $check_available[$res_key] = false;
             foreach ($assets_requests->assets_requests_details->whereIn('users_id', $kUserIds) as $assets_requests_details) {

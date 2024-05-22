@@ -30,6 +30,7 @@
                                 <th>Vəzifə</th>
                                 <th>Hesabat qəbulu</th>
                                 <th>Ştat</th>
+                                <th>İşçi</th>
                                 <th>Status</th>
                                 <th>Əməliyyatlar</th>
                             </tr>
@@ -41,27 +42,41 @@
                                     <td>
                                         @isset($item->departments)
                                             <span style="color: {{$item->departments->trashed() ? 'red' : 'black'}};">
-                                                {{$item->departments->name}}
+                                                <a href="{{ route('admin.departments.show', $item->departments->id) }}">
+                                                    {{$item->departments->name}}
+                                                </a>
                                             </span>
-                                            @else 
+                                        @else
                                             <p>İdarə heyəti</p>
                                         @endif
                                     </td>
                                     <td>
                                         @isset($item->branches)
                                             <span style="color: {{$item->branches->trashed() ? 'red' : 'black'}};">
-                                                {{$item->branches->name}}
+                                                <a href="{{ route('admin.branches.show', $item->branches->id) }}">
+                                                    {{$item->branches->name}}
+                                                </a>
                                             </span>
                                         @endif
                                     </td>
                                     <td>{{$item->name}}</td>
                                     <td>
-                                        <strong class="{{ $item->report_receiver == 1 ? 'text-success' : 'text-danger' }}">
+                                        <code
+                                            class="{{ $item->report_receiver == 1 ? 'text-success' : 'text-danger' }}">
                                             {{ $item->report_receiver == 1 ? 'Hesabat qəbul edə bilər' : 'Hesabat qəbul edə bilməz' }}
-                                        </strong>
+                                        </code>
                                     </td>
                                     <td>
                                         {{ $item->count }}
+                                    </td>
+                                    <td>
+                                        @forelse($item->users as $item_user)
+                                            <a href="{{ route('admin.users.show', $item_user->id) }}">
+                                                {{ $item_user->name }}
+                                            </a>
+                                        @empty
+                                            <code>Ştat boşdur</code>
+                                        @endforelse
                                     </td>
                                     <td>
                                         <button class="btn btn-sm btn-{{$item->status == 1 ? 'success' : 'danger'}}">
@@ -72,6 +87,11 @@
                                         <a href="{{ route('admin.positions.edit', $item->id ) }}"
                                            class="text-success mr-2">
                                             <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                                        </a>
+
+                                        <a href="#"
+                                           class="text-danger mr-2 delete-item" data-id="{{$item->id}}">
+                                            <i class="nav-icon i-Close-Window font-weight-bold"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -89,7 +109,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('#positions-table').DataTable();
+            $('#positions-table').DataTable({ "paging": false });
         })
 
         @if (session('success'))
@@ -116,5 +136,37 @@
 
         @php session()->forget('error') @endphp
         @endif
+
+        $(document).ready(function () {
+            $('.delete-item').on("click", function () {
+                const item_id = $(this).data('id');
+                Swal.fire({
+                    title: "Silmək istədiyinizdən əminsiniz ?",
+                    text: "Qeyd edək ki, silmək istədiyiniz elemendə bağlı olan bütün məlumatlar silinəcək!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sil!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/admin/positions/" + item_id,
+                            type: "DELETE",
+                            data: {
+                                "_token": "{{csrf_token()}}"
+                            },
+                            success: function (response) {
+                                Swal.fire(response.message).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.href = response.route;
+                                    }
+                                });
+                            },
+                        })
+                    }
+                })
+            })
+        })
     </script>
 @endsection

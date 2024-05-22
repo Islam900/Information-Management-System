@@ -83,9 +83,9 @@ use App\Http\Controllers\Accountant\{
 
 use Illuminate\Support\Facades\Route;
 
-// if (env('APP_ENV') === 'production') {
-//     URL::forceScheme('https');
-//  }
+//if (env('APP_ENV') === 'production') {
+//    URL::forceScheme('https');
+//}
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -99,7 +99,7 @@ Auth::routes();
 
 // ACCOUNTANT ROUTES
 Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
-Route::get('home', [App\Http\Controllers\Accountant\AccountantController::class, 'index'])->name('home');
+
 
 });
 
@@ -120,6 +120,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::resource('appointments', AppointmentsController::class);
     Route::resource('tickets', TicketsController::class);
     Route::resource('reports', ReportsController::class);
+    Route::get('reports/details/{date}', [ReportsController::class, 'details'])->name('report-details');
     Route::get('appointments/{id}/refund', [AppointmentsController::class, 'refund'])->name('appointments.refund');
     Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
     Route::resource('users', UsersController::class);
@@ -170,6 +171,7 @@ Route::prefix('itd-leader')->name('itd-leader.')->middleware(['auth', 'check_rol
     Route::resource('appointments', ITDAppointmentsController::class);
     Route::resource('tickets', ITDTicketsController::class);
     Route::resource('reports', ITDReportsController::class);
+    Route::get('reports/details/{date}', [ITDReportsController::class, 'details'])->name('itd-report-details');
     Route::get('structure', [ITDStructureController::class, 'index'])->name('structures.index');
     Route::resource('users', ITDUsersController::class);
     Route::resource('local-numbers', ITDLocalNumbersController::class);

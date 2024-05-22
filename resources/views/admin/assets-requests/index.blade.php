@@ -160,7 +160,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    @foreach($assets as $asset_key => $assets_requests)
+                    @forelse($assets as $asset_key => $assets_requests)
                         <div class="card mt-2">
                             <div class="p-5 mb-sm-4">
                                 <!-- Details-->
@@ -212,7 +212,11 @@
 
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                    <h3 class="text-center text-primary">
+                        Mal-material sorğusu yaradılmayıb
+                    </h3>
+                    @endforelse
                 </div>
             </div>
         </div>

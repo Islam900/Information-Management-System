@@ -51,7 +51,6 @@ class PositionsController extends Controller
      */
     public function show(string $id)
     {
-        //
     }
 
     /**
@@ -81,9 +80,12 @@ class PositionsController extends Controller
      */
     public function destroy(string $id)
     {
-        $position = Positions::findOrFail($id);
-        $position->delete();
-        return redirect()->route('admin.admin.positions.index')->with('success', 'Məlumatlar silindi');
+        $positions = Positions::find($id);
+        $positions->delete();
+        return response()->json([
+            'message' => 'Məlumatlar müvəffəqiyyətlə silindi',
+            'route' => route('admin.positions.index')
+        ]);
     }
 
     public function get_positions_by_branch(Request $request)
