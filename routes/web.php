@@ -40,6 +40,7 @@ use App\Http\Controllers\ITD\{
 
 use App\Http\Controllers\LogController;
 
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Support\{
     SupportController,
     SupportTicketsController
@@ -83,9 +84,9 @@ use App\Http\Controllers\Accountant\{
 
 use Illuminate\Support\Facades\Route;
 
-//if (env('APP_ENV') === 'production') {
-//    URL::forceScheme('https');
-//}
+// if (env('APP_ENV') === 'production') {
+//     URL::forceScheme('https');
+//  }
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -99,9 +100,10 @@ Auth::routes();
 
 // ACCOUNTANT ROUTES
 Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
-
+    Route::get('home', [App\Http\Controllers\Accountant\AccountantController::class, 'index'])->name('home');
 
 });
+
 
 // ADMIN ROUTES
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administrator'])->group(function () {
@@ -120,7 +122,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::resource('appointments', AppointmentsController::class);
     Route::resource('tickets', TicketsController::class);
     Route::resource('reports', ReportsController::class);
-    Route::get('reports/details/{date}', [ReportsController::class, 'details'])->name('report-details');
     Route::get('appointments/{id}/refund', [AppointmentsController::class, 'refund'])->name('appointments.refund');
     Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
     Route::resource('users', UsersController::class);
@@ -129,6 +130,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('assets-requests/submit', [AdminAssetsRequestsController::class, 'submit'])->name('assets-requests.submit');
     Route::resource('assets-requests', AdminAssetsRequestsController::class);
 
+    Route::get('/message', [MessageController::class, 'index'])->name('message.index');
+    Route::post('/messages', [MessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+    Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get'); // Added name
 
     /* -------------------- GENERAL SETTINGS ---------------------- */
     Route::get('general-settings', [GeneralSettingsController::class, 'index'])->name('general-settings.index');
@@ -142,8 +146,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('add-permission-to-role', [GeneralSettingsController::class, 'add_permission_to_role'])->name('add-permission-to-role');
     Route::post('update-user-report-receiver-data', [UsersController::class, 'update_user_report_receiver_data'])->name('update-user-report-receiver-data');
 
-
-
     Route::get('logs', [LogController::class, 'logs'])->name('logs');
 
     Route::post('get-branches-by-department', [BranchesController::class, 'get_branches_by_department'])->name('get-branches-by-department');
@@ -153,8 +155,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check_role:administ
     Route::post('get-appointments-by-user', [TicketsController::class, 'get_inventories_by_user'])->name('get-appointments-by-user');
     Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
-
 });
+
 
 
 // ITDLEADER ROUTES
@@ -171,11 +173,14 @@ Route::prefix('itd-leader')->name('itd-leader.')->middleware(['auth', 'check_rol
     Route::resource('appointments', ITDAppointmentsController::class);
     Route::resource('tickets', ITDTicketsController::class);
     Route::resource('reports', ITDReportsController::class);
-    Route::get('reports/details/{date}', [ITDReportsController::class, 'details'])->name('itd-report-details');
     Route::get('structure', [ITDStructureController::class, 'index'])->name('structures.index');
     Route::resource('users', ITDUsersController::class);
     Route::resource('local-numbers', ITDLocalNumbersController::class);
 });
+//
+//Route::get('/message', [MessageController::class, 'index'])->name('message.index');
+//Route::post('/messages', [MessageController::class, 'sendMessage'])->name('sendMessageRouteName');
+//Route::get('/messages/{userId}', [MessageController::class, 'getMessages'])->name('messages.get'); // Added name
 
 
 // WAREHOUSEMAN ROUTES
@@ -256,7 +261,6 @@ Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_rol
     Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
     Route::resource('assets-requests', ACCAssetsController::class);
     Route::post('assets-requests/submit', [ACCAssetsController::class, 'submit'])->name('assets-requests.submit');
-
-
 });
+
 
