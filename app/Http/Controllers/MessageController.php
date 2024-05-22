@@ -13,7 +13,7 @@ class MessageController extends Controller
     public function index()
     {
         // Mesajlaştığınız kullanıcıları listeleyin
-        $users = User::take(5)->get();
+        $users = User::where('id', '!=', Auth::user()->id)->get();
 
         $messages = Message::where('to_user_id', Auth::id())
             ->orWhere('from_user_id', Auth::id())
@@ -24,7 +24,7 @@ class MessageController extends Controller
 
     public function sendMessage(Request $request)
     {
-            $request->validate([
+        $request->validate([
             'to_user_id' => 'required|exists:users,id',
             'message' => 'required|string',
         ]);
