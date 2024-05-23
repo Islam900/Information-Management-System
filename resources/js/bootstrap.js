@@ -1,9 +1,15 @@
+import Echo from 'laravel-echo';
 
-import Echo from "laravel-echo"
+window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: '2f932b16a41e2526159c',
-    cluster: 'ap2',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     encrypted: true
-})
+});
+
+window.Echo.private('messages')
+    .listen('MessageSent', (e) => {
+        addMessageToChat(e.message, e.message.from_user_id == userId);
+    });

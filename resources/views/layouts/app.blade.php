@@ -93,6 +93,18 @@
 <script src="{{ asset('assets/js/vendor/jquery.smartWizard.min.js')}}"></script>
 <script src="{{ asset('assets/js/smart.wizard.script.js')}}"></script>
 
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
+        cluster: '{{ env("PUSHER_APP_CLUSTER") }}'
+    });
+
+    var channel = pusher.subscribe('messages');
+
+</script>
+
 
 
 <script>
