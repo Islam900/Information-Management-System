@@ -73,6 +73,7 @@
 </div>
 
 <script>
+
     function sendMessage(event) {
         event.preventDefault();
 
@@ -92,8 +93,6 @@
                 const to_user_id = formData.get('to_user_id');
 
                 addMessageToChat(data.message, true);
-
-                // Kullanıcıyla olan sohbeti güncelle
                 fetchMessages(to_user_id);
             } else {
                 console.error('Mesaj gönderilirken bir hata oluştu:', data.message);

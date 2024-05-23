@@ -37,7 +37,6 @@ class MessageController extends Controller
             'message' => $request->message,
         ]);
 
-        // Olayı tetikle (WebSocket veya diğer dinleyiciler için)
         event(new \App\Events\MessageSent($message));
 
         return response()->json(['message' => 'Message sent successfully', 'success' => true]);
