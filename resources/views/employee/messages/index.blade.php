@@ -73,116 +73,106 @@
 </div>
 
 <script>
-    const userId = {{ auth()->id() }};
-</script>
+    // Kullanıcı kimliğini Blade şablonunda işleyerek bir JavaScript değişkenine atama
+const authUserId = @json(Auth::id());
+let channelBound = false;
 
-<script>
-    function sendMessage(event) {
-        event.preventDefault();
-
-        var formData = new FormData(document.getElementById("sendMessageForm"));
-
-        fetch("{{ route('employee.sendMessageRouteName') }}", {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
+function fetchMessages(userId) {
+    fetch(`/employee/messages/${userId}`)
         .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById("message").value = "";
-                const to_user_id = formData.get('to_user_id');
+        .then(messages => {
+            var messagesContainer = document.getElementById("chatMessages");
 
-                addMessageToChat(data.message, true);
+            messagesContainer.innerHTML = '';
+            messages.forEach(message => {
+                addMessageToChat(message, message.from_user_id == authUserId);
+            });
 
-                // Kullanıcıyla olan sohbeti güncelle
-                fetchMessages(to_user_id);
-            } else {
-                console.error('Mesaj gönderilirken bir hata oluştu:', data.message);
+            // Kanalı yalnızca bir kez bağla
+            if (!channelBound) {
+                channel.bind('messages', function(message) {
+                    addMessageToChat(message.message, message.from_user_id == authUserId);
+                });
+                channelBound = true;
             }
         })
         .catch(error => {
             console.error('Bir hata oluştu:', error);
         });
+}
+
+function sendMessage(event) {
+    event.preventDefault();
+
+    var formData = new FormData(document.getElementById("sendMessageForm"));
+
+    fetch("{{ route('employee.sendMessageRouteName') }}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("message").value = "";
+            const to_user_id = formData.get('to_user_id');
+
+            addMessageToChat(data.message, true);
+            fetchMessages(to_user_id);
+        } else {
+            console.error('Mesaj gönderilirken bir hata oluştu:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Bir hata oluştu:', error);
+    });
+}
+
+function addMessageToChat(message, isMyMessage) {
+    var messagesContainer = document.getElementById("chatMessages");
+    var messageElement = document.createElement("div");
+    messageElement.classList.add("d-flex", "mb-4");
+    if (isMyMessage) {
+        messageElement.classList.add("user");
     }
 
-    window.onload = function () {
-    document.getElementById("sendMessageForm").addEventListener("submit", sendMessage);
+    if (!isMyMessage) {
+        messageElement.innerHTML = `
+            <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/13.jpg" alt="" class="avatar-sm rounded-circle ml-3">
+            <div class="message flex-grow-1" style="background-color: #ededed">
+                <p class="m-0">${message.message}</p>
+            </div>
+        `;
+    } else {
+        messageElement.innerHTML = `
+            <div class="message flex-grow-1" style="background-color: #e0ffe5">
+                <p class="m-0 text-right">${message.message}</p>
+            </div>
+            <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/1.jpg" alt="" class="avatar-sm rounded-circle mr-3">
+        `;
+    }
 
-    window.Echo.private(`messages.${userId}`)
-        .listen('MessageSent', (e) => {
-            addMessageToChat(e.message, false);
-        });
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;  // Scroll to bottom
+}
+
+window.onload = function () {
+    document.getElementById("sendMessageForm").addEventListener("submit", sendMessage);
 };
 
-    function addMessageToChat(message, isMyMessage) {
-        var messagesContainer = document.getElementById("chatMessages");
-        var messageElement = document.createElement("div");
-        messageElement.classList.add("d-flex", "mb-4");
-        if (isMyMessage) {
-            messageElement.classList.add("user");
-        }
+document.querySelectorAll('.fore-user').forEach(item => {
+    item.addEventListener('click', function () {
+        const userId = item.getAttribute('data-user-id');
+        var userName = this.querySelector('h6').innerText.trim();
 
-        if (!isMyMessage) {
-            messageElement.innerHTML = `
-                <div class="message flex-grow-1">
-                    <div class="d-flex">
-                        <p class="mb-1 text-title text-16 flex-grow-1">${message.from_user_name}</p>
-                        <span class="text-small text-muted">${message.created_at}</span>
-                    </div>
-                    <p class="m-0">${message.message}</p>
-                </div>
-                <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/13.jpg" alt="" class="avatar-sm rounded-circle ml-3">
-            `;
-        } else {
-            messageElement.innerHTML = `
-                <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/1.jpg" alt="" class="avatar-sm rounded-circle mr-3">
-                <div class="message flex-grow-1">
-                    <div class="d-flex">
-                        <p class="mb-1 text-title text-16 flex-grow-1">${message.from_user_name}</p>
-                        <span class="text-small text-muted">${message.created_at}</span>
-                    </div>
-                    <p class="m-0">${message.message}</p>
-                </div>
-            `;
-        }
+        document.getElementById("chatUserName").innerText = userName;
+        document.getElementById("to_user_id").value = userId;
 
-        messagesContainer.appendChild(messageElement);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;  // Scroll to bottom
-    }
-
-    function fetchMessages(userId) {
-        fetch(`/employee/messages/${userId}`)
-            .then(response => response.json())
-            .then(messages => {
-                var messagesContainer = document.getElementById("chatMessages");
-                messagesContainer.innerHTML = '';
-
-                messages.forEach(message => {
-                    addMessageToChat(message, message.from_user_id == @json(Auth::id()));
-                });
-            })
-            .catch(error => {
-                console.error('Bir hata oluştu:', error);
-            });
-    }
-
-    window.onload = function () {
-        document.getElementById("sendMessageForm").addEventListener("submit", sendMessage);
-    };
-
-    document.querySelectorAll('.fore-user').forEach(item => {
-        item.addEventListener('click', function () {
-            const userId = item.getAttribute('data-user-id');
-            var userName = this.querySelector('h6').innerText.trim();
-
-            document.getElementById("chatUserName").innerText = userName;
-            document.getElementById("to_user_id").value = userId;
-
-            fetchMessages(userId);
-        });
+        fetchMessages(userId);
     });
+});
+
 </script>
 @endsection

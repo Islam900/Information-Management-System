@@ -79,98 +79,106 @@
 
     <script>
 
-        function fetchMessages(userId) {
-            fetch(`/admin/messages/${userId}`)
-                .then(response => response.json())
+        // Kullanıcı kimliğini Blade şablonunda işleyerek bir JavaScript değişkenine atama
+const authUserId = @json(Auth::id());
+let channelBound = false;
+
+function fetchMessages(userId) {
+    fetch(`/admin/messages/${userId}`)
+        .then(response => response.json())
         .then(messages => {
-                var messagesContainer = document.getElementById("chatMessages");
-
-                messagesContainer.innerHTML = '';
-                messages.forEach(message => {
-                    addMessageToChat(message, message.from_user_id == @json(Auth::id()));
-                });
-                channel.bind('messages', function(message) {
-                    addMessageToChat(message.message, message.from_user_id == @json(Auth::id()));
-                });
-            })
-                .catch(error => {
-                    console.error('Bir hata oluştu:', error);
-                });
-        }
-
-
-        function sendMessage(event) {
-            event.preventDefault();
-
-            var formData = new FormData(document.getElementById("sendMessageForm"));
-
-            fetch("{{ route('admin.sendMessageRouteName') }}", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById("message").value = "";
-                        const to_user_id = formData.get('to_user_id');
-
-                        addMessageToChat(data.message, true);
-                        fetchMessages(to_user_id);
-                    } else {
-                        console.error('Mesaj gönderilirken bir hata oluştu:', data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Bir hata oluştu:', error);
-                });
-        }
-
-        function addMessageToChat(message, isMyMessage) {
             var messagesContainer = document.getElementById("chatMessages");
-            var messageElement = document.createElement("div");
-            messageElement.classList.add("d-flex", "mb-4");
-            if (isMyMessage) {
-                messageElement.classList.add("user");
-            }
 
-            if (!isMyMessage) {
-                messageElement.innerHTML = `
-                <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/13.jpg" alt="" class="avatar-sm rounded-circle ml-3">
-                <div class="message flex-grow-1" style="background-color: #ededed">
-                    <p class="m-0">${message.message}</p>
-                </div>
-            `;
-            } else {
-                messageElement.innerHTML = `
-                <div class="message flex-grow-1" style="background-color: #e0ffe5">
-                    <p class="m-0 text-right">${message.message}</p>
-                </div>
-                <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/1.jpg" alt="" class="avatar-sm rounded-circle mr-3">
-            `;
-            }
-
-
-            messagesContainer.appendChild(messageElement);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;  // Scroll to bottom
-        }
-
-        window.onload = function () {
-            document.getElementById("sendMessageForm").addEventListener("submit", sendMessage);
-        };
-
-        document.querySelectorAll('.fore-user').forEach(item => {
-            item.addEventListener('click', function () {
-                const userId = item.getAttribute('data-user-id');
-                var userName = this.querySelector('h6').innerText.trim();
-
-                document.getElementById("chatUserName").innerText = userName;
-                document.getElementById("to_user_id").value = userId;
-
-                fetchMessages(userId);
+            messagesContainer.innerHTML = '';
+            messages.forEach(message => {
+                addMessageToChat(message, message.from_user_id == authUserId);
             });
+
+            // Kanalı yalnızca bir kez bağla
+            if (!channelBound) {
+                channel.bind('messages', function(message) {
+                    addMessageToChat(message.message, message.from_user_id == authUserId);
+                });
+                channelBound = true;
+            }
+        })
+        .catch(error => {
+            console.error('Bir hata oluştu:', error);
         });
+}
+
+function sendMessage(event) {
+    event.preventDefault();
+
+    var formData = new FormData(document.getElementById("sendMessageForm"));
+
+    fetch("{{ route('admin.sendMessageRouteName') }}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("message").value = "";
+            const to_user_id = formData.get('to_user_id');
+
+            addMessageToChat(data.message, true);
+            fetchMessages(to_user_id);
+        } else {
+            console.error('Mesaj gönderilirken bir hata oluştu:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Bir hata oluştu:', error);
+    });
+}
+
+function addMessageToChat(message, isMyMessage) {
+    var messagesContainer = document.getElementById("chatMessages");
+    var messageElement = document.createElement("div");
+    messageElement.classList.add("d-flex", "mb-4");
+    if (isMyMessage) {
+        messageElement.classList.add("user");
+    }
+
+    if (!isMyMessage) {
+        messageElement.innerHTML = `
+            <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/13.jpg" alt="" class="avatar-sm rounded-circle ml-3">
+            <div class="message flex-grow-1" style="background-color: #ededed">
+                <p class="m-0">${message.message}</p>
+            </div>
+        `;
+    } else {
+        messageElement.innerHTML = `
+            <div class="message flex-grow-1" style="background-color: #e0ffe5">
+                <p class="m-0 text-right">${message.message}</p>
+            </div>
+            <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/1.jpg" alt="" class="avatar-sm rounded-circle mr-3">
+        `;
+    }
+
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;  // Scroll to bottom
+}
+
+window.onload = function () {
+    document.getElementById("sendMessageForm").addEventListener("submit", sendMessage);
+};
+
+document.querySelectorAll('.fore-user').forEach(item => {
+    item.addEventListener('click', function () {
+        const userId = item.getAttribute('data-user-id');
+        var userName = this.querySelector('h6').innerText.trim();
+
+        document.getElementById("chatUserName").innerText = userName;
+        document.getElementById("to_user_id").value = userId;
+
+        fetchMessages(userId);
+    });
+});
+
     </script>
 @endsection
