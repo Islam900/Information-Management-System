@@ -26,7 +26,7 @@
         </li>
 
         <li class="nav-item ">
-            <a class="nav-item-hold" href="{{ route('itd-leader.message.index') }}">
+            <a class="nav-item-hold" href="{{ route('itd-leader.messages.index') }}">
                 <i class="nav-icon i-traffic-Light"></i>
                 <span class="nav-text">Mesajlar</span>
             </a>

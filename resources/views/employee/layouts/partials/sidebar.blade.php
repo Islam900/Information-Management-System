@@ -19,7 +19,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-item-hold" href="{{ route('employee.message.index') }}">
+            <a class="nav-item-hold" href="{{ route('employee.messages.index') }}">
                 <i class="nav-icon i-Bar-Chart"></i>
                 <span class="nav-text">Mesajlar</span>
             </a>

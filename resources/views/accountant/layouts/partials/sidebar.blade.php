@@ -10,8 +10,8 @@
             <div class="triangle"></div>
         </li>
 
-        <li class="nav-item " data-item="dashboard-inventory">
-            <a class="nav-item-hold" href="{{ route('accountant.message.index') }}">
+        <li class="nav-item " data-item="">
+            <a class="nav-item-hold" href="{{ route('accountant.messages.index') }}">
                 <i class="nav-icon i-Inbox-Empty"></i>
                 <span class="nav-text">Mesajlar</span>
             </a>

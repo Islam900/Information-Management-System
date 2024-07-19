@@ -13,7 +13,7 @@ class ITDLeaderController extends Controller
         return view('itd-leader.dashboard');
     }
 
-    public function update_profile(\http\Env\Request $request)
+    public function update_profile(Request $request)
     {
         $user = Auth::user();
         $user->name = $request->name;

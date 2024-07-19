@@ -18,7 +18,7 @@ class WarehousesController extends Controller
     {
         $whs = Warehouses::select('warehouses.*', DB::raw('SUM(stocks.purchase_count) as total_purchase_count'))
             ->leftJoin('stocks', 'warehouses.id', '=', 'stocks.warehouses_id')
-            ->groupBy('warehouses.id', 'warehouses.name', 'warehouses.address', 'warehouses.status', 'warehouses.created_at', 'warehouses.updated_at')
+            ->groupBy('warehouses.id', 'warehouses.name', 'warehouses.address', 'warehouses.status', 'warehouses.created_at', 'warehouses.updated_at', 'warehouses.deleted_at')
             ->get();
         return view('admin.warehouses.index', compact('whs'));
     }

@@ -59,7 +59,6 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
 
             $user = User::find(Auth::user()->id);
-            $user->active_status = 1;
             $user->save();
 
             $user_role_count = explode(',',$user->type);
@@ -110,7 +109,6 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $user = User::find(Auth::user()->id);
-        $user->active_status = 0;
         $user->save();
 
         Session::forget('user_current_type');

@@ -21,7 +21,6 @@ class GeneralSettingsSeeder extends Seeder
             'weekly_report_module' => 0,
             'weekly_report_module_users' => NULL,
             'ticket_module' => 0,
-            'assets_requests' => 0,
             'delivery_act_generation' => 0,
             'delivery_act_content' => NULL,
             'delivery_to_another_employee_act_generation' => 0,

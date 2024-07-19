@@ -1,5 +1,7 @@
 <?php
+
 use App\Models\Stocks;
+
 function display_user_types()
 {
     $types_array = [
@@ -38,17 +40,16 @@ function display_user_types()
     $compact_types = [];
     if (count($user_types) > 1) {
         foreach ($user_types as $type_key => $type) {
-             $compact_types[$type_key]['type'] = $types_array[$type];
+            $compact_types[$type_key]['type'] = $types_array[$type];
         }
     }
 
     return $compact_types;
 }
 
-//function calculate_product_count($unical_code)
-//{
-//    $purchase_count = Stocks::where('product_unical_code', $unical_code)->sum('purchase_count');
-//    return $purchase_count;
-//}
+function isUserActive($userId)
+{
+    return \Illuminate\Support\Facades\Cache::has('user-is-online-' . $userId);
+}
 
 

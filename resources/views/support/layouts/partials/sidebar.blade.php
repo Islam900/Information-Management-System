@@ -11,7 +11,7 @@
         </li>
 
         <li class="nav-item " data-item="">
-            <a class="nav-item-hold" href="{{route('support.message.index')}}">
+            <a class="nav-item-hold" href="{{route('support.messages.index')}}">
                 <i class="nav-icon i-Computer-Secure"></i>
                 <span class="nav-text">Mesajlar</span>
             </a>

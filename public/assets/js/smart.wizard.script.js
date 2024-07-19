@@ -28,7 +28,11 @@ $(document).ready(function () {
         theme: 'default',
         transitionEffect: 'fade',
         showStepURLhash: true,
-
+        toolbarSettings: {
+            toolbarPosition: 'both',
+            toolbarButtonPosition: 'end',
+            toolbarExtraButtons: [btnFinish, btnCancel]
+        }
     });
 
 
