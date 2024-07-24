@@ -10,7 +10,7 @@
             max-width: 70%;
         }
 
-        #chatMessages {
+        #chatMessages{
             display: flex;
             flex-direction: column;
         }
@@ -19,7 +19,6 @@
             background-color: #dcf8c6;
             align-self: flex-end;
         }
-
         .received {
             background-color: #ffffff;
             align-self: flex-start;
@@ -42,9 +41,8 @@
 
                     <div class="contacts-scrollable perfect-scrollbar ps ims-users">
                         @foreach ($users as $user)
-                            <div
-                                class="p-3 d-flex border-bottom align-items-center {{ isUserActive($user->id) ? 'online' : 'offline' }} online clearfix fore-user"
-                                data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}">
+                            <div class="p-3 d-flex border-bottom align-items-center {{ isUserActive($user->id) ? 'online' : 'offline' }} online clearfix fore-user"
+                                 data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}">
                                 <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/3.jpg" alt=""
                                      class="avatar-sm rounded-circle mr-3">
                                 <h6 class="">{{ $user->name }}</h6>
@@ -60,8 +58,7 @@
                 </div>
             </div>
             <div data-sidebar-content="chat" class="chat-content-wrap sidebar-content" style="margin-left: 260px;">
-                <div
-                    class="d-flex align-items-center pl-3 pr-3 pt-2 pb-2 o-hidden box-shadow-1 chat-topbar">
+                <div class="d-flex pl-3 pr-3 pt-2 pb-2 o-hidden box-shadow-1 chat-topbar">
                     <a data-sidebar-toggle="chat" class="link-icon d-md-none">
                         <i class="icon-regular i-Right ml-0 mr-3"></i>
                     </a>
@@ -70,12 +67,10 @@
                              class="avatar-sm rounded-circle mr-2">
                         <p class="m-0 text-title text-16 flex-grow-1 chat-with" id="chatUserName"></p>
                     </div>
-
                 </div>
 
                 <div class="chat-content perfect-scrollbar ps" data-suppress-scroll-x="true" id="chatMessages">
-                    <audio id="notificationSound" src="{{ asset('sounds/ims-notification.mp3') }}"
-                           preload="auto"></audio>
+                    <audio id="notificationSound" src="{{ asset('sounds/ims-notification.mp3') }}" preload="auto"></audio>
                 </div>
 
                 <div class="pl-3 pr-3 pt-3 pb-3 box-shadow-1 chat-input-area">
@@ -83,8 +78,7 @@
                         @csrf
                         <input type="hidden" id="to_user_id" name="to_user_id">
                         <div class="input-group">
-                            <input type="text" id="message" name="message" class="form-control form-control-rounded"
-                                   placeholder="Mesajınızı daxil edin">
+                            <input type="text" id="message" name="message" class="form-control form-control-rounded" placeholder="Mesajınızı daxil edin">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">Göndər</button>
                             </div>
@@ -96,10 +90,3 @@
     </div>
 @endsection
 
-@section('js')
-    <script>
-        $('.delete-conversation').on("click", function () {
-
-        })
-    </script>
-@endsection

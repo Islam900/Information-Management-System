@@ -73,6 +73,16 @@ class GeneralSettingsController extends Controller
             }
         }
 
+        $settings = GeneralSettings::first();
+
+        if($settings->notification_content && $settings->notification_content != $request->notification_content){
+            $user = User::all();
+            foreach ($user as $user) {
+                $user->read_notf = 0;
+                $user->save();
+            }
+        }
+
 
         $general_settings = GeneralSettings::updateOrCreate(
             ['id' => 1],

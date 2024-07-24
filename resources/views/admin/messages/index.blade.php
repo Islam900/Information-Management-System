@@ -9,6 +9,12 @@
             border-radius: 10px;
             max-width: 70%;
         }
+
+        #chatMessages{
+            display: flex;
+            flex-direction: column;
+        }
+
         .sent {
             background-color: #dcf8c6;
             align-self: flex-end;
@@ -33,9 +39,9 @@
                         </div>
                     </div>
 
-                    <div class="contacts-scrollable perfect-scrollbar ps">
+                    <div class="contacts-scrollable perfect-scrollbar ps ims-users">
                         @foreach ($users as $user)
-                            <div class="p-3 d-flex border-bottom align-items-center contact online clearfix fore-user"
+                            <div class="p-3 d-flex border-bottom align-items-center {{ isUserActive($user->id) ? 'online' : 'offline' }} online clearfix fore-user"
                                  data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}">
                                 <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/3.jpg" alt=""
                                      class="avatar-sm rounded-circle mr-3">
@@ -83,3 +89,4 @@
         </div>
     </div>
 @endsection
+

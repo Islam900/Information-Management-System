@@ -43,20 +43,24 @@
 </div>
 
 
-@if ($general_settings && $general_settings->notification_module == 1)
+@if ($general_settings && $general_settings->notification_module == 1 && !\Illuminate\Support\Facades\Auth::user()->read_notf)
     <div class="modal" id="notificationModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h3 class="modal-title">Bildiriş</h3>
+                    <button type="button" class="btn-close btn btn-sm btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                        <span>
+                            <i class="nav-icon i-Close"></i>
+                        </span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <p>{!! $general_settings->notification_content !!}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                    <button type="button" class="btn btn-primary notification-read">Tanış oldum</button>
                 </div>
             </div>
         </div>
@@ -93,31 +97,18 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script>
+    $(document).ready(function () {
+        $('#notificationModal').modal('show');
+    });
+</script>
 
+<script>
     var notificationSound = document.getElementById('notificationSound');
 
     function playNotificationSound() {
         notificationSound.play();
     }
 
-    function showNotificationToast(user)
-    {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: "bottom-end",
-            showConfirmButton: true,
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
-        Toast.fire({
-            icon: "info",
-            title: user + ' sizə yeni mesaj göndərdi'
-        });
-    }
 
     Pusher.logToConsole = true;
 
@@ -128,8 +119,7 @@
     var channel = pusher.subscribe('messages');
 
     $(document).ready(function () {
-
-        $('.ims-users').on('click', '.fore-user', function () {
+        $('.ims-users').on('click', '.fore-user', function (e) {
             var userName = $(this).data('user-name');
             var userId = $(this).data('user-id');
             $('#chatUserName').text(userName);
@@ -142,7 +132,7 @@
 
         function fetchMessages(userId) {
             $.ajax({
-                url: "{{ route('employee.messages.fetch') }}",
+                url: "{{ route('support.messages.fetch') }}",
                 type: "POST",
                 data: {
                     "_token": "{{ csrf_token() }}",
@@ -156,8 +146,6 @@
                     response.messages.forEach(message => {
                         const messageEl = document.createElement('div');
                         messageEl.classList.add('message');
-                        console.log(sender);
-                        console.log(userId);
 
                         if (message.from_user_id == {{ Auth::id() }}  && message.to_user_id == sender) {
                             messageEl.classList.add('sent');
@@ -242,18 +230,30 @@
             let filteredUsers = users.filter(user => user.name.toLowerCase().includes(searchTerm));
             renderUsers(filteredUsers);
         });
+
+        $('.notification-read').on("click", function () {
+            const userId = "{{ \Illuminate\Support\Facades\Auth::id() }}";
+            $.ajax({
+                url: "{{ route('update-user-notf-status') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "userId": userId
+                },
+                success: function (response) {
+                    if(response.status)
+                    {
+                        Swal.fire({
+                            title: response.title,
+                            text: response.message,
+                            icon: response.icon
+                        });
+                    }
+                }
+            })
+        })
     });
 
-
-
-
-</script>
-
-
-<script>
-    $(document).ready(function () {
-        $('#notificationModal').modal('show');
-    });
 </script>
 
 <!-- Initialize Quill editor -->

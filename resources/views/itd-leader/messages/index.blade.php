@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('itd-leader.layouts.app')
 
 @section('content')
 
@@ -39,9 +39,9 @@
                         </div>
                     </div>
 
-                    <div class="contacts-scrollable perfect-scrollbar ps">
+                    <div class="contacts-scrollable perfect-scrollbar ps ims-users">
                         @foreach ($users as $user)
-                            <div class="p-3 d-flex border-bottom align-items-center contact online clearfix fore-user"
+                            <div class="p-3 d-flex border-bottom align-items-center {{ isUserActive($user->id) ? 'online' : 'offline' }} online clearfix fore-user"
                                  data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}">
                                 <img src="https://gull-html-laravel.ui-lib.com/assets/images/faces/3.jpg" alt=""
                                      class="avatar-sm rounded-circle mr-3">
@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="pl-3 pr-3 pt-3 pb-3 box-shadow-1 chat-input-area">
-                    <form id="sendMessageForm" action="{{ route('admin.messages.send') }}" method="POST">
+                    <form id="sendMessageForm" action="{{ route('itd-leader.messages.send') }}" method="POST">
                         @csrf
                         <input type="hidden" id="to_user_id" name="to_user_id">
                         <div class="input-group">
@@ -89,3 +89,4 @@
         </div>
     </div>
 @endsection
+

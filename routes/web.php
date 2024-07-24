@@ -243,18 +243,10 @@ Route::middleware(['logLastUserActivity'])->group(function () {
 
         Route::get('/messages', [SupportMessageController::class, 'index'])->name('messages.index');
         Route::post('/send-message', [SupportMessageController::class, 'sendMessage'])->name('messages.send');
-        Route::get('/messages/{user}', [SupportMessageController::class, 'fetchMessages'])->name('messages.fetch');
+        Route::post('/user-messages', [SupportMessageController::class, 'fetchMessages'])->name('messages.fetch');
     });
 
-
-//Togrul deysihiklik
-
-    Route::post('/check-user-status', [LoginController::class, 'checkUserStatus'])->name('check.user.status');
-    Route::post('/search-user', [\App\Http\Controllers\SearchController::class, 'search_user'])->name('search-user');
-
-
 // ACCOUNTANT ROUTES
-
     Route::prefix('accountant')->name('accountant.')->middleware(['auth', 'check_role:accountant'])->group(function () {
         Route::get('/home', [AccountantController::class, 'index'])->name('home');
         Route::get('profile', [AccountantController::class, 'profile'])->name('profile');
@@ -277,5 +269,10 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         Route::get('/messages/{user}', [ACCMessageController::class, 'fetchMessages'])->name('messages.fetch');
     });
 });
+
+Route::post('/check-user-status', [LoginController::class, 'checkUserStatus'])->name('check.user.status');
+Route::post('/search-user', [\App\Http\Controllers\SearchController::class, 'search_user'])->name('search-user');
+Route::post('/update-user-notf-status', [\App\Http\Controllers\GeneralController::class, 'update_user_notf_status'])->name('update-user-notf-status');
+
 
 

@@ -38,9 +38,7 @@
                                         <ul class="list-group">
                                             @foreach($room->local_numbers as $number)
                                                 <li class="list-group-item">
-                                                    <a href="{{ route('admin.local_numbers.show', $number->id) }}">
                                                         {{ $number->name }}
-                                                    </a>
                                                 </li>
                                             @endforeach
                                         </ul>
