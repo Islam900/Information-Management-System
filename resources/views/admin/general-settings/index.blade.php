@@ -510,7 +510,7 @@
                                                                     <label class="checkbox checkbox-primary">
                                                                         <input type="checkbox" id="{{$permission}}"
                                                                                name="permissions[]"
-                                                                               value="{{ $permission->id }}">
+                                                                               value="{{ $permission->name }}">
                                                                         <span>{{ $permission->name}}</span>
                                                                         <span class="checkmark"></span>
                                                                     </label>
@@ -572,27 +572,26 @@
                                             <form action="{{ route('admin.store-technical-users') }}" method="POST">
                                                 @csrf
                                                 <div class="d-flex align-items-center">
-                                                    <input type="text" class="form-control mr-2" required
-                                                           name="name" placeholder="Ad soyad daxil edin" id="">
-                                                    <input type="email" placeholder="Email daxil edin"
-                                                           class="form-control mr-2" required
-                                                           name="email" id="">
-                                                    <input type="password" placeholder="Şifrə daxil edin"
-                                                           class="form-control mr-2" required
-                                                           name="password" id="">
-                                                    <select name="role" class="form-control" id="">
+                                                    <select name="user_id" class="form-control ui fluid search dropdown create_form_dropdown" id="">
+                                                        <option disabled selected>İşçi seçin</option>
+                                                        @foreach($users as $user)
+                                                            <option value="{{ $user->id }}">{{$user->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <select name="role" class="form-control ui fluid search dropdown create_form_dropdown" id="">
                                                         <option disabled selected>Vəzifə seçin</option>
                                                         @foreach($roles as $role)
                                                             <option value="{{ $role->id }}">{{$role->name}}</option>
                                                         @endforeach
                                                     </select>
-                                                    <select name="type" class="form-control me-2" id="">
+                                                    <select name="type" class="form-control ui fluid search dropdown create_form_dropdown me-2" id="">
                                                         <option disabled selected>Növ seçin</option>
                                                         <option value="warehouseman">Təhcizat</option>
-                                                        <option value="finance">Mühasib</option>
+                                                        <option value="accountant">Mühasib</option>
                                                         <option value="support">Texniki dəstək</option>
                                                         <option value="hr">İnsan resursları</option>
-                                                        <option value="administrator">Administrator</option>
+                                                        <option value="admin">Administrator</option>
+                                                        <option value="itd-leader">ITD rəhbəri</option>
                                                     </select>
                                                     <button class="btn btn-lg btn-outline-success ms-2" type="submit"
                                                             style="height: 48px;">Yeni

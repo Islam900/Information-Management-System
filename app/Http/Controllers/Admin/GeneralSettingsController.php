@@ -130,10 +130,10 @@ class GeneralSettingsController extends Controller
 
     public function store_technical_users(Request $request)
     {
-        $data = $request->all();
-        $data['password'] = bcrypt($request->email);
-        $data['rooms_id'] = 1;
-        $user = User::create($data);
+        $user = User::find($request->user_id);
+        $user->role = Role::find($request->role)->name;
+        $user->type = $user->type.','.$request->type;
+        $user->save();
 
         $role = Role::find($request->role);
         $user->assignRole($role);

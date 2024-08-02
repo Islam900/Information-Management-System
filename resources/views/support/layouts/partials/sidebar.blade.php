@@ -26,6 +26,13 @@
             <div class="triangle"></div>
         </li>
        @endif
+        <li class="nav-item">
+            <a class="nav-item-hold" href="{{ route('support.support-users.index') }}">
+                <i class="nav-icon i-Checked-User"></i>
+                <span class="nav-text">Mütəxəssislər</span>
+            </a>
+            <div class="triangle"></div>
+        </li>
     </ul>
 </div>
 

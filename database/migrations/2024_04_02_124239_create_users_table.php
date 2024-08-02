@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->foreignId('report_receiver_id')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('assets_requests_id')->nullable();
             $table->string('type')->default('employee');
+            $table->string('role')->nullable();
             $table->timestamp('last_activity')->nullable();
             $table->integer('read_notf')->default(0);
             $table->rememberToken();

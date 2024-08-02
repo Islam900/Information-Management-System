@@ -45,7 +45,8 @@ use App\Http\Controllers\LogController;
 use App\Http\Controllers\Support\{
     SupportController,
     SupportTicketsController,
-    SupportMessageController
+    SupportMessageController,
+    SupportUsersController
 };
 
 use App\Http\Controllers\User\{
@@ -177,7 +178,8 @@ Route::middleware(['logLastUserActivity'])->group(function () {
 
         Route::get('/messages', [ITDMessageController::class, 'index'])->name('messages.index');
         Route::post('/send-message', [ITDMessageController::class, 'sendMessage'])->name('messages.send');
-        Route::get('/messages/{user}', [ITDMessageController::class, 'fetchMessages'])->name('messages.fetch');
+        Route::post('/user-messages', [MessageController::class, 'fetchMessages'])->name('messages.fetch');
+
     });
 
 
@@ -201,7 +203,8 @@ Route::middleware(['logLastUserActivity'])->group(function () {
 
         Route::get('/messages', [WHMMessageController::class, 'index'])->name('messages.index');
         Route::post('/send-message', [WHMMessageController::class, 'sendMessage'])->name('messages.send');
-        Route::get('/messages/{user}', [WHMMessageController::class, 'fetchMessages'])->name('messages.fetch');
+        Route::post('/user-messages', [MessageController::class, 'fetchMessages'])->name('messages.fetch');
+
 
     });
 
@@ -237,9 +240,12 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         Route::get('profile', [SupportController::class, 'profile'])->name('profile');
         Route::put('update-profile/{id}', [SupportController::class, 'update_profile'])->name('update-profile');
         Route::resource('tickets', SupportTicketsController::class);
+        Route::resource('support-users', SupportUsersController::class);
         Route::get('my-tickets', [SupportTicketsController::class, 'my_tickets'])->name('my-tickets');
         Route::post('accept-ticket', [SupportTicketsController::class, 'accept_ticket'])->name('accept-ticket');
         Route::post('update-ticket', [SupportTicketsController::class, 'update_ticket'])->name('update-ticket');
+        Route::post('assign-ticket', [SupportTicketsController::class, 'assign_ticket'])->name('assign-ticket');
+        Route::post('get-ticket-details', [SupportTicketsController::class, 'get_ticket_details'])->name('get-ticket-details');
 
         Route::get('/messages', [SupportMessageController::class, 'index'])->name('messages.index');
         Route::post('/send-message', [SupportMessageController::class, 'sendMessage'])->name('messages.send');
@@ -266,7 +272,8 @@ Route::middleware(['logLastUserActivity'])->group(function () {
 
         Route::get('/messages', [ACCMessageController::class, 'index'])->name('messages.index');
         Route::post('/send-message', [ACCMessageController::class, 'sendMessage'])->name('messages.send');
-        Route::get('/messages/{user}', [ACCMessageController::class, 'fetchMessages'])->name('messages.fetch');
+        Route::post('/user-messages', [MessageController::class, 'fetchMessages'])->name('messages.fetch');
+
     });
 });
 

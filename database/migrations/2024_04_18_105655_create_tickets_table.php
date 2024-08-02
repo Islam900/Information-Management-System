@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('operator_id')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('helpdesk_id')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('appointments_id')->constrained('appointments')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('ticket_reasons_id')->constrained('ticket_reasons')->onUpdate('cascade')->onDelete('cascade');

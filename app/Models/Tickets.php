@@ -13,6 +13,7 @@ class Tickets extends Model
     protected $table = 'tickets';
     protected $fillable = [
         'user_id',
+        'operator_id',
         'helpdesk_id',
         'appointments_id',
         'ticket_reasons_id',
@@ -28,6 +29,10 @@ class Tickets extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function operator()
+    {
+        return $this->belongsTo(User::class, 'operator_id');
+    }
     public function helpdesk()
     {
         return $this->belongsTo(User::class, 'helpdesk_id');
@@ -41,6 +46,10 @@ class Tickets extends Model
     public function ticket_reasons()
     {
         return $this->belongsTo(TicketReasons::class);
+    }
+
+    public function ticket_histories(){
+        return $this->hasMany(TicketHistories::class);
     }
 
 }

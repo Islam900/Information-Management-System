@@ -49,6 +49,9 @@ class EmployeeMessageController extends Controller
                 ->where('to_user_id', $userId);
         })->get();
 
-        return response()->json(['messages' => $messages]);
+        return response()->json([
+            'messages' => $messages,
+            'avatar' => User::find($userId)->avatar ?? 'user.jpg',
+        ]);
     }
 }

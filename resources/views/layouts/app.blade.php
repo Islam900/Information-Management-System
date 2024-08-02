@@ -109,7 +109,6 @@
         notificationSound.play();
     }
 
-
     Pusher.logToConsole = true;
 
     var pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
@@ -132,7 +131,7 @@
 
         function fetchMessages(userId) {
             $.ajax({
-                url: "{{ route('support.messages.fetch') }}",
+                url: "{{ route('employee.messages.fetch') }}",
                 type: "POST",
                 data: {
                     "_token": "{{ csrf_token() }}",
@@ -158,6 +157,8 @@
                             messagesEl.appendChild(messageEl);
                         }
                     });
+
+                    const chatUserAvatarEl = document.querySelector('.chat-topbar img.avatar-sm');
                 }
             })
         }

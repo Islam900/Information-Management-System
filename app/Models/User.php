@@ -27,6 +27,7 @@ class User extends Authenticatable
         'name',
         'email',
         'type',
+        'role',
         'password',
         'b_day',
         'report_receiver_id',
@@ -91,6 +92,11 @@ class User extends Authenticatable
     public function my_tickets()
     {
         return $this->hasMany(Tickets::class, 'helpdesk_id');
+    }
+
+    public function my_ticket_operations()
+    {
+        return $this->hasMany(Tickets::class, 'operator_id');
     }
 
     public function reports()
