@@ -139,4 +139,14 @@ class User extends Authenticatable
         return $this->hasMany(Message::class, 'to_user_id');
     }
 
+    public function kpis()
+    {
+        return $this->belongsToMany(Kpis::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comments::class);
+    }
+
 }

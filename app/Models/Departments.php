@@ -38,4 +38,9 @@ class Departments extends Model
     {
         return $this->hasMany(Positions::class);
     }
+
+    public function targets()
+    {
+        return $this->hasMany(Targets::class);
+    }
 }
