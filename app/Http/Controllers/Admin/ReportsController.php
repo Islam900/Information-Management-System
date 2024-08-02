@@ -32,7 +32,7 @@ class ReportsController extends Controller
      * Show the form for creating a new resource.
      */
 
-    public function details($date)
+    public function report_details($date)
     {
         $reports = Reports::with('reports_subjects')->where('report_date', $date)->get();
         return view('admin.reports.details', compact('reports'));

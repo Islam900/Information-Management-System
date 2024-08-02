@@ -90,9 +90,9 @@ use App\Http\Controllers\Accountant\{
 
 use Illuminate\Support\Facades\Route;
 
-// if (env('APP_ENV') === 'production') {
-//     URL::forceScheme('https');
-//  }
+ if (env('APP_ENV') === 'production') {
+     URL::forceScheme('https');
+  }
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -121,7 +121,14 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         Route::resource('hand-registers', HandRegistersController::class);
         Route::resource('appointments', AppointmentsController::class);
         Route::resource('tickets', TicketsController::class);
+
+        Route::post('assign-ticket', [TicketsController::class, 'assign_ticket'])->name('assign-ticket');
+        Route::post('get-ticket-details', [TicketsController::class, 'get_ticket_details'])->name('get-ticket-details');
+
         Route::resource('reports', ReportsController::class);
+
+        Route::get('report-details/{date}', [ReportsController::class, 'report_details'])->name('report-details');
+
         Route::get('appointments/{id}/refund', [AppointmentsController::class, 'refund'])->name('appointments.refund');
         Route::get('structure', [StructureController::class, 'index'])->name('structures.index');
         Route::resource('users', UsersController::class);
@@ -175,6 +182,9 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         Route::get('structure', [ITDStructureController::class, 'index'])->name('structures.index');
         Route::resource('users', ITDUsersController::class);
         Route::resource('local-numbers', ITDLocalNumbersController::class);
+
+        Route::get('report-details/{date}', [ITDReportsController::class, 'report_details'])->name('itd-report-details');
+
 
         Route::get('/messages', [ITDMessageController::class, 'index'])->name('messages.index');
         Route::post('/send-message', [ITDMessageController::class, 'sendMessage'])->name('messages.send');

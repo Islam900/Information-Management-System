@@ -123,7 +123,7 @@ class SupportTicketsController extends Controller
                 $ticket_history = TicketHistories::create([
                     'tickets_id' => $ticket->id,
                     'subject' => 'Bilet statusu dəyişdirildi',
-                    'description' => $ticket->user->name.' tərəfindən yaradılan'. $ticket->ticket_number .' nömrəli biletin statusu '. $ticket->helpdesk->name .' tərəfindən "'. $text .'" olaraq dəyişdirildi.',
+                    'description' => $ticket->user->name.' tərəfindən yaradılan '. $ticket->ticket_number .' nömrəli biletin statusu '. $ticket->helpdesk->name .' tərəfindən "'. $text .'" olaraq dəyişdirildi.',
                     'class' => $class,
                 ]);
 

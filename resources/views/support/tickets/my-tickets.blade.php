@@ -434,7 +434,8 @@
                                         <strong class="text-white">{{ $item->helpdesk->name }}
                                         </strong>
                                     </div>
-                                    <h3 style="white-space: nowrap;">{{ $item->appointments->products->product_name }}</h3>
+                                    <p style="white-space: nowrap; margin-top: 10px">{{ $item->user->name }}
+                                        - {{ $item->appointments->products->product_name }}</p>
 
                                     <div class="sce">
                                         <div class="icon">

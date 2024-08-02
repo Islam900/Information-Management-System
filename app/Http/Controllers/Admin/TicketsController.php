@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\TicketHistories;
 use App\Models\TicketReasons;
 use App\Models\Tickets;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketsController extends Controller
 {
@@ -16,7 +18,8 @@ class TicketsController extends Controller
     public function index()
     {
         $tickets = Tickets::all();
-        return view('admin.tickets.index', compact('tickets'));
+        $users = User::where('type', 'like', '%support%')->get();
+        return view('admin.tickets.index', compact('tickets','users'));
     }
 
     /**
@@ -35,6 +38,49 @@ class TicketsController extends Controller
         $user = User::find($request->user_id);
         $inventories = $user->inventories()->with('products')->get();
         return $inventories;
+    }
+
+    public function assign_ticket(Request $request)
+    {
+        $ticket = Tickets::where('ticket_number', $request->ticket_number)->first();
+        if ($ticket) {
+            $ticket->operator_id = Auth::user()->id;
+            $ticket->helpdesk_id = $request->user_id;
+
+            if ($ticket->save()) {
+
+                $ticket_history = TicketHistories::create([
+                    'tickets_id' => $ticket->id,
+                    'subject' => 'Bilet təhkim olundu',
+                    'description' => $ticket->user->name.' tərəfindən yaradılan '. $ticket->ticket_number .' nömrəli biletə problemin həll olunması üçün '. Auth::user()->name .' (Administrator) tərəfindən '.$ticket->helpdesk->name .' (Texniki dəstək mütəxəssisi) təyin olundu.',
+                    'class' => 'info',
+                ]);
+
+                return response()->json([
+                    'notification' => 'Bilet təhkim olundu',
+                    'route' => route('admin.tickets.index'),
+                    'status' => 200
+                ]);
+            } else {
+                return response()->json([
+                    'notification' => 'Xəta',
+                    'route' => route('admin.tickets.index'),
+                    'status' => 500
+                ]);
+            }
+        } else {
+            return response()->json([
+                'notification' => 'Bilet tapılmadı',
+                'route' => route('admin.tickets.index'),
+                'status' => 404
+            ]);
+        }
+    }
+
+    public function get_ticket_details (Request $request)
+    {
+        $ticket = Tickets::with('ticket_histories')->find($request->ticket_id);
+        return view('admin.tickets.timeline', compact('ticket'));
     }
 
     /**

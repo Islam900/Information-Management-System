@@ -234,21 +234,8 @@
             }
         }
 
-        @media screen and (max-width: 1900px) {
-            .sidenav-open .ticket-container .item {
-                width: 48%;
-            }
-        }
-
-        @media screen and (max-width: 1800px) {
+        @media screen and (max-width: 1960px) {
             .ticket-container .item {
-                width: 48%;
-            }
-        }
-
-        @media screen and (max-width: 1350px) {
-            .ticket-container .item,
-            .sidenav-open .ticket-container .item {
                 width: 100%;
             }
         }
@@ -382,7 +369,7 @@
     </style>
 
     <div class="row mb-4">
-        <div class="col-md-8 mb-4">
+        <div class="col-lg-8 col-12 mb-4">
 
             <div class="card">
                 <div class="card-header">
@@ -451,8 +438,8 @@
                                             </strong>
                                         @endif
                                     </div>
-                                    <h3 style="white-space: nowrap;">{{ $item->user->name }}
-                                        - {{ $item->appointments->products->product_name }}</h3>
+                                    <p style="white-space: wrap; margin-top: 10px">{{ $item->user->name }}
+                                        - {{ $item->appointments->products->product_name }}</p>
                                     <div class="sce">
                                         <div class="icon">
                                             <i class="nav-icon i-Calendar"></i>
@@ -488,7 +475,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-lg-4 col-12 mb-4">
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">

@@ -291,7 +291,8 @@
 
                                 <div class="item-left">
                                     <p class="event">{{$item->ticket_number}}</p>
-                                    <h3 style="white-space: nowrap;">{{ $item->appointments->products->product_name }}</h3>
+                                    <p style="white-space: wrap; margin-top: 10px">{{ $item->user->name }}
+                                        - {{ $item->appointments->products->product_name }}</p>
 
                                     <div class="sce">
                                         <div class="icon">
