@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('local_numbers', function (Blueprint $table) {
+        Schema::create('kpi_positions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('departments_id')->nullable()->constrained('departments')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('branches_id')->nullable()->constrained('branches')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('rooms_id')->nullable()->constrained('rooms')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('number');
+            $table->string('name');
             $table->integer('status')->default(1);
             $table->softDeletes();
             $table->timestamps();
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('local_numbers');
+        Schema::dropIfExists('kpi_positions');
     }
 };

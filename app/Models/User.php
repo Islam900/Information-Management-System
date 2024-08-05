@@ -23,6 +23,7 @@ class User extends Authenticatable
         'departments_id',
         'branches_id',
         'positions_id',
+        'kpi_positions_id',
         'rooms_id',
         'name',
         'email',
@@ -77,6 +78,11 @@ class User extends Authenticatable
     public function positions()
     {
         return $this->belongsTo(Positions::class);
+    }
+
+    public function kpi_positions()
+    {
+        return $this->belongsTo(Kpi_positions::class);
     }
 
     public function tickets()

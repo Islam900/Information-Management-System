@@ -29,6 +29,11 @@ class Branches extends Model
         return $this->hasMany(Positions::class);
     }
 
+    public function kpi_positions()
+    {
+        return $this->hasMany(Kpi_positions::class);
+    }
+
     public function reports()
     {
         return $this->hasMany(Reports::class);

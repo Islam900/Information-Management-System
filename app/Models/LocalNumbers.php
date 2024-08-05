@@ -10,14 +10,14 @@ class LocalNumbers extends Model
 {
     use HasFactory,SoftDeletes;
     protected $table = 'local_numbers';
-    protected $fillable = ['departments_id', 'branches_id', 'rooms_id' , 'users_id' , 'number'];
+    protected $fillable = ['departments_id', 'branches_id', 'rooms_id' , 'user_id' , 'number'];
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function department()
+    public function departments()
     {
         return $this->belongsTo(Departments::class);
     }

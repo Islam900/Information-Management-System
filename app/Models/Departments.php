@@ -39,6 +39,11 @@ class Departments extends Model
         return $this->hasMany(Positions::class);
     }
 
+    public function kpi_positions()
+    {
+        return $this->hasMany(Kpi_positions::class);
+    }
+
     public function targets()
     {
         return $this->hasMany(Targets::class);

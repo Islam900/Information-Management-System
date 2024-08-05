@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('departments_id')->nullable()->constrained('departments')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('branches_id')->nullable()->constrained('branches')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('positions_id')->nullable()->constrained('positions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('kpi_positions_id')->nullable()->constrained('kpi_positions')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('rooms_id')->constrained('rooms')->onUpdate('cascade')->onDelete('cascade');
             $table->string('name');
             $table->string('email')->unique()->nullable();
