@@ -21,7 +21,12 @@ class SupportTicketsController extends Controller
     public function my_tickets()
     {
         $tickets = Auth::user()->my_tickets;
-        return view('support.tickets.my-tickets', compact('tickets'));
+
+        $total = $tickets->count();
+        $pending = $tickets->where('status', 0)->count();
+        $solved = $tickets->where('status','!=', 0)->count();
+
+        return view('support.tickets.my-tickets', compact('tickets', 'total', 'pending', 'solved'));
     }
 
     public function accept_ticket(Request $request)

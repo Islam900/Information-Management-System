@@ -88,6 +88,14 @@ use App\Http\Controllers\Accountant\{
 
 };
 
+use App\Http\Controllers\HR\{
+    HrController,
+    HrMessagesController,
+    MeetingsController,
+    AnnouncementsController,
+    SurveysController
+};
+
 use Illuminate\Support\Facades\Route;
 
  if (env('APP_ENV') === 'production') {
@@ -285,6 +293,23 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         Route::post('/user-messages', [MessageController::class, 'fetchMessages'])->name('messages.fetch');
 
     });
+});
+
+// HR ROUTES
+Route::prefix('hr')->name('hr.')->middleware(['auth', 'check_role:hr'])->group(function () {
+    Route::get('/home', [HrController::class, 'index'])->name('home');
+
+    Route::get('profile', [HrController::class, 'profile'])->name('profile');
+    Route::put('update-profile/{id}', [HrController::class, 'update_profile'])->name('update-profile');
+
+
+    Route::get('/messages', [HrMessagesController::class, 'index'])->name('messages.index');
+    Route::post('/send-message', [HrMessagesController::class, 'sendMessage'])->name('messages.send');
+    Route::get('/messages/{user}', [HrMessagesController::class, 'fetchMessages'])->name('messages.fetch');
+    Route::resource('/meetings', MeetingsController::class);
+    Route::resource('/announcements', AnnouncementsController::class);
+    Route::resource('/surveys', SurveysController::class);
+    Route::post('/surveys', [SurveysController::class , 'store'])->name('surveys.store');
 });
 
 Route::post('/check-user-status', [LoginController::class, 'checkUserStatus'])->name('check.user.status');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Support;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tickets;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ class SupportUsersController extends Controller
      */
     public function index()
     {
-        $users = User::where('type', 'like', '%support%')->where('id', '!=', Auth::user()->id)->get();
+        $users = User::where('type', 'like', '%support%')->get();
         return view('support.support-users.index', compact('users'));
     }
 
@@ -39,7 +40,11 @@ class SupportUsersController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::with('my_tickets')->findOrFail($id);
+        $total = Tickets::where('helpdesk_id', $id)->count();
+        $pending = Tickets::where('helpdesk_id', $id)->where('status', 0)->count();
+        $solved = Tickets::where('helpdesk_id', $id)->where('status','!=', 0)->count();
+        return view('support.support-users.show', compact('user', 'total', 'pending', 'solved'));
     }
 
     /**

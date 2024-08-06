@@ -32,25 +32,24 @@
                                     <tfoot>
                                     <tr>
                                         <td colspan="2">
-                                            <div class="d-flex justify-content-between align-items-center" style="gap: 12px">
-                                                <button class="btn btn-info w-100">
+                                            <div class="d-flex justify-content-between align-items-center"
+                                                 style="gap: 12px">
+                                                <a href="{{ route('support.support-users.show', $user->id) }}">
+                                                    <button class="btn btn-info w-100">
                                                     <span>
                                                         <i class="nav-icon i-Eye"></i>
                                                     </span>
-                                                    Ətraflı
-                                                </button>
-                                                <button class="btn btn-primary w-100">
-                                                    <span>
-                                                        <i class="nav-icon i-Pen-2"></i>
-                                                    </span>
-                                                    Düzəliş et
-                                                </button>
-                                                <button class="btn btn-danger w-100">
+                                                        Ətraflı
+                                                    </button>
+                                                </a>
+                                                @if(\Illuminate\Support\Facades\Auth::user()->id != $user->id)
+                                                    <button class="btn btn-danger w-100">
                                                     <span>
                                                         <i class="nav-icon i-File-Trash"></i>
                                                     </span>
-                                                    Sil
-                                                </button>
+                                                        Sil
+                                                    </button>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

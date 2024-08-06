@@ -22766,7 +22766,7 @@ ul.metismenu {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 70px
+    /*max-width: 70px*/
 }
 
 .card-icon-bg [class^=i-] {

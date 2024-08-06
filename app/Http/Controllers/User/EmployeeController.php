@@ -11,6 +11,12 @@ class EmployeeController extends Controller
 {
     public function index()
     {
+        //elanlar
+        //anketler where expired_at > now()
+        //iclas tedbirler
+
+        // iclas tedbir - accept reject
+        //  ankete cavab
         return view('employee.home');
     }
 
