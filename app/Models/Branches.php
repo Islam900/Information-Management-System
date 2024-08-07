@@ -24,6 +24,11 @@ class Branches extends Model
         return $this->belongsTo(Departments::class);
     }
 
+    public function tickets()
+    {
+        return $this->hasMany(Tickets::class);
+    }
+
     public function positions()
     {
         return $this->hasMany(Positions::class);

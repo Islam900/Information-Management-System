@@ -1,5 +1,20 @@
 @extends('support.layouts.app')
 @section('content')
+    <style>
+        .ticket-container .item-right .down-border {
+            bottom: -130px;
+            right: -35px;
+        }
+        /*.urg_endTime {*/
+        /*    position: absolute;*/
+        /*    left: 50%;*/
+        /*    bottom: -105px;*/
+        /*    transform: translateX(-50%);*/
+        /*    padding: 4px 18px;*/
+        /*    border-radius: 20px;*/
+        /*    color: #fff;*/
+        /*}*/
+    </style>
     <div class="row mb-4">
         <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
@@ -53,7 +68,7 @@
                     <div class="content">
                         <p class="text-muted mt-2 mb-0">
                             <strong>
-                                Gecikən bilet sayı - {{ $solved }}
+                                Gecikən bilet sayı - {{ $expired }}
                             </strong>
                         </p>
                     </div>
@@ -123,7 +138,8 @@
                                     }
                                 @endphp
                                 <div class="item-right">
-                                    <div class="urg_status {{ $pr_class }} text-white">{{ $item->ticket_priority }}</div>
+                                    <div
+                                        class="urg_status {{ $pr_class }} text-white">{{ $item->ticket_priority }}</div>
                                     <h2 class="num">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('d') }}</h2>
                                     <p class="day">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('M') }}</p>
 
@@ -137,6 +153,7 @@
 
                                     <span class="up-border"></span>
                                     <span class="down-border"></span>
+{{--                                    <div class="urg_endTime"></div>--}}
                                 </div> <!-- end item-right -->
 
                                 <div class="item-left">
@@ -164,14 +181,38 @@
                                         <label class="description" for='myInput{{$item -> id}}'>{{$item->note}}</label>
                                     </div>
                                     <div class="fix"></div>
-                                    @if($item->status == 0 && $item->ticket_status == 0)
-                                        <button class="tickets w-100 solve-ticket"
-                                                data-ticket-number="{{ $item->ticket_number }}">Bilet statusunu
-                                            dəyişdirin
+                                    @php
+                                        $buttonClass = 'tickets w-100';
+                                        $buttonText = '';
+
+                                        if ($item->ticket_status == 0) {
+                                            if ($item->status == 0) {
+                                                $buttonText = 'Bilet statusunu dəyişdirin';
+                                                $buttonClass .= ' solve-ticket';
+                                            } else {
+                                                $buttonText = 'Bilet açıqdır';
+                                            }
+                                        } elseif ($item->ticket_status == 1) {
+                                            if ($item->status != 0) {
+                                                $buttonText = 'Bilet bağlıdır';
+                                            } else {
+                                                $buttonText = 'İşçi tərəfindən təsdiq gözləyir';
+                                            }
+                                        }
+                                    @endphp
+                                    <div
+                                        class="d-flex flex-column align-items-end justify-content-end buttons_container"
+                                        style="height: 87px">
+
+                                        @if($buttonText)
+                                            <button class="{{ $buttonClass }}"
+                                                    @isset($item->ticket_number) data-ticket-number="{{ $item->ticket_number }}" @endisset>
+                                                {{ $buttonText }}
+                                            </button>
+                                        @endif
+                                        <button class="tickets w-100 {{ $class }}">{{ $text }}
                                         </button>
-                                    @endif
-                                    <button class="tickets w-100 {{ $class }}">{{ $text }}
-                                    </button>
+                                    </div>
                                 </div> <!-- end item-left -->
                             </div> <!-- end item -->
                         </div>

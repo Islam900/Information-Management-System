@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branches;
+use App\Models\Departments;
 use App\Models\TicketHistories;
 use App\Models\TicketReasons;
 use App\Models\Tickets;
+use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -19,9 +22,10 @@ class EmployeeTicketController extends Controller
 
     public function create()
     {
-        $appointments = Auth::user()->appointments ?? [];
-        $reasons = TicketReasons::where('status', 1)->get();
-        return view('employee.tickets.create', compact('reasons', 'appointments'));
+        $departments = Departments::where('status', 1)->get();
+        $branches = Branches::where('status', 1)->get();
+        $users = User::all();
+        return view('employee.tickets.create', compact('departments', 'branches', 'users'));
     }
 
     public function store(Request $request)

@@ -21,9 +21,4 @@ class Appointments extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function tickets()
-    {
-        return $this->hasMany(Tickets::class);
-    }
 }

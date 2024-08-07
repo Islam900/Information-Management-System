@@ -67,18 +67,5 @@ class DatabaseSeeder extends Seeder
 //            'type' => 'support',
 //            'b_day' => Carbon::now()->format('Y-m-d')
 //        ]);
-
-        TicketReasons::create([
-            'reason' => 'Səbəb 1',
-            'status' => 1
-        ]);
-        TicketReasons::create([
-            'reason' => 'Səbəb 2',
-            'status' => 1
-        ]);
-        TicketReasons::create([
-            'reason' => 'Səbəb 3',
-            'status' => 1
-        ]);
     }
 }

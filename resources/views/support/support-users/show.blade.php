@@ -1,5 +1,21 @@
 @extends('support.layouts.app')
 @section('content')
+    <style>
+        .ticket-container .item-right .down-border {
+            bottom: -130px;
+            right: -35px;
+        }
+
+        /*.urg_endTime {*/
+        /*    position: absolute;*/
+        /*    left: 50%;*/
+        /*    bottom: -105px;*/
+        /*    transform: translateX(-50%);*/
+        /*    padding: 4px 18px;*/
+        /*    border-radius: 20px;*/
+        /*    color: #fff;*/
+        /*}*/
+    </style>
     <div class="row mb-4">
         <div class="col-md-12 mb-4">
 
@@ -81,7 +97,6 @@
                         </div>
 
 
-
                         <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-header">
@@ -136,16 +151,18 @@
                                                     <h2 class="num">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('d') }}</h2>
                                                     <p class="day">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('M') }}</p>
 
-                                                    <button class="btn btn-secondary show-details" data-ticket-id="{{$item->id}}">
-                                            <span>
-                                                <i class="nav-icon i-Eye font-weight-bold"></i>
-                                            </span>
-                                                        Ətraflı bax
+                                                    <button class="btn btn-secondary show-details"
+                                                            data-ticket-id="{{$item->id}}">
+                                                            <span>
+                                                                <i class="nav-icon i-Eye font-weight-bold"></i>
+                                                            </span>
+                                                            Ətraflı bax
                                                     </button>
 
 
                                                     <span class="up-border"></span>
                                                     <span class="down-border"></span>
+{{--                                                    <div class="urg_endTime"></div>--}}
                                                 </div> <!-- end item-right -->
 
                                                 <div class="item-left">
@@ -168,13 +185,28 @@
                                                         <strong>{{$item->ticket_reasons->reason}}</strong>
                                                     </div>
                                                     <div class="desc_container">
-                                                        <input type="checkbox" class="hidden_check" id="myInput{{$item -> id}}"
+                                                        <input type="checkbox" class="hidden_check"
+                                                               id="myInput{{$item -> id}}"
                                                                style="display: none">
-                                                        <label class="description" for='myInput{{$item -> id}}'>{{$item->note}}</label>
+                                                        <label class="description"
+                                                               for='myInput{{$item -> id}}'>{{$item->note}}</label>
                                                     </div>
                                                     <div class="fix"></div>
-                                                    <button class="tickets w-100 {{ $class }}">{{ $text }}
-                                                    </button>
+                                                    <div
+                                                        class="d-flex flex-column align-items-end justify-content-end buttons_container"
+                                                        style="height: 87px">
+                                                        @if($item->ticket_status == 1 && $item->status != 0)
+                                                            <button class="tickets w-100">Bilet bağlıdır</button>
+                                                        @elseif($item->status != 0 && $item->ticket_status == 0)
+                                                            <button class="tickets w-100">İşçi tərəfindən təsdiq
+                                                                gözləyir
+                                                            </button>
+                                                        @elseif($item->ticket_status == 0)
+                                                            <button class="tickets w-100">Bilet açıqdır</button>
+                                                        @endif
+                                                        <button class="tickets w-100 {{ $class }}">{{ $text }}
+                                                        </button>
+                                                    </div>
                                                 </div> <!-- end item-left -->
                                             </div> <!-- end item -->
                                         </div>
@@ -191,7 +223,8 @@
                                         <hr>
                                         <div class="main-card mb-3">
                                             <div class="card-body">
-                                                <div class="vertical-timeline-item vertical-timeline-element text-center">
+                                                <div
+                                                    class="vertical-timeline-item vertical-timeline-element text-center">
                                                     @if(count($user->my_tickets) > 0)
                                                         Əməliyyat tarixçəsinə baxmaq üçün zəhmət olmasa bilet seçin
                                                     @else
@@ -229,5 +262,6 @@
                 }
             })
         })
+
     </script>
 @endsection

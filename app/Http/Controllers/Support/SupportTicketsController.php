@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TicketHistories;
 use App\Models\Tickets;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,8 +26,8 @@ class SupportTicketsController extends Controller
         $total = $tickets->count();
         $pending = $tickets->where('status', 0)->count();
         $solved = $tickets->where('status','!=', 0)->count();
-
-        return view('support.tickets.my-tickets', compact('tickets', 'total', 'pending', 'solved'));
+        $expired = $tickets->where('ticket_solve_time', '<', Carbon::now()->addHours(4))->where('status', 0)->count();
+        return view('support.tickets.my-tickets', compact('tickets', 'total', 'pending', 'solved', 'expired'));
     }
 
     public function accept_ticket(Request $request)

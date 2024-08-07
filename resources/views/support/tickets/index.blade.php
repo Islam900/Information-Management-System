@@ -3,9 +3,18 @@
 
     <style>
         .ticket-container .item-right .down-border {
-            bottom: -120px;
+            bottom: -140px;
             right: -35px;
         }
+        /*.urg_endTime {*/
+        /*    position: absolute;*/
+        /*    left: 50%;*/
+        /*    bottom: -105px;*/
+        /*    transform: translateX(-50%);*/
+        /*    padding: 4px 18px;*/
+        /*    border-radius: 20px;*/
+        /*    color: #fff;*/
+        /*}*/
     </style>
 
     <div class="row mb-4">
@@ -85,6 +94,7 @@
                                     </button>
                                     <span class="up-border"></span>
                                     <span class="down-border"></span>
+                                    {{--                                    <div class="urg_endTime"></div>--}}
                                     <!-- Göz simgesi burada -->
 
                                 </div> <!-- end item-right -->
@@ -130,6 +140,12 @@
                                             <button class="tickets w-100 accept-ticket"
                                                     data-ticket-number="{{ $item->ticket_number }}">Bileti qəbul et
                                             </button>
+                                        @elseif($item->ticket_status == 1 && $item->status != 0)
+                                            <button class="tickets w-100">Bilet bağlıdır</button>
+                                        @elseif($item->status != 0 && $item->ticket_status == 0)
+                                            <button class="tickets w-100">İşçi tərəfindən təsdiq gözləyir</button>
+                                        @elseif($item->ticket_status == 0)
+                                            <button class="tickets w-100">Bilet açıqdır</button>
                                         @endif
                                         <button class="tickets w-100">{{ $text }}</button>
                                     </div>

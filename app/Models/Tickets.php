@@ -12,18 +12,25 @@ class Tickets extends Model
     use HasFactory,SoftDeletes, CascadeSoftDeletes;
     protected $table = 'tickets';
     protected $fillable = [
+        'departments_id',
+        'branches_id',
+        'type',
         'user_id',
         'operator_id',
         'helpdesk_id',
-        'appointments_id',
-        'ticket_reasons_id',
+        'department_ticket_subjects_id',
+        'subject',
         'ticket_number',
-        'status',
-        'ticket_status',
         'ticket_solve_time',
         'ticket_priority',
         'rate',
-        'note'
+        'rate_comment',
+        'file',
+        'watcher',
+        'solve_percentage',
+        'note',
+        'status',
+        'ticket_status',
     ];
 
     public function user()
@@ -31,6 +38,20 @@ class Tickets extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function departments()
+    {
+        return $this->belongsTo(Departments::class);
+    }
+
+    public function branches()
+    {
+        return $this->belongsTo(Departments::class);
+    }
+
+    public function department_ticket_subjects()
+    {
+        return $this->belongsTo(DepartmentTicketSubjects::class);
+    }
     public function operator()
     {
         return $this->belongsTo(User::class, 'operator_id');
@@ -38,16 +59,6 @@ class Tickets extends Model
     public function helpdesk()
     {
         return $this->belongsTo(User::class, 'helpdesk_id');
-    }
-
-    public function appointments()
-    {
-        return $this->belongsTo(Appointments::class);
-    }
-
-    public function ticket_reasons()
-    {
-        return $this->belongsTo(TicketReasons::class);
     }
 
     public function ticket_histories(){

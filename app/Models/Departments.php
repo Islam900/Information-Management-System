@@ -48,4 +48,14 @@ class Departments extends Model
     {
         return $this->hasMany(Targets::class);
     }
+
+    public function ticket_subjects()
+    {
+        return $this->hasMany(DepartmentTicketSubjects::class);
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Tickets::class);
+    }
 }

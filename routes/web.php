@@ -170,6 +170,8 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         Route::post('get-appointments-by-user', [TicketsController::class, 'get_inventories_by_user'])->name('get-appointments-by-user');
         Route::post('get-subcategories-by-main-category', [CategoriesController::class, 'get_subcategories_by_main_category'])->name('get-subcategories-by-main-category');
         Route::post('product-details', [ProductsController::class, 'details'])->name('product-details');
+
+
     });
 
 
@@ -248,6 +250,9 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         Route::get('/messages', [EmployeeMessageController::class, 'index'])->name('messages.index');
         Route::post('/send-message', [EmployeeMessageController::class, 'sendMessage'])->name('messages.send');
         Route::post('/user-messages', [EmployeeMessageController::class, 'fetchMessages'])->name('messages.fetch');
+
+        Route::post('get-department-data', [\App\Http\Controllers\GeneralController::class, 'get_department_data'])->name('get-department-data');
+
 
     });
 
