@@ -3,7 +3,8 @@
     float: left;
     padding: 0 20px;
     overflow: hidden;
-    margin: 10px
+    margin: 10px;
+    position: relative;
 }
 
 .ticket-container * {
@@ -41,6 +42,17 @@
         color: #fff;
     }
 }
+
+.ticket-container .status-pending {
+    background-color: #b8bbbff2;
+
+    .tickets {
+        background-color: #ffb747;
+        color: #fff;
+    }
+}
+
+
 
 .ticket-container .status-primary {
     background-color: #99c8fdf2;
@@ -120,23 +132,54 @@
     margin-right: 20px;
     width: 25%;
     position: relative;
-    height: 286px
+    height: 286px;
+}
+
+.urg_status {
+    position: absolute;
+    left: 50%;
+    top: 28px;
+    transform: translateX(-50%);
+    padding: 4px 18px;
+    border-radius: 20px;
+    color: #fff;
+}
+
+.urg_status_tecili {
+    background-color: #ff5b5b;
+    color: #fff;
+    animation: blink 1s infinite;
+}
+
+.urg_status_normal {
+    background-color: #ff9900;
+    color: #fff;
+    animation: blink 3s infinite;
+
+}
+
+.urg_status_tecili_deyil {
+    background-color: #369700;
+    color: #fff;
+    animation: blink 5s infinite;
+
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 .ticket-container .item-right .up-border, .ticket-container .item-right .down-border {
     padding: 14px 15px;
     background-color: #fff;
     border-radius: 50%;
-    position: absolute
+    position: absolute;
 }
 
 .ticket-container .item-right .up-border {
     top: -8px;
-    right: -35px;
-}
-
-.ticket-container .item-right .down-border {
-    bottom: -145px;
     right: -35px;
 }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Support;
 use App\Http\Controllers\Controller;
 use App\Models\Tickets;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,7 +45,8 @@ class SupportUsersController extends Controller
         $total = Tickets::where('helpdesk_id', $id)->count();
         $pending = Tickets::where('helpdesk_id', $id)->where('status', 0)->count();
         $solved = Tickets::where('helpdesk_id', $id)->where('status','!=', 0)->count();
-        return view('support.support-users.show', compact('user', 'total', 'pending', 'solved'));
+        $expired = Tickets::where('helpdesk_id', $id)->where('ticket_solve_time', '<', Carbon::now()->addHours(4))->where('status', 0)->count();
+        return view('support.support-users.show', compact('user', 'total', 'pending', 'solved', 'expired'));
     }
 
     /**

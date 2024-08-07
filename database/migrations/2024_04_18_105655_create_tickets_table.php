@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->string('ticket_number')->unique();
             $table->integer('status')->default(0);
             $table->integer('ticket_status')->default(0);
+            $table->dateTime('ticket_solve_time');
+            $table->string('ticket_priority')->default('Təcili deyil');
             $table->integer('rate')->default(5);
             $table->text('note')->nullable();
             $table->softDeletes();

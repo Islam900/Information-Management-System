@@ -1,5 +1,13 @@
 @extends('support.layouts.app')
 @section('content')
+
+    <style>
+        .ticket-container .item-right .down-border {
+            bottom: -120px;
+            right: -35px;
+        }
+    </style>
+
     <div class="row mb-4">
         <div class="col-lg-8 col-12 mb-4">
 
@@ -23,23 +31,49 @@
                 <div class="card-body">
                     @foreach($tickets as $item)
                         @php
-                            if($item->status == 0) {
-                                $text = 'Gözləyir';
-                                $class = 'status-warning';
-                            } elseif ($item->status == 1) {
-                                $text = 'Həll olundu';
-                                $class = 'status-success';
-                            } elseif($item->status == 2) {
-                                $text = 'Problem yoxdur - Əsassız';
-                                $class = 'status-primary';
-                            } elseif($item->status == 3) {
-                                $text = 'İnventar sıradan çıxıb';
-                                $class = 'status-danger';
-                            }
+                            $text = '';
+                            if($item->ticket_status == 1)
+                                {
+                                     if ($item->status == 1) {
+                                        $text = 'Həll olundu';
+                                        $class = 'status-success';
+                                    } elseif($item->status == 2) {
+                                        $text = 'Problem yoxdur - Əsassız';
+                                        $class = 'status-primary';
+                                    } elseif($item->status == 3) {
+                                        $text = 'İnventar sıradan çıxıb';
+                                        $class = 'status-danger';
+                                    }
+                                } else {
+                                    if($item->status == 0) {
+                                        $text = 'Gözləyir';
+                                    }
+                                    elseif ($item->status == 1) {
+                                        $text = 'Həll olundu';
+                                    } elseif($item->status == 2) {
+                                        $text = 'Problem yoxdur - Əsassız';
+                                    } elseif($item->status == 3) {
+                                        $text = 'İnventar sıradan çıxıb';
+                                    }
+                                    $class = 'status-pending';
+                                }
                         @endphp
                         <div class="ticket-container">
                             <div class="item {{ $class }}">
+                                @php
+                                    if($item->ticket_priority == "Təcili deyil")
+                                    {
+                                        $pr_class = 'urg_status_tecili_deyil';
+                                    } elseif ($item->ticket_priority == "Normal")
+                                    {
+                                        $pr_class = 'urg_status_normal';
+                                    } elseif ($item->ticket_priority == "Təcilidir")
+                                    {
+                                        $pr_class = 'urg_status_tecili';
+                                    }
+                                @endphp
                                 <div class="item-right">
+                                    <div class="urg_status {{ $pr_class }} text-white">{{ $item->ticket_priority }}</div>
                                     <h2 class="num">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('d') }}</h2>
                                     <p class="day">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('M') }}</p>
 
@@ -66,7 +100,7 @@
                                             @endcan
 
                                         @else
-                                            <strong class="text-white">{{ $item->helpdesk->name }}
+                                            <strong class="text-secondary">{{ $item->helpdesk->name }}
                                             </strong>
                                         @endif
                                     </div>
@@ -107,6 +141,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-4 col-12 mb-4">
             <div class="card">
                 <div class="card-body">
@@ -133,25 +168,39 @@
 
 @section('js')
     <script>
+
         $(document).ready(function () {
+
+
             $('#appointments-table').DataTable();
 
             $('.accept-ticket').on("click", function () {
+
                 const ticket_number = $(this).data('ticket-number');
                 Swal.fire({
                     title: "Bileti qəbul etmək istəyirsiniz ?",
+                    html: `
+                        <div class="col-12 form-group mb-3 none-field">
+                            <div class="select_label ui sub header">Tarix <span class="text-danger">*</span></div>
+                            <input type="text" id="date-time-picker" name="ticket_solve_time" required
+                                class="form-control" style="background: #f8f9fa;" placeholder="Təxmini həll olunma tarixi">
+                        </div>
+
+                        `,
                     showDenyButton: true,
                     showCancelButton: false,
                     confirmButtonText: "Qəbul et",
                     denyButtonText: `İmtina et`
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        const ticket_solve_time = $('#date-time-picker').val();
                         $.ajax({
                             url: "{{ route('support.accept-ticket') }}",
                             method: "POST",
                             data: {
                                 "_token": "{{ csrf_token() }}",
-                                "ticket_number": ticket_number
+                                "ticket_number": ticket_number,
+                                "ticket_solve_time": ticket_solve_time
                             },
                             success: function (response) {
                                 if (response.status == 200) {
@@ -183,19 +232,42 @@
                         Swal.fire("Bileti qəbul etmədiniz", "", "info");
                     }
                 });
+                flatpickr("#date-time-picker", {
+                    allowInput: true,
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    minDate: "today",
+                    time_24hr: true,
+                    locale: "az",
+                    onReady: function (selectedDates, dateStr, instance) {
+                        var now = new Date();
+                        var hours = now.getHours();
+                        var minutes = now.getMinutes();
+                        instance.set('minTime', (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes);
+                    }
+                });
+
             })
+
 
             $(".assign-ticket").on("click", function () {
                 const ticket_number = $(this).data('ticket-number');
                 Swal.fire({
                     title: "Zəhmət olmasa mütəxəssis seçin",
                     icon: "info",
-                    html: `
-                        <select id="user_id" name="user_id" class="form-control ui fluid search dropdown create_form_dropdown">
-                            @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                    </select>`,
+                    html: `<div class="col-12 form-group mb-3 none-field">
+                            <div class="select_label ui sub header">Mütəxəssislər <span class="text-danger">*</span></div>
+                            <select id="user_id" name="user_id" class="form-control ui fluid search dropdown create_form_dropdown">
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 form-group mb-3 none-field">
+                            <div class="select_label ui sub header">Tarix <span class="text-danger">*</span></div>
+                            <input type="text" id="date-time-picker" name="ticket_solve_time" required
+                                class="form-control" style="background: #f8f9fa;" placeholder="Təxmini həll olunma tarixi">
+                        </div>`,
                     showCloseButton: true,
                     showCancelButton: true,
                     focusConfirm: false,
@@ -210,12 +282,14 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const user_id = $('#user_id').val();
+                        const ticket_solve_time = $('#date-time-picker').val();
                         $.ajax({
                             url: "{{ route('support.assign-ticket') }}",
                             method: "POST",
                             data: {
                                 "_token": "{{ csrf_token() }}",
                                 "ticket_number": ticket_number,
+                                "ticket_solve_time": ticket_solve_time,
                                 "user_id": user_id,
                             },
                             success: function (response) {
@@ -247,7 +321,21 @@
                     } else {
                         Swal.fire("Dəyişikliklər qeydə alınmadı", "", "info");
                     }
-                    ;
+
+                });
+                flatpickr("#date-time-picker", {
+                    allowInput: true,
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    minDate: "today",
+                    time_24hr: true,
+                    locale: "az",
+                    onReady: function (selectedDates, dateStr, instance) {
+                        var now = new Date();
+                        var hours = now.getHours();
+                        var minutes = now.getMinutes();
+                        instance.set('minTime', (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes);
+                    }
                 });
             })
 

@@ -72,7 +72,7 @@
                                     <div class="content">
                                         <p class="text-muted mt-2 mb-0">
                                             <strong>
-                                                Gecikən bilet sayı - {{ $solved }}
+                                                Gecikən bilet sayı - {{ $expired }}
                                             </strong>
                                         </p>
                                     </div>
@@ -90,23 +90,49 @@
                                 <div class="card-body">
                                     @foreach($user->my_tickets as $item)
                                         @php
-                                            if($item->status == 0) {
-                                                $text = 'Gözləyir';
-                                                $class = 'status-warning';
-                                            } elseif ($item->status == 1) {
-                                                $text = 'Həll olundu';
-                                                $class = 'status-success';
-                                            } elseif($item->status == 2) {
-                                                $text = 'Problem yoxdur - Əsassız';
-                                                $class = 'status-primary';
-                                            } elseif($item->status == 3) {
-                                                $text = 'İnventar sıradan çıxıb';
-                                                $class = 'status-danger';
-                                            }
+                                            $text = '';
+                            if($item->ticket_status == 1)
+                                {
+                                     if ($item->status == 1) {
+                                        $text = 'Həll olundu';
+                                        $class = 'status-success';
+                                    } elseif($item->status == 2) {
+                                        $text = 'Problem yoxdur - Əsassız';
+                                        $class = 'status-primary';
+                                    } elseif($item->status == 3) {
+                                        $text = 'İnventar sıradan çıxıb';
+                                        $class = 'status-danger';
+                                    }
+                                } else {
+                                    if($item->status == 0) {
+                                        $text = 'Gözləyir';
+                                    }
+                                    elseif ($item->status == 1) {
+                                        $text = 'Həll olundu';
+                                    } elseif($item->status == 2) {
+                                        $text = 'Problem yoxdur - Əsassız';
+                                    } elseif($item->status == 3) {
+                                        $text = 'İnventar sıradan çıxıb';
+                                    }
+                                    $class = 'status-pending';
+                                }
                                         @endphp
                                         <div class="ticket-container">
                                             <div class="item {{ $class }}">
+                                                @php
+                                                    if($item->ticket_priority == "Təcili deyil")
+                                                    {
+                                                        $pr_class = 'urg_status_tecili_deyil';
+                                                    } elseif ($item->ticket_priority == "Normal")
+                                                    {
+                                                        $pr_class = 'urg_status_normal';
+                                                    } elseif ($item->ticket_priority == "Təcilidir")
+                                                    {
+                                                        $pr_class = 'urg_status_tecili';
+                                                    }
+                                                @endphp
                                                 <div class="item-right">
+                                                    <div class="urg_status {{ $pr_class }} text-white">{{ $item->ticket_priority }}</div>
                                                     <h2 class="num">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('d') }}</h2>
                                                     <p class="day">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('M') }}</p>
 
@@ -116,29 +142,21 @@
                                             </span>
                                                         Ətraflı bax
                                                     </button>
+
+
                                                     <span class="up-border"></span>
                                                     <span class="down-border"></span>
-                                                    <!-- Göz simgesi burada -->
-
                                                 </div> <!-- end item-right -->
 
                                                 <div class="item-left">
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <p class="event mb-0">{{$item->ticket_number}}</p>
-                                                        @if(!$item->helpdesk_id)
-                                                            @can('Texniki dəstək bileti təhkim etmə')
-                                                                <button class="tickets assign-ticket mt-0"
-                                                                        data-ticket-number="{{ $item->ticket_number }}">Bileti təhkim et
-                                                                </button>
-                                                            @endcan
-
-                                                        @else
-                                                            <strong class="text-white">{{ $item->helpdesk->name }}
-                                                            </strong>
-                                                        @endif
+                                                        <p class="event">{{$item->ticket_number}}</p>
+                                                        <strong class="text-white">{{ $item->helpdesk->name }}
+                                                        </strong>
                                                     </div>
-                                                    <p style="white-space: wrap; margin-top: 10px">{{ $item->user->name }}
+                                                    <p style="white-space: nowrap; margin-top: 10px">{{ $item->user->name }}
                                                         - {{ $item->appointments->products->product_name }}</p>
+
                                                     <div class="sce">
                                                         <div class="icon">
                                                             <i class="nav-icon i-Calendar"></i>
@@ -154,18 +172,9 @@
                                                                style="display: none">
                                                         <label class="description" for='myInput{{$item -> id}}'>{{$item->note}}</label>
                                                     </div>
-                                                    {{--                                    <div class="fix"></div>--}}
-                                                    <div
-                                                        class="d-flex flex-column align-items-end justify-content-end buttons_container"
-                                                        style="height: 87px">
-
-                                                        @if($item->status == 0 && is_null($item->helpdesk_id))
-                                                            <button class="tickets w-100 accept-ticket"
-                                                                    data-ticket-number="{{ $item->ticket_number }}">Bileti qəbul et
-                                                            </button>
-                                                        @endif
-                                                        <button class="tickets w-100">{{ $text }}</button>
-                                                    </div>
+                                                    <div class="fix"></div>
+                                                    <button class="tickets w-100 {{ $class }}">{{ $text }}
+                                                    </button>
                                                 </div> <!-- end item-left -->
                                             </div> <!-- end item -->
                                         </div>

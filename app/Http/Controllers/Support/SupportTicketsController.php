@@ -34,7 +34,7 @@ class SupportTicketsController extends Controller
         $ticket = Tickets::where('ticket_number', $request->ticket_number)->first();
         if ($ticket) {
             $ticket->helpdesk_id = Auth::user()->id;
-
+            $ticket->ticket_solve_time = $request->ticket_solve_time;
             if ($ticket->save()) {
 
                 $ticket_history = TicketHistories::create([
@@ -71,6 +71,7 @@ class SupportTicketsController extends Controller
         if ($ticket) {
             $ticket->operator_id = Auth::user()->id;
             $ticket->helpdesk_id = $request->user_id;
+            $ticket->ticket_solve_time = $request->ticket_solve_time;
 
             if ($ticket->save()) {
 

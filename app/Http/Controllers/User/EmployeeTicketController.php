@@ -33,6 +33,7 @@ class EmployeeTicketController extends Controller
             'ticket_reasons_id' => $request->ticket_reasons_id,
             'appointments_id' => $request->inventories_id,
             'ticket_number' => '#TICKET-NO-' . rand(0, 999999),
+            'ticket_priority' => $request->ticket_priority,
             'status' => 0,
             'rate' => 0,
             'note' => $request->note,

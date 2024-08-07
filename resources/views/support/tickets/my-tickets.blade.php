@@ -81,23 +81,49 @@
                 <div class="card-body">
                     @foreach($tickets as $item)
                         @php
-                            if($item->status == 0) {
-                                $text = 'Gözləyir';
-                                $class = 'status-warning';
-                            } elseif ($item->status == 1) {
-                                $text = 'Həll olundu';
-                                $class = 'status-success';
-                            } elseif($item->status == 2) {
-                                $text = 'Problem yoxdur - Əsassız';
-                                $class = 'status-primary';
-                            } elseif($item->status == 3) {
-                                $text = 'İnventar sıradan çıxıb';
-                                $class = 'status-danger';
-                            }
+                            $text = '';
+                            if($item->ticket_status == 1)
+                                {
+                                     if ($item->status == 1) {
+                                        $text = 'Həll olundu';
+                                        $class = 'status-success';
+                                    } elseif($item->status == 2) {
+                                        $text = 'Problem yoxdur - Əsassız';
+                                        $class = 'status-primary';
+                                    } elseif($item->status == 3) {
+                                        $text = 'İnventar sıradan çıxıb';
+                                        $class = 'status-danger';
+                                    }
+                                } else {
+                                    if($item->status == 0) {
+                                        $text = 'Gözləyir';
+                                    }
+                                    elseif ($item->status == 1) {
+                                        $text = 'Həll olundu';
+                                    } elseif($item->status == 2) {
+                                        $text = 'Problem yoxdur - Əsassız';
+                                    } elseif($item->status == 3) {
+                                        $text = 'İnventar sıradan çıxıb';
+                                    }
+                                    $class = 'status-pending';
+                                }
                         @endphp
                         <div class="ticket-container">
                             <div class="item {{ $class }}">
+                                @php
+                                    if($item->ticket_priority == "Təcili deyil")
+                                    {
+                                        $pr_class = 'urg_status_tecili_deyil';
+                                    } elseif ($item->ticket_priority == "Normal")
+                                    {
+                                        $pr_class = 'urg_status_normal';
+                                    } elseif ($item->ticket_priority == "Təcilidir")
+                                    {
+                                        $pr_class = 'urg_status_tecili';
+                                    }
+                                @endphp
                                 <div class="item-right">
+                                    <div class="urg_status {{ $pr_class }} text-white">{{ $item->ticket_priority }}</div>
                                     <h2 class="num">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('d') }}</h2>
                                     <p class="day">{{ \Illuminate\Support\Carbon::parse($item->created_at)->format('M') }}</p>
 

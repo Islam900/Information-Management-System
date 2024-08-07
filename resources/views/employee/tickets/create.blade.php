@@ -22,7 +22,7 @@
                         @csrf
                         <div class="form_inputs_container position-relative">
                             <div class="row position-relative form_block" id="formRow">
-                                <div class="col-md-4 form-group mb-3">
+                                <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">İnventar</div>
                                     <select frequency="true" id="inventories_select" name="inventories_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">İnventar seçin</option>
@@ -35,20 +35,30 @@
                                     <span class="text-danger error_message" id="categories_idError"></span>
                                 </div>
 
-                                <div class="col-md-4 form-group mb-3">
+                                <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Səbəb</div>
                                     <select frequency="true" id="reasons_select" name="ticket_reasons_id" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
                                         <option value="">Səbəb seçin</option>
-                                        @forelse($reasons as $item)
+                                        @foreach($reasons as $item)
                                             <option value="{{$item->id}}" {{ old('ticket_reasons_id')==$item->id ? 'selected' : '' }}>{{$item->reason}}</option>
-                                        @empty
-                                            <option disabled selected>Məlumat yoxdur</option>
-                                        @endforelse
+                                        @endforeach
+                                        <option value="0">Digər...</option>
                                     </select>
                                     <span class="text-danger error_message" id="categories_idError"></span>
                                 </div>
 
-                                <div class="col-md-4 form-group mb-3">
+                                <div class="col-md-3 form-group mb-3">
+                                    <div class="select_label ui sub header ">Vaciblik dərəcəsi</div>
+                                    <select frequency="true" id="ticket_priority" name="ticket_priority" class="form-control ui fluid search dropdown create_form_dropdown vendors_select_cl">
+                                        <option value="">Vaciblik dərəcəsi seçin</option>
+                                        <option value="Təcili deyil">Təcili deyil</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="Təcilidir">Təcilidir</option>
+                                    </select>
+                                    <span class="text-danger error_message" id="categories_idError"></span>
+                                </div>
+
+                                <div class="col-md-3 form-group mb-3">
                                     <div class="select_label ui sub header ">Əlavə qeyd</div>
                                     <div class="ui input">
                                         <input id="note" required value="{{old('note')}}"

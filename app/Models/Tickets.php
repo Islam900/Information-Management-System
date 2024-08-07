@@ -20,6 +20,8 @@ class Tickets extends Model
         'ticket_number',
         'status',
         'ticket_status',
+        'ticket_solve_time',
+        'ticket_priority',
         'rate',
         'note'
     ];
