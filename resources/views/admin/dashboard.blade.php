@@ -40,6 +40,36 @@
                         </code>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Giriş məlumatları
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User ID</th>
+                                <th>Timestamp</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @forelse($userLogs as $key => $log)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $log['userName'] }}</td>
+                                    <td>{{ $log['timestamp'] }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4">No attendance data available.</td>
+                                </tr>
+                            @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -152,7 +152,6 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         /* -------------------- GENERAL SETTINGS ---------------------- */
         Route::get('general-settings', [GeneralSettingsController::class, 'index'])->name('general-settings.index');
         Route::post('update-general-settings', [GeneralSettingsController::class, 'update_general_settings'])->name('update-general-settings');
-        Route::post('store-ticket-reasons', [GeneralSettingsController::class, 'store_ticket_reasons'])->name('store-ticket-reasons');
         Route::post('update-ticket', [TicketsController::class, 'update_ticket'])->name('update-ticket');
 
         Route::post('store-technical-users', [GeneralSettingsController::class, 'store_technical_users'])->name('store-technical-users');
@@ -251,7 +250,7 @@ Route::middleware(['logLastUserActivity'])->group(function () {
         Route::post('/send-message', [EmployeeMessageController::class, 'sendMessage'])->name('messages.send');
         Route::post('/user-messages', [EmployeeMessageController::class, 'fetchMessages'])->name('messages.fetch');
 
-        Route::post('get-department-data', [\App\Http\Controllers\GeneralController::class, 'get_department_data'])->name('get-department-data');
+        Route::post('get-department-ticket-subject', [\App\Http\Controllers\GeneralController::class, 'get_department_ticket_subject'])->name('get-department-ticket-subject');
 
 
     });

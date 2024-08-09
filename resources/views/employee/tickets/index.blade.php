@@ -19,7 +19,7 @@
                                 <span class="me-2">
                                     <i class="nav-icon i-Add-File"></i>
                                 </span>
-                                    Yeni texniki dəstək bileti
+                                    Yeni bilet
                                 </button>
                             </a>
                         </div>
@@ -80,9 +80,7 @@
 
                                 <div class="item-left">
                                     <p class="event">{{$item->ticket_number}}</p>
-                                    <p style="white-space: wrap; margin-top: 10px">{{ $item->user->name }}
-                                        - {{ $item->appointments->products->product_name }}</p>
-
+                                    <p style="white-space: wrap; margin-top: 10px">{{ $item->user->name }}</p>
                                     <div class="sce">
                                         <div class="icon">
                                             <i class="nav-icon i-Calendar"></i>
@@ -91,12 +89,12 @@
                                     </div>
                                     <div class="fix"></div>
                                     <div class="loc">
-                                        <strong>{{$item->ticket_reasons->reason}}</strong>
+                                        <strong>{{$item->department_ticket_subjects->subject ?? $item->subject}}</strong>
                                     </div>
                                     <div class="desc_container">
                                         <input type="checkbox" class="hidden_check" id="myInput{{$item -> id}}"
                                                style="display: none">
-                                        <label class="description" for='myInput{{$item -> id}}'>{{$item->note}}</label>
+                                        <label class="description" for='myInput{{$item -> id}}'>{!! $item->note !!}</label>
                                     </div>
                                     <div class="fix"></div>
                                     <div

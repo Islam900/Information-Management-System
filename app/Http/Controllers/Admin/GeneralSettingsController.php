@@ -23,7 +23,6 @@ class GeneralSettingsController extends Controller
         $users = User::where('type', 'employee')->get();
         $all_users = User::all();
         $assets_requests_users_id = User::whereNotNull('assets_requests_id')->pluck('id')->toArray();
-        $reasons = TicketReasons::withCount('tickets')->get();
         $roles = Role::withCount('permissions')->withCount('users')->get();
         $permissions = Permission::all();
         $technical_users = User::where('type', '!=', 'employee')->get();
@@ -36,7 +35,6 @@ class GeneralSettingsController extends Controller
                 'branches',
                 'users',
                 'all_users',
-                'reasons',
                 'roles',
                 'permissions',
                 'technical_users',

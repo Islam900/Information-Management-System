@@ -22,6 +22,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
 
 
 
@@ -47,24 +48,23 @@
 
 
 @if ($general_settings && $general_settings->notification_module == 1 && !\Illuminate\Support\Facades\Auth::user()->read_notf)
-    <div class="modal" id="notificationModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Bildiriş</h3>
-                    <button type="button" class="btn-close btn btn-sm btn-danger" data-bs-dismiss="modal" aria-label="Close">
-                        <span>
-                            <i class="nav-icon i-Close"></i>
-                        </span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>{!! $general_settings->notification_content !!}</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
-                    <button type="button" class="btn btn-primary notification-read">Tanış oldum</button>
-                </div>
+
+    <div class="ui basic modal">
+        <div class="ui icon header">
+            <i class="message icon"></i>
+            Bildiriş
+        </div>
+        <div class="content">
+            <p>{!! $general_settings->notification_content !!}</p>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Bağla
+            </div>
+            <div class="ui green ok inverted button notification-read">
+                <i class="checkmark icon"></i>
+                Tanış oldum
             </div>
         </div>
     </div>
@@ -101,9 +101,11 @@
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/l10n/az.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js" integrity="sha512-8QFTrG0oeOiyWo/VM9Y8kgxdlCryqhIxVeRpWSezdRRAvarxVtwLnGroJgnVW9/XBRduxO/z1GblzPrMQoeuew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function () {
-        $('#notificationModal').modal('show');
+        $('.ui.basic.modal').modal('show')
+        ;
     });
 </script>
 

@@ -19,6 +19,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale
 }
+ .red-star {
+     color: red;
+ }
 
 .i-Add-Window:before {
     content: "\E918"

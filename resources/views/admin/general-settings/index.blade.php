@@ -337,69 +337,6 @@
 
                 </form>
 
-                <!-- TICKET REASONS START  -->
-                <div class="card-body">
-                    <div class="accordion mt-2" id="accordionRightIcon">
-                        <div class="card">
-                            <div class="card-header header-elements-inline">
-                                <h6 class="card-title ul-collapse__icon--size ul-collapse__right-icon mb-0">
-                                    <a data-toggle="collapse" class="text-default collapsed"
-                                       href="#accordion-item-icons-reason" aria-expanded="false">
-                                        <span><i class="i-Big-Data ul-accordion__font"> </i></span>
-                                        Texniki dəstək səbəbləri</a>
-                                </h6>
-                            </div>
-                            <div id="accordion-item-icons-reason" class="collapse"
-                                 data-parent="#accordionRightIcon" style="">
-                                <div class="card-body">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <form action="{{ route('admin.store-ticket-reasons') }}" method="POST">
-                                                @csrf
-                                                <div class="d-flex align-items-center">
-                                                    <input type="text" class="form-control mr-2" required
-                                                           name="reason" id="">
-                                                    <button class="btn btn-lg btn-outline-success" type="submit"
-                                                            style="height: 48px;">Yeni
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <table class="table table-bordered table-striped">
-                                                <thead>
-                                                <tr>
-                                                    <th>№</th>
-                                                    <th>Səbəb</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                @foreach ($reasons as $reason)
-                                                    <tr>
-                                                        <td>{{ $reason->id }}</td>
-                                                        <td>{{ $reason->reason }}</td>
-                                                        <td>
-                                                            <button
-                                                                class="btn btn-sm btn-{{$reason->status == 1 ? 'success' : 'danger'}}">
-                                                                {{$reason->status == 1 ? 'Aktiv' : 'Deaktiv'}}
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- TICKET REASONS END  -->
-
 
                 <!-- PERMISSIONS START  -->
                 <div class="card-body">

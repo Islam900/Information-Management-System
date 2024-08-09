@@ -10,6 +10,8 @@
         "beyondcode/laravel-websockets": "^1.14",
         "dyrynda/laravel-cascade-soft-deletes": "^4.4",
         "guzzlehttp/guzzle": "^7.2",
+        "jmrashed/zkteco": "^1.0",
+        "laradevsbd/zkteco-sdk": "^1.0",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",

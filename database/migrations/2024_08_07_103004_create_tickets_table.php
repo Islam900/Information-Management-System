@@ -19,11 +19,11 @@ return new class extends Migration {
             $table->foreignId('department_ticket_subjects_id')->constrained('department_ticket_subjects')->nullable()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('branches_id')->constrained('branches')->nullable()->onUpdate('cascade')->onDelete('cascade');
             $table->string('type');
-            $table->text('subject');
+            $table->text('subject')->nullable();
             $table->string('ticket_number')->unique();
             $table->integer('status')->default(0);
             $table->integer('ticket_status')->default(0);
-            $table->dateTime('ticket_solve_time');
+            $table->dateTime('ticket_solve_time')->nullable();
             $table->string('ticket_priority')->default('Təcili deyil');
             $table->integer('rate')->default(5);
             $table->integer('solve_percentage')->default(0);
